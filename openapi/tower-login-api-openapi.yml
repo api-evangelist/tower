@@ -1,0 +1,373 @@
+openapi: 3.1.0
+info:
+  contact:
+    email: hello@tower.dev
+    name: Tower Computing GmbH
+    url: https://tower.dev
+  description: REST API to interact with Tower Services.
+  termsOfService: https://tower.dev/terms
+  title: Tower Accounts Login API
+  version: v0.11.16
+servers:
+- url: https://api.tower.dev/v1
+tags:
+- name: Login
+paths:
+  /login/device:
+    get:
+      description: Creates a new device login ticket and returns the codes and urls needed for authentication.
+      operationId: create-device-login-ticket
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateDeviceLoginTicketResponse'
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Error
+      summary: Create device login ticket
+      tags:
+      - Login
+  /login/device/claim:
+    post:
+      description: Claims a device login ticket code for the authenticated user.
+      operationId: claim-device-login-ticket
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClaimDeviceLoginTicketParams'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClaimDeviceLoginTicketResponse'
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Error
+      security:
+      - AccessTokenAuth:
+        - session
+      - APIKeyAuth:
+        - session
+      summary: Claim a device login ticket
+      tags:
+      - Login
+  /login/device/{device_code}:
+    get:
+      description: Checks if a device login code has been claimed and returns the user session if so.
+      operationId: describe-device-login-session
+      parameters:
+      - description: The device code to check.
+        in: path
+        name: device_code
+        required: true
+        schema:
+          description: The device code to check.
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DescribeDeviceLoginSessionResponse'
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Error
+      summary: Describe device login session
+      tags:
+      - Login
+components:
+  schemas:
+    DescribeDeviceLoginSessionResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/DescribeDeviceLoginSessionResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        session:
+          $ref: '#/components/schemas/Session'
+          description: The current session associated with your authentication method.
+      required:
+      - session
+      type: object
+    ErrorModel:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/ErrorModel.json
+          format: uri
+          readOnly: true
+          type: string
+        detail:
+          description: A human-readable explanation specific to this occurrence of the problem.
+          examples:
+          - Property foo is required but is missing.
+          type: string
+        errors:
+          description: Optional list of individual error details
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+        instance:
+          description: A URI reference that identifies the specific occurrence of the problem.
+          examples:
+          - https://example.com/error-log/abc123
+          format: uri
+          type: string
+        status:
+          description: HTTP status code
+          examples:
+          - 400
+          format: int64
+          type: integer
+        title:
+          description: A short, human-readable summary of the problem type. This value should not change between occurrences of the error.
+          examples:
+          - Bad Request
+          type: string
+        type:
+          default: about:blank
+          description: A URI reference to human-readable documentation for the error.
+          examples:
+          - https://example.com/errors/example
+          format: uri
+          type: string
+      type: object
+    CreateDeviceLoginTicketResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/CreateDeviceLoginTicketResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        device_code:
+          description: The unique code identifying this device login request.
+          type: string
+        expires_in:
+          description: Number of seconds until this request expires.
+          format: int64
+          type: integer
+        generated_at:
+          description: When this device login request was created.
+          format: date-time
+          type: string
+        interval:
+          description: Number of seconds to wait between polling attempts.
+          format: int64
+          type: integer
+        login_url:
+          description: The URL where the user should go to enter the user code.
+          type: string
+        user_code:
+          description: The code that the user needs to enter to authenticate.
+          type: string
+        verification_url:
+          description: The URL that the device should poll to check authentication status.
+          type: string
+      required:
+      - device_code
+      - user_code
+      - login_url
+      - verification_url
+      - generated_at
+      - expires_in
+      - interval
+      type: object
+    ClaimDeviceLoginTicketResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/ClaimDeviceLoginTicketResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        claimed:
+          description: Whether the code was successfully claimed.
+          type: boolean
+      required:
+      - claimed
+      type: object
+    Team:
+      additionalProperties: false
+      properties:
+        execution_region:
+          type: string
+        name:
+          type: string
+        organization:
+          description: The name of the organization this team belongs to.
+          type: string
+        slug:
+          deprecated: true
+          description: This property is deprecated. Use name instead.
+          type: string
+        token:
+          $ref: '#/components/schemas/Token'
+        type:
+          description: The type of team, either 'personal' or 'team'.
+          type: string
+      required:
+      - name
+      - type
+      - organization
+      - execution_region
+      type: object
+    ClaimDeviceLoginTicketParams:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/ClaimDeviceLoginTicketParams.json
+          format: uri
+          readOnly: true
+          type: string
+        refresh_token:
+          description: The refresh token for the session to delegate to the device.
+          type: string
+        user_code:
+          description: The user code to claim.
+          type: string
+      required:
+      - user_code
+      - refresh_token
+      type: object
+    Token:
+      additionalProperties: false
+      properties:
+        access_token:
+          description: The access token to use when authenticating API requests with Tower.
+          type: string
+        jwt:
+          type: string
+        refresh_token:
+          description: The refresh token to use when refreshing an expired access token. For security reasons, refresh tokens should only be transmitted over secure channels and never logged or stored in plaintext. It will only be returned upon initial authentication or when explicitly refreshing the access token.
+          type: string
+      required:
+      - access_token
+      - jwt
+      type: object
+    Session:
+      additionalProperties: false
+      properties:
+        featurebase_identity:
+          $ref: '#/components/schemas/FeaturebaseIdentity'
+          deprecated: true
+          description: This property is deprecated. It will be removed in a future version.
+        teams:
+          items:
+            $ref: '#/components/schemas/Team'
+          type: array
+        token:
+          $ref: '#/components/schemas/Token'
+        user:
+          $ref: '#/components/schemas/User'
+      required:
+      - user
+      - token
+      - teams
+      - featurebase_identity
+      type: object
+    FeaturebaseIdentity:
+      additionalProperties: false
+      properties:
+        company_hash:
+          type: string
+        user_hash:
+          type: string
+      required:
+      - user_hash
+      - company_hash
+      type: object
+    ErrorDetail:
+      additionalProperties: false
+      properties:
+        location:
+          description: Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id'
+          type: string
+        message:
+          description: Error message text
+          type: string
+        value:
+          description: The value at the given location
+      type: object
+    User:
+      additionalProperties: false
+      properties:
+        company:
+          type: string
+        country:
+          type: string
+        created_at:
+          format: date-time
+          type: string
+        email:
+          type: string
+        first_name:
+          type: string
+        is_alerts_enabled:
+          type: boolean
+        is_confirmed:
+          type: boolean
+        is_invitation_claimed:
+          deprecated: true
+          description: This property is deprecated. It will be removed in a future version.
+          type: boolean
+        is_subscribed_to_changelog:
+          type: boolean
+        last_name:
+          type: string
+        profile_photo_url:
+          type: string
+        promo_code:
+          type: string
+      required:
+      - first_name
+      - last_name
+      - company
+      - country
+      - promo_code
+      - email
+      - profile_photo_url
+      - created_at
+      - is_alerts_enabled
+      - is_confirmed
+      - is_subscribed_to_changelog
+      type: object
+  securitySchemes:
+    APIKeyAuth:
+      description: API key created by a Tower user or Tower service account to authenticate an API request.
+      in: header
+      name: X-API-Key
+      type: apiKey
+    AccessTokenAuth:
+      description: Access token authentication scheme which uses an access token provided by the Tower API as part of a Tower session (see documentation about creating sessions).
+      scheme: Bearer
+      type: http

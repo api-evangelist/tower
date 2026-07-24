@@ -1,0 +1,482 @@
+openapi: 3.1.0
+info:
+  contact:
+    email: hello@tower.dev
+    name: Tower Computing GmbH
+    url: https://tower.dev
+  description: REST API to interact with Tower Services.
+  termsOfService: https://tower.dev/terms
+  title: Tower Accounts Runs API
+  version: v0.11.16
+servers:
+- url: https://api.tower.dev/v1
+tags:
+- name: Runs
+paths:
+  /runs:
+    get:
+      description: Search, filter, and list runs across all of the apps in your account.
+      operationId: search-runs
+      parameters:
+      - description: The page number to fetch.
+        explode: false
+        in: query
+        name: page
+        schema:
+          default: 1
+          description: The page number to fetch.
+          format: int64
+          type: integer
+      - description: The number of records to fetch on each page.
+        explode: false
+        in: query
+        name: page_size
+        schema:
+          default: 20
+          description: The number of records to fetch on each page.
+          format: int64
+          type: integer
+      - description: Filter runs by status(es). Define multiple with a comma-separated list. Supplying none will return all statuses.
+        explode: false
+        in: query
+        name: status
+        schema:
+          default:
+          - pending
+          - starting
+          - running
+          - crashed
+          - errored
+          - exited
+          - cancelled
+          - retrying
+          description: Filter runs by status(es). Define multiple with a comma-separated list. Supplying none will return all statuses.
+          items:
+            enum:
+            - pending
+            - starting
+            - running
+            - crashed
+            - errored
+            - exited
+            - cancelled
+            - retrying
+            type: string
+          type: array
+      - description: Filter runs scheduled after this datetime (inclusive). Provide timestamps in ISO-8601 format.
+        explode: false
+        in: query
+        name: start_at
+        schema:
+          description: Filter runs scheduled after this datetime (inclusive). Provide timestamps in ISO-8601 format.
+          format: date-time
+          type: string
+      - description: Filter runs scheduled before or at this datetime (inclusive). Provide timestamps in ISO-8601 format.
+        explode: false
+        in: query
+        name: end_at
+        schema:
+          description: Filter runs scheduled before or at this datetime (inclusive). Provide timestamps in ISO-8601 format.
+          format: date-time
+          type: string
+      - description: Filter runs by environment. If not provided, all environments will be included.
+        explode: false
+        in: query
+        name: environment
+        schema:
+          description: Filter runs by environment. If not provided, all environments will be included.
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchRunsResponse'
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Error
+      security:
+      - AccessTokenAuth:
+        - runs:read
+      - APIKeyAuth:
+        - runs:read
+      summary: Search runs
+      x-shoulder-tap-events:
+      - runs.*
+      tags:
+      - Runs
+components:
+  schemas:
+    SearchRunsResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/SearchRunsResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        pages:
+          $ref: '#/components/schemas/Pagination'
+        runs:
+          items:
+            $ref: '#/components/schemas/Run'
+          type: array
+      required:
+      - pages
+      - runs
+      type: object
+    RunAttempt:
+      additionalProperties: false
+      properties:
+        ended_at:
+          description: When this attempt ended.
+          format: date-time
+          type:
+          - string
+          - 'null'
+        exit_code:
+          description: Exit code for this attempt.
+          format: int64
+          type:
+          - integer
+          - 'null'
+        seq:
+          description: 1-based attempt number.
+          format: int64
+          type: integer
+        started_at:
+          description: When the run started executing your code.
+          format: date-time
+          type:
+          - string
+          - 'null'
+        starting_at:
+          description: When the runner environment started to get setup.
+          format: date-time
+          type:
+          - string
+          - 'null'
+        status:
+          description: Terminal status of this attempt.
+          type: string
+      required:
+      - seq
+      - status
+      - starting_at
+      - started_at
+      - ended_at
+      - exit_code
+      type: object
+    RunInitiator:
+      additionalProperties: false
+      properties:
+        details:
+          description: Additional information about the initiator of a run.
+          oneOf:
+          - $ref: '#/components/schemas/ScheduleRunInitiatorDetails'
+          - $ref: '#/components/schemas/RunRunInitiatorDetails'
+          type: object
+        type:
+          description: The type of initiator for this run. Null if none or unknown.
+          type:
+          - string
+          - 'null'
+      required:
+      - type
+      - details
+      type: object
+    RunRunInitiatorDetails:
+      additionalProperties: false
+      properties:
+        run_app_name:
+          description: The name of the app that initiated this run, if type is 'tower_run'
+          type: string
+        run_number:
+          description: The number of the run that initaited this run, if type is 'tower_run'
+          format: int64
+          type: integer
+      type: object
+    ErrorModel:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/ErrorModel.json
+          format: uri
+          readOnly: true
+          type: string
+        detail:
+          description: A human-readable explanation specific to this occurrence of the problem.
+          examples:
+          - Property foo is required but is missing.
+          type: string
+        errors:
+          description: Optional list of individual error details
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+        instance:
+          description: A URI reference that identifies the specific occurrence of the problem.
+          examples:
+          - https://example.com/error-log/abc123
+          format: uri
+          type: string
+        status:
+          description: HTTP status code
+          examples:
+          - 400
+          format: int64
+          type: integer
+        title:
+          description: A short, human-readable summary of the problem type. This value should not change between occurrences of the error.
+          examples:
+          - Bad Request
+          type: string
+        type:
+          default: about:blank
+          description: A URI reference to human-readable documentation for the error.
+          examples:
+          - https://example.com/errors/example
+          format: uri
+          type: string
+      type: object
+    RunRetryPolicy:
+      additionalProperties: false
+      properties:
+        max_retries:
+          format: int64
+          type: integer
+        retry_delay_seconds:
+          format: int64
+          type: integer
+        use_exponential_backoff:
+          type: boolean
+      required:
+      - max_retries
+      - retry_delay_seconds
+      - use_exponential_backoff
+      type: object
+    ScheduleRunInitiatorDetails:
+      additionalProperties: false
+      properties:
+        schedule_name:
+          description: The name of the schedule that initiated this run, if type is 'tower_schedule'
+          type: string
+      type: object
+    RunCreator:
+      additionalProperties: false
+      properties:
+        name:
+          description: 'The creator''s name: a user''s full name (or email) or a service account''s name.'
+          readOnly: true
+          type: string
+        type:
+          description: The kind of principal that created the run.
+          enum:
+          - user
+          - service_account
+          type: string
+      required:
+      - type
+      - name
+      type: object
+    RunParameter:
+      additionalProperties: false
+      properties:
+        hidden:
+          default: false
+          description: Whether this parameter is hidden/secret. Defaults to false.
+          type: boolean
+        is_override:
+          description: Whether this parameter's value was supplied as an override at run/schedule creation time (true) or comes from the app version's default (false).
+          type:
+          - boolean
+          - 'null'
+        name:
+          type: string
+        value:
+          type: string
+      required:
+      - name
+      - value
+      type: object
+    ErrorDetail:
+      additionalProperties: false
+      properties:
+        location:
+          description: Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id'
+          type: string
+        message:
+          description: Error message text
+          type: string
+        value:
+          description: The value at the given location
+      type: object
+    Run:
+      additionalProperties: false
+      properties:
+        $link:
+          deprecated: true
+          description: $link is deprecated. Individual responses include links.
+          type: string
+        app_name:
+          type: string
+        app_slug:
+          deprecated: true
+          description: This property is deprecated. Use app_name instead.
+          type: string
+        app_version:
+          type: string
+        attempts:
+          description: Previous attempt details. Populated on describe, omitted on list.
+          items:
+            $ref: '#/components/schemas/RunAttempt'
+          type: array
+        cancelled_at:
+          format: date-time
+          type:
+          - string
+          - 'null'
+        created_at:
+          format: date-time
+          type: string
+        created_by:
+          $ref: '#/components/schemas/RunCreator'
+          description: The principal that created this run. Null on legacy rows that predate principal tracking.
+        ended_at:
+          format: date-time
+          type:
+          - string
+          - 'null'
+        environment:
+          type: string
+        exit_code:
+          description: Exit code of the run, if the run is completed. Null if there is no exit code
+          format: int64
+          type:
+          - integer
+          - 'null'
+        hostname:
+          deprecated: true
+          description: hostname is deprecated, use subdomain
+          type: string
+        initiator:
+          $ref: '#/components/schemas/RunInitiator'
+          description: Run initiator information
+        is_scheduled:
+          description: Whether this run was triggered by a schedule (true) or on-demand (false). Historical records default to false.
+          type: boolean
+        num_attempts:
+          description: Number of attempts for this run (1 = original, 2+ = retries).
+          format: int64
+          type: integer
+        number:
+          format: int64
+          type: integer
+        parameters:
+          description: Parameters used to invoke this run.
+          items:
+            $ref: '#/components/schemas/RunParameter'
+          type: array
+        retry_policy:
+          $ref: '#/components/schemas/RunRetryPolicy'
+          description: Retry policy configured for this run.
+        run_id:
+          type: string
+        scheduled_at:
+          format: date-time
+          type: string
+        started_at:
+          description: When the run started executing your code.
+          format: date-time
+          type:
+          - string
+          - 'null'
+        starting_at:
+          description: When the runner environment started to get setup.
+          format: date-time
+          type:
+          - string
+          - 'null'
+        status:
+          enum:
+          - scheduled
+          - retrying
+          - pending
+          - starting
+          - running
+          - crashed
+          - errored
+          - exited
+          - cancelled
+          type: string
+        status_group:
+          enum:
+          - successful
+          - failed
+          - ''
+          type: string
+        subdomain:
+          description: If app is externally accessible, then you can access this run with this hostname.
+          type:
+          - string
+          - 'null'
+      required:
+      - run_id
+      - number
+      - app_name
+      - status
+      - status_group
+      - is_scheduled
+      - parameters
+      - environment
+      - exit_code
+      - created_at
+      - scheduled_at
+      - cancelled_at
+      - starting_at
+      - started_at
+      - ended_at
+      - app_version
+      - initiator
+      - num_attempts
+      - $link
+      type: object
+    Pagination:
+      additionalProperties: false
+      properties:
+        num_pages:
+          format: int64
+          type: integer
+        page:
+          format: int64
+          type: integer
+        page_size:
+          format: int64
+          type: integer
+        total:
+          format: int64
+          type: integer
+      required:
+      - page
+      - total
+      - num_pages
+      - page_size
+      type: object
+  securitySchemes:
+    APIKeyAuth:
+      description: API key created by a Tower user or Tower service account to authenticate an API request.
+      in: header
+      name: X-API-Key
+      type: apiKey
+    AccessTokenAuth:
+      description: Access token authentication scheme which uses an access token provided by the Tower API as part of a Tower session (see documentation about creating sessions).
+      scheme: Bearer
+      type: http

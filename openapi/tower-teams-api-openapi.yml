@@ -1,0 +1,1080 @@
+openapi: 3.1.0
+info:
+  contact:
+    email: hello@tower.dev
+    name: Tower Computing GmbH
+    url: https://tower.dev
+  description: REST API to interact with Tower Services.
+  termsOfService: https://tower.dev/terms
+  title: Tower Accounts Teams API
+  version: v0.11.16
+servers:
+- url: https://api.tower.dev/v1
+tags:
+- name: Teams
+paths:
+  /teams:
+    delete:
+      description: Delete a new team
+      operationId: delete-team
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteTeamParams'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteTeamResponse'
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Error
+      security:
+      - AccessTokenAuth:
+        - teams:delete
+      - APIKeyAuth:
+        - teams:delete
+      summary: Delete team
+      tags:
+      - Teams
+    get:
+      description: List all the teams that you are a member of.
+      operationId: list-teams
+      parameters:
+      - description: The page number to fetch.
+        explode: false
+        in: query
+        name: page
+        schema:
+          default: 1
+          description: The page number to fetch.
+          format: int64
+          type: integer
+      - description: The number of records to fetch on each page.
+        explode: false
+        in: query
+        name: page_size
+        schema:
+          default: 20
+          description: The number of records to fetch on each page.
+          format: int64
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListTeamsResponse'
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Error
+      security:
+      - AccessTokenAuth:
+        - teams:read
+      - APIKeyAuth:
+        - teams:read
+      summary: List teams
+      tags:
+      - Teams
+    post:
+      description: Create a new team
+      operationId: create-team
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTeamParams'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateTeamResponse'
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Error
+      security:
+      - AccessTokenAuth:
+        - teams:create
+      - APIKeyAuth:
+        - teams:create
+      summary: Create team
+      tags:
+      - Teams
+  /teams/{name}:
+    get:
+      description: Get details about a team, including its members and invitations.
+      operationId: describe-team
+      parameters:
+      - description: The name of the team to fetch.
+        in: path
+        name: name
+        required: true
+        schema:
+          description: The name of the team to fetch.
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DescribeTeamResponse'
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Error
+      security:
+      - AccessTokenAuth:
+        - teams:read
+      - APIKeyAuth:
+        - teams:read
+      summary: Describe team
+      tags:
+      - Teams
+    put:
+      description: Update a team with a new name or name. Note that updating the team with a new name will cause all your URLs to change!
+      operationId: update-team
+      parameters:
+      - description: The name of the team to update
+        in: path
+        name: name
+        required: true
+        schema:
+          description: The name of the team to update
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTeamParams'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateTeamResponse'
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Error
+      security:
+      - AccessTokenAuth:
+        - teams:update
+      - APIKeyAuth:
+        - teams:update
+      summary: Update team
+      tags:
+      - Teams
+  /teams/{name}/invites:
+    delete:
+      description: Delete a pending team invitation that you have previously sent
+      operationId: delete-team-invitation
+      parameters:
+      - description: The name of the team to remove someone from
+        in: path
+        name: name
+        required: true
+        schema:
+          description: The name of the team to remove someone from
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteTeamInvitationParams'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteTeamInvitationResponse'
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Error
+      security:
+      - AccessTokenAuth:
+        - teams:update
+      - APIKeyAuth:
+        - teams:update
+      summary: Delete team invitation
+      tags:
+      - Teams
+    get:
+      description: List the pending invitations for a team
+      operationId: list-team-invitations
+      parameters:
+      - description: The name of the team to list members for
+        in: path
+        name: name
+        required: true
+        schema:
+          description: The name of the team to list members for
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListTeamInvitationsResponse'
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Error
+      security:
+      - AccessTokenAuth:
+        - teams:read
+      - APIKeyAuth:
+        - teams:read
+      summary: List team invitations
+      tags:
+      - Teams
+    post:
+      description: Invite a new team
+      operationId: invite-team-member
+      parameters:
+      - description: The name of the team to invite someone to
+        in: path
+        name: name
+        required: true
+        schema:
+          description: The name of the team to invite someone to
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InviteTeamMemberParams'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InviteTeamMemberResponse'
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Error
+      security:
+      - AccessTokenAuth:
+        - teams:update
+      - APIKeyAuth:
+        - teams:update
+      summary: Invite team member
+      tags:
+      - Teams
+  /teams/{name}/invites/resend:
+    post:
+      description: Resend a team invitation to a user if they need a reminder or if they lost it
+      operationId: resend-team-invitation
+      parameters:
+      - description: The name of the team to invite someone to
+        in: path
+        name: name
+        required: true
+        schema:
+          description: The name of the team to invite someone to
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResendTeamInvitationParams'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResendTeamInvitationResponse'
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Error
+      security:
+      - AccessTokenAuth:
+        - teams:update
+      - APIKeyAuth:
+        - teams:update
+      summary: Resend team invitation
+      tags:
+      - Teams
+  /teams/{name}/leave:
+    post:
+      description: Remove yourself from a team. If you're the last member of a team, you cannot remove yourself. You should delete the team instead.
+      operationId: leave-team
+      parameters:
+      - description: The name of the team to leave
+        in: path
+        name: name
+        required: true
+        schema:
+          description: The name of the team to leave
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeaveTeamResponse'
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Error
+      security:
+      - AccessTokenAuth:
+        - teams:leave
+      - APIKeyAuth:
+        - teams:leave
+      summary: Leave team
+      tags:
+      - Teams
+  /teams/{name}/members:
+    delete:
+      operationId: remove-team-member
+      parameters:
+      - description: The name of the team to remove someone from
+        in: path
+        name: name
+        required: true
+        schema:
+          description: The name of the team to remove someone from
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RemoveTeamMemberParams'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RemoveTeamMemberResponse'
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Error
+      security:
+      - AccessTokenAuth:
+        - teams:update
+      - APIKeyAuth:
+        - teams:update
+      summary: Remove team member
+      tags:
+      - Teams
+    get:
+      description: List the members of a team
+      operationId: list-team-members
+      parameters:
+      - description: The name of the team to list members for
+        in: path
+        name: name
+        required: true
+        schema:
+          description: The name of the team to list members for
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListTeamMembersResponse'
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Error
+      security:
+      - AccessTokenAuth:
+        - teams:read
+      - APIKeyAuth:
+        - teams:read
+      summary: List team members
+      tags:
+      - Teams
+    put:
+      operationId: update-team-member
+      parameters:
+      - description: The name of the team
+        in: path
+        name: name
+        required: true
+        schema:
+          description: The name of the team
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTeamMemberParams'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateTeamMemberResponse'
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Error
+      security:
+      - AccessTokenAuth:
+        - teams:update
+      - APIKeyAuth:
+        - teams:update
+      summary: Update team member
+      tags:
+      - Teams
+components:
+  schemas:
+    TeamInvitation:
+      additionalProperties: false
+      properties:
+        email:
+          type: string
+        invitation_sent_at:
+          format: date-time
+          type: string
+        role:
+          type: string
+        team:
+          $ref: '#/components/schemas/Team'
+      required:
+      - team
+      - email
+      - invitation_sent_at
+      - role
+      type: object
+    InviteTeamMemberResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/InviteTeamMemberResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        team_invitations:
+          description: The team invitation that you created
+          items:
+            $ref: '#/components/schemas/TeamInvitation'
+          type: array
+      required:
+      - team_invitations
+      type: object
+    UpdateTeamMemberResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/UpdateTeamMemberResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        team_member:
+          $ref: '#/components/schemas/TeamMembership'
+          description: The team member that was updated
+      required:
+      - team_member
+      type: object
+    DescribeTeamResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/DescribeTeamResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        invitations:
+          description: Pending team invitations
+          items:
+            $ref: '#/components/schemas/TeamInvitation'
+          type: array
+        members:
+          description: The members of the team
+          items:
+            $ref: '#/components/schemas/User'
+          type: array
+        team:
+          $ref: '#/components/schemas/Team'
+          description: The team details
+      required:
+      - team
+      - members
+      - invitations
+      type: object
+    ListTeamsResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/ListTeamsResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        pages:
+          $ref: '#/components/schemas/Pagination'
+          description: Pagination information
+        teams:
+          description: List of teams
+          items:
+            $ref: '#/components/schemas/Team'
+          type: array
+      required:
+      - teams
+      - pages
+      type: object
+    ErrorDetail:
+      additionalProperties: false
+      properties:
+        location:
+          description: Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id'
+          type: string
+        message:
+          description: Error message text
+          type: string
+        value:
+          description: The value at the given location
+      type: object
+    User:
+      additionalProperties: false
+      properties:
+        company:
+          type: string
+        country:
+          type: string
+        created_at:
+          format: date-time
+          type: string
+        email:
+          type: string
+        first_name:
+          type: string
+        is_alerts_enabled:
+          type: boolean
+        is_confirmed:
+          type: boolean
+        is_invitation_claimed:
+          deprecated: true
+          description: This property is deprecated. It will be removed in a future version.
+          type: boolean
+        is_subscribed_to_changelog:
+          type: boolean
+        last_name:
+          type: string
+        profile_photo_url:
+          type: string
+        promo_code:
+          type: string
+      required:
+      - first_name
+      - last_name
+      - company
+      - country
+      - promo_code
+      - email
+      - profile_photo_url
+      - created_at
+      - is_alerts_enabled
+      - is_confirmed
+      - is_subscribed_to_changelog
+      type: object
+    DeleteTeamResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/DeleteTeamResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        team:
+          $ref: '#/components/schemas/Team'
+          description: The team that was just created
+      required:
+      - team
+      type: object
+    ListTeamInvitationsResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/ListTeamInvitationsResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        team_invitations:
+          description: All of team invitations
+          items:
+            $ref: '#/components/schemas/TeamInvitation'
+          type: array
+      required:
+      - team_invitations
+      type: object
+    CreateTeamParams:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/CreateTeamParams.json
+          format: uri
+          readOnly: true
+          type: string
+        name:
+          description: The name of the team to create
+          type: string
+      required:
+      - name
+      type: object
+    UpdateTeamMemberParams:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/UpdateTeamMemberParams.json
+          format: uri
+          readOnly: true
+          type: string
+        email:
+          description: The email address of the team member to update
+          type: string
+        role:
+          description: The role to update the team member to
+          enum:
+          - admin
+          - developer
+          type:
+          - string
+          - 'null'
+      required:
+      - email
+      type: object
+    DeleteTeamInvitationResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/DeleteTeamInvitationResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        invitation:
+          $ref: '#/components/schemas/TeamInvitation'
+          description: The team invitation that was just removed
+      required:
+      - invitation
+      type: object
+    LeaveTeamResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/LeaveTeamResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        team:
+          $ref: '#/components/schemas/Team'
+          description: The team that you just left
+      required:
+      - team
+      type: object
+    ListTeamMembersResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/ListTeamMembersResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        team_members:
+          description: All of the members of a team
+          items:
+            $ref: '#/components/schemas/TeamMembership'
+          type: array
+      required:
+      - team_members
+      type: object
+    UpdateTeamResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/UpdateTeamResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        team:
+          $ref: '#/components/schemas/Team'
+          description: The team that was just created
+      required:
+      - team
+      type: object
+    Token:
+      additionalProperties: false
+      properties:
+        access_token:
+          description: The access token to use when authenticating API requests with Tower.
+          type: string
+        jwt:
+          type: string
+        refresh_token:
+          description: The refresh token to use when refreshing an expired access token. For security reasons, refresh tokens should only be transmitted over secure channels and never logged or stored in plaintext. It will only be returned upon initial authentication or when explicitly refreshing the access token.
+          type: string
+      required:
+      - access_token
+      - jwt
+      type: object
+    Pagination:
+      additionalProperties: false
+      properties:
+        num_pages:
+          format: int64
+          type: integer
+        page:
+          format: int64
+          type: integer
+        page_size:
+          format: int64
+          type: integer
+        total:
+          format: int64
+          type: integer
+      required:
+      - page
+      - total
+      - num_pages
+      - page_size
+      type: object
+    RemoveTeamMemberResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/RemoveTeamMemberResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        team_member:
+          $ref: '#/components/schemas/User'
+          description: The team member that was just removed
+      required:
+      - team_member
+      type: object
+    DeleteTeamParams:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/DeleteTeamParams.json
+          format: uri
+          readOnly: true
+          type: string
+        name:
+          description: The name of the team to delete
+          type: string
+      required:
+      - name
+      type: object
+    CreateTeamResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/CreateTeamResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        team:
+          $ref: '#/components/schemas/Team'
+          description: The team that was just created
+      required:
+      - team
+      type: object
+    DeleteTeamInvitationParams:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/DeleteTeamInvitationParams.json
+          format: uri
+          readOnly: true
+          type: string
+        email:
+          description: The email address of the team member to remove
+          type: string
+      required:
+      - email
+      type: object
+    TeamMembership:
+      additionalProperties: false
+      properties:
+        role:
+          enum:
+          - admin
+          - developer
+          type: string
+        team:
+          $ref: '#/components/schemas/Team'
+        user:
+          $ref: '#/components/schemas/User'
+      required:
+      - team
+      - user
+      - role
+      type: object
+    RemoveTeamMemberParams:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/RemoveTeamMemberParams.json
+          format: uri
+          readOnly: true
+          type: string
+        email:
+          description: The email address of the team member to remove
+          type: string
+      required:
+      - email
+      type: object
+    UpdateTeamParams:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/UpdateTeamParams.json
+          format: uri
+          readOnly: true
+          type: string
+        execution_region:
+          description: The execution region for runs
+          enum:
+          - eu-central-1
+          - us-east-1
+          - us-west-2
+          - eu-west-1
+          type: string
+        name:
+          description: The name of the team to update. This is optional, if you supply null it will not update the team name.
+          type:
+          - string
+          - 'null'
+      required:
+      - name
+      type: object
+    InviteTeamMemberParams:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/InviteTeamMemberParams.json
+          format: uri
+          readOnly: true
+          type: string
+        emails:
+          description: The email addresses of the people to invite. It can be a list in any format (comma separated, newline separated, etc.) and it will be parsed into individual addresses
+          type: string
+        message:
+          description: Optional message to include in the invite email
+          type: string
+        role:
+          default: developer
+          description: The role to assign to the invitations
+          enum:
+          - admin
+          - developer
+          type:
+          - string
+          - 'null'
+      required:
+      - emails
+      - role
+      type: object
+    Team:
+      additionalProperties: false
+      properties:
+        execution_region:
+          type: string
+        name:
+          type: string
+        organization:
+          description: The name of the organization this team belongs to.
+          type: string
+        slug:
+          deprecated: true
+          description: This property is deprecated. Use name instead.
+          type: string
+        token:
+          $ref: '#/components/schemas/Token'
+        type:
+          description: The type of team, either 'personal' or 'team'.
+          type: string
+      required:
+      - name
+      - type
+      - organization
+      - execution_region
+      type: object
+    ErrorModel:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/ErrorModel.json
+          format: uri
+          readOnly: true
+          type: string
+        detail:
+          description: A human-readable explanation specific to this occurrence of the problem.
+          examples:
+          - Property foo is required but is missing.
+          type: string
+        errors:
+          description: Optional list of individual error details
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+        instance:
+          description: A URI reference that identifies the specific occurrence of the problem.
+          examples:
+          - https://example.com/error-log/abc123
+          format: uri
+          type: string
+        status:
+          description: HTTP status code
+          examples:
+          - 400
+          format: int64
+          type: integer
+        title:
+          description: A short, human-readable summary of the problem type. This value should not change between occurrences of the error.
+          examples:
+          - Bad Request
+          type: string
+        type:
+          default: about:blank
+          description: A URI reference to human-readable documentation for the error.
+          examples:
+          - https://example.com/errors/example
+          format: uri
+          type: string
+      type: object
+    ResendTeamInvitationParams:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/ResendTeamInvitationParams.json
+          format: uri
+          readOnly: true
+          type: string
+        email:
+          description: The email address of team invitation to resend
+          type: string
+        message:
+          description: Optional message to include in the invite email
+          type: string
+      required:
+      - email
+      type: object
+    ResendTeamInvitationResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/ResendTeamInvitationResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        team_invitation:
+          $ref: '#/components/schemas/TeamInvitation'
+          description: The team invitations that were resent
+      required:
+      - team_invitation
+      type: object
+  securitySchemes:
+    APIKeyAuth:
+      description: API key created by a Tower user or Tower service account to authenticate an API request.
+      in: header
+      name: X-API-Key
+      type: apiKey
+    AccessTokenAuth:
+      description: Access token authentication scheme which uses an access token provided by the Tower API as part of a Tower session (see documentation about creating sessions).
+      scheme: Bearer
+      type: http

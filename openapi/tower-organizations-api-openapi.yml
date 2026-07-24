@@ -1,0 +1,233 @@
+openapi: 3.1.0
+info:
+  contact:
+    email: hello@tower.dev
+    name: Tower Computing GmbH
+    url: https://tower.dev
+  description: REST API to interact with Tower Services.
+  termsOfService: https://tower.dev/terms
+  title: Tower Accounts Organizations API
+  version: v0.11.16
+servers:
+- url: https://api.tower.dev/v1
+tags:
+- name: Organizations
+paths:
+  /organizations/{name}:
+    put:
+      description: Update an organization's name. Only the current owner can perform this operation.
+      operationId: update-organization
+      parameters:
+      - description: The current name of the organization to update
+        in: path
+        name: name
+        required: true
+        schema:
+          description: The current name of the organization to update
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateOrganizationParams'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateOrganizationResponse'
+          description: OK
+        '403':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Forbidden
+        '404':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Not Found
+        '409':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Conflict
+        '422':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Unprocessable Entity
+        '500':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Internal Server Error
+      security:
+      - AccessTokenAuth:
+        - orgs:update
+      - APIKeyAuth:
+        - orgs:update
+      summary: Update organization
+      tags:
+      - Organizations
+components:
+  schemas:
+    UpdateOrganizationResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/UpdateOrganizationResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        organization:
+          $ref: '#/components/schemas/Organization'
+          description: The organization that was just updated
+      required:
+      - organization
+      type: object
+    ErrorModel:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/ErrorModel.json
+          format: uri
+          readOnly: true
+          type: string
+        detail:
+          description: A human-readable explanation specific to this occurrence of the problem.
+          examples:
+          - Property foo is required but is missing.
+          type: string
+        errors:
+          description: Optional list of individual error details
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+        instance:
+          description: A URI reference that identifies the specific occurrence of the problem.
+          examples:
+          - https://example.com/error-log/abc123
+          format: uri
+          type: string
+        status:
+          description: HTTP status code
+          examples:
+          - 400
+          format: int64
+          type: integer
+        title:
+          description: A short, human-readable summary of the problem type. This value should not change between occurrences of the error.
+          examples:
+          - Bad Request
+          type: string
+        type:
+          default: about:blank
+          description: A URI reference to human-readable documentation for the error.
+          examples:
+          - https://example.com/errors/example
+          format: uri
+          type: string
+      type: object
+    ErrorDetail:
+      additionalProperties: false
+      properties:
+        location:
+          description: Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id'
+          type: string
+        message:
+          description: Error message text
+          type: string
+        value:
+          description: The value at the given location
+      type: object
+    UpdateOrganizationParams:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/UpdateOrganizationParams.json
+          format: uri
+          readOnly: true
+          type: string
+        name:
+          description: The name of the organization to update. This is optional, if you supply null it will not update the organization name.
+          type: string
+      type: object
+    User:
+      additionalProperties: false
+      properties:
+        company:
+          type: string
+        country:
+          type: string
+        created_at:
+          format: date-time
+          type: string
+        email:
+          type: string
+        first_name:
+          type: string
+        is_alerts_enabled:
+          type: boolean
+        is_confirmed:
+          type: boolean
+        is_invitation_claimed:
+          deprecated: true
+          description: This property is deprecated. It will be removed in a future version.
+          type: boolean
+        is_subscribed_to_changelog:
+          type: boolean
+        last_name:
+          type: string
+        profile_photo_url:
+          type: string
+        promo_code:
+          type: string
+      required:
+      - first_name
+      - last_name
+      - company
+      - country
+      - promo_code
+      - email
+      - profile_photo_url
+      - created_at
+      - is_alerts_enabled
+      - is_confirmed
+      - is_subscribed_to_changelog
+      type: object
+    Organization:
+      additionalProperties: false
+      properties:
+        name:
+          description: The name of the organization
+          type: string
+        owner:
+          $ref: '#/components/schemas/User'
+          description: The user of the organization owner
+      required:
+      - name
+      - owner
+      type: object
+  securitySchemes:
+    APIKeyAuth:
+      description: API key created by a Tower user or Tower service account to authenticate an API request.
+      in: header
+      name: X-API-Key
+      type: apiKey
+    AccessTokenAuth:
+      description: Access token authentication scheme which uses an access token provided by the Tower API as part of a Tower session (see documentation about creating sessions).
+      scheme: Bearer
+      type: http

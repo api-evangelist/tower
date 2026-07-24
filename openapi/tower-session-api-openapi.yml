@@ -1,0 +1,435 @@
+openapi: 3.1.0
+info:
+  contact:
+    email: hello@tower.dev
+    name: Tower Computing GmbH
+    url: https://tower.dev
+  description: REST API to interact with Tower Services.
+  termsOfService: https://tower.dev/terms
+  title: Tower Accounts Session API
+  version: v0.11.16
+servers:
+- url: https://api.tower.dev/v1
+tags:
+- name: Session
+paths:
+  /session:
+    delete:
+      description: Terminate a session and revoke the access keys associated with it.
+      operationId: delete-session
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteSessionParams'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteSessionResponse'
+          description: OK
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Error
+      security:
+      - AccessTokenAuth:
+        - session
+      - APIKeyAuth:
+        - session
+      summary: Delete session
+      tags:
+      - Session
+    get:
+      description: Validate your current session and return the user information associated with the session.
+      operationId: describe-session
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DescribeSessionResponse'
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Error
+      security:
+      - AccessTokenAuth:
+        - session
+      - APIKeyAuth:
+        - session
+      summary: Describe session
+      x-shoulder-tap-events:
+      - users.updated
+      tags:
+      - Session
+    post:
+      description: Create a new session and return it.
+      operationId: create-session
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSessionParams'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateSessionResponse'
+          description: OK
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Error
+      summary: Create session
+      tags:
+      - Session
+  /session/refresh:
+    post:
+      description: If your access tokens expire, this API endpoint takes a Refresh Token and returns a new set of Access Tokens for your session. Note that we don't rotate the Refresh Token itself, and it's not returned by this API endpoint.
+      operationId: refresh-session
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshSessionParams'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefreshSessionResponse'
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Error
+      security:
+      - AccessTokenAuth: []
+      - APIKeyAuth: []
+      summary: Refresh session
+      tags:
+      - Session
+components:
+  schemas:
+    ErrorDetail:
+      additionalProperties: false
+      properties:
+        location:
+          description: Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id'
+          type: string
+        message:
+          description: Error message text
+          type: string
+        value:
+          description: The value at the given location
+      type: object
+    DescribeSessionResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/DescribeSessionResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        session:
+          $ref: '#/components/schemas/Session'
+          description: The current session associated with your authentication method.
+      required:
+      - session
+      type: object
+    RefreshSessionResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/RefreshSessionResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        refreshed_at:
+          description: A timestamp that indicates the last time the session data was refreshed.
+          format: date-time
+          type: string
+        session:
+          $ref: '#/components/schemas/Session'
+          description: Refresh the current session and return the updated session information.
+      required:
+      - refreshed_at
+      - session
+      type: object
+    CreateSessionParams:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/CreateSessionParams.json
+          format: uri
+          readOnly: true
+          type: string
+        code:
+          description: One-time password verification code for two-factor authentication. If the user has two-factor authentication enabled, this code is required to log in.
+          type: string
+        password:
+          type: string
+        username:
+          type: string
+      required:
+      - username
+      - password
+      type: object
+    Team:
+      additionalProperties: false
+      properties:
+        execution_region:
+          type: string
+        name:
+          type: string
+        organization:
+          description: The name of the organization this team belongs to.
+          type: string
+        slug:
+          deprecated: true
+          description: This property is deprecated. Use name instead.
+          type: string
+        token:
+          $ref: '#/components/schemas/Token'
+        type:
+          description: The type of team, either 'personal' or 'team'.
+          type: string
+      required:
+      - name
+      - type
+      - organization
+      - execution_region
+      type: object
+    ErrorModel:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/ErrorModel.json
+          format: uri
+          readOnly: true
+          type: string
+        detail:
+          description: A human-readable explanation specific to this occurrence of the problem.
+          examples:
+          - Property foo is required but is missing.
+          type: string
+        errors:
+          description: Optional list of individual error details
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+        instance:
+          description: A URI reference that identifies the specific occurrence of the problem.
+          examples:
+          - https://example.com/error-log/abc123
+          format: uri
+          type: string
+        status:
+          description: HTTP status code
+          examples:
+          - 400
+          format: int64
+          type: integer
+        title:
+          description: A short, human-readable summary of the problem type. This value should not change between occurrences of the error.
+          examples:
+          - Bad Request
+          type: string
+        type:
+          default: about:blank
+          description: A URI reference to human-readable documentation for the error.
+          examples:
+          - https://example.com/errors/example
+          format: uri
+          type: string
+      type: object
+    DeleteSessionResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/DeleteSessionResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        session:
+          $ref: '#/components/schemas/Session'
+          description: The session that was deleted.
+      required:
+      - session
+      type: object
+    Token:
+      additionalProperties: false
+      properties:
+        access_token:
+          description: The access token to use when authenticating API requests with Tower.
+          type: string
+        jwt:
+          type: string
+        refresh_token:
+          description: The refresh token to use when refreshing an expired access token. For security reasons, refresh tokens should only be transmitted over secure channels and never logged or stored in plaintext. It will only be returned upon initial authentication or when explicitly refreshing the access token.
+          type: string
+      required:
+      - access_token
+      - jwt
+      type: object
+    CreateSessionResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/CreateSessionResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        session:
+          $ref: '#/components/schemas/Session'
+          description: The new session information.
+      required:
+      - session
+      type: object
+    Session:
+      additionalProperties: false
+      properties:
+        featurebase_identity:
+          $ref: '#/components/schemas/FeaturebaseIdentity'
+          deprecated: true
+          description: This property is deprecated. It will be removed in a future version.
+        teams:
+          items:
+            $ref: '#/components/schemas/Team'
+          type: array
+        token:
+          $ref: '#/components/schemas/Token'
+        user:
+          $ref: '#/components/schemas/User'
+      required:
+      - user
+      - token
+      - teams
+      - featurebase_identity
+      type: object
+    FeaturebaseIdentity:
+      additionalProperties: false
+      properties:
+        company_hash:
+          type: string
+        user_hash:
+          type: string
+      required:
+      - user_hash
+      - company_hash
+      type: object
+    RefreshSessionParams:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/RefreshSessionParams.json
+          format: uri
+          readOnly: true
+          type: string
+        refresh_token:
+          description: The refresh token associated with the session to refresh.
+          type: string
+      type: object
+    DeleteSessionParams:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/DeleteSessionParams.json
+          format: uri
+          readOnly: true
+          type: string
+        session_id:
+          description: The ID of the session to delete. If not provided, the current session will be deleted.
+          type: string
+      type: object
+    User:
+      additionalProperties: false
+      properties:
+        company:
+          type: string
+        country:
+          type: string
+        created_at:
+          format: date-time
+          type: string
+        email:
+          type: string
+        first_name:
+          type: string
+        is_alerts_enabled:
+          type: boolean
+        is_confirmed:
+          type: boolean
+        is_invitation_claimed:
+          deprecated: true
+          description: This property is deprecated. It will be removed in a future version.
+          type: boolean
+        is_subscribed_to_changelog:
+          type: boolean
+        last_name:
+          type: string
+        profile_photo_url:
+          type: string
+        promo_code:
+          type: string
+      required:
+      - first_name
+      - last_name
+      - company
+      - country
+      - promo_code
+      - email
+      - profile_photo_url
+      - created_at
+      - is_alerts_enabled
+      - is_confirmed
+      - is_subscribed_to_changelog
+      type: object
+  securitySchemes:
+    APIKeyAuth:
+      description: API key created by a Tower user or Tower service account to authenticate an API request.
+      in: header
+      name: X-API-Key
+      type: apiKey
+    AccessTokenAuth:
+      description: Access token authentication scheme which uses an access token provided by the Tower API as part of a Tower session (see documentation about creating sessions).
+      scheme: Bearer
+      type: http

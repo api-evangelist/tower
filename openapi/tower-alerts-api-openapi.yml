@@ -1,0 +1,859 @@
+openapi: 3.1.0
+info:
+  contact:
+    email: hello@tower.dev
+    name: Tower Computing GmbH
+    url: https://tower.dev
+  description: REST API to interact with Tower Services.
+  termsOfService: https://tower.dev/terms
+  title: Tower Accounts Alerts API
+  version: v0.11.16
+servers:
+- url: https://api.tower.dev/v1
+tags:
+- name: Alerts
+paths:
+  /alerts:
+    get:
+      description: List alerts for the current account with optional filtering
+      operationId: list-alerts
+      parameters:
+      - description: The page number to fetch.
+        explode: false
+        in: query
+        name: page
+        schema:
+          default: 1
+          description: The page number to fetch.
+          format: int64
+          type: integer
+      - description: The number of records to fetch on each page.
+        explode: false
+        in: query
+        name: page_size
+        schema:
+          default: 20
+          description: The number of records to fetch on each page.
+          format: int64
+          type: integer
+      - description: Filter alerts by alert type
+        explode: false
+        in: query
+        name: alert_type
+        schema:
+          description: Filter alerts by alert type
+          type: string
+      - description: Filter alerts created after or at this datetime (inclusive)
+        explode: false
+        in: query
+        name: start_at
+        schema:
+          description: Filter alerts created after or at this datetime (inclusive)
+          format: date-time
+          type: string
+      - description: Filter alerts created before or at this datetime (inclusive)
+        explode: false
+        in: query
+        name: end_at
+        schema:
+          description: Filter alerts created before or at this datetime (inclusive)
+          format: date-time
+          type: string
+      - description: Filter alerts by acknowledged status.
+        explode: false
+        in: query
+        name: acked
+        schema:
+          description: Filter alerts by acknowledged status.
+          type: string
+      - description: Filter alerts by environment (e.g., production, staging)
+        explode: false
+        in: query
+        name: environment
+        schema:
+          description: Filter alerts by environment (e.g., production, staging)
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListAlertsResponse'
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Error
+      security:
+      - AccessTokenAuth:
+        - notifications:read
+      - APIKeyAuth:
+        - notifications:read
+      summary: List alerts
+      tags:
+      - Alerts
+  /alerts/acknowledge-all:
+    post:
+      description: Mark all unacknowledged alerts as acknowledged for the current user in the current account
+      operationId: acknowledge-all-alerts
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcknowledgeAllAlertsResponse'
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Error
+      security:
+      - AccessTokenAuth:
+        - notifications:update
+      - APIKeyAuth:
+        - notifications:update
+      summary: Acknowledge all alerts
+      tags:
+      - Alerts
+  /alerts/stream:
+    get:
+      description: Streams alert notifications in real-time
+      operationId: stream-alerts
+      responses:
+        '200':
+          content:
+            text/event-stream:
+              schema:
+                description: Each oneOf object in the array represents one possible Server Sent Events (SSE) message, serialized as UTF-8 text according to the SSE specification.
+                items:
+                  oneOf:
+                  - properties:
+                      data:
+                        $ref: '#/components/schemas/Alert'
+                      event:
+                        const: alert
+                        description: The event name.
+                        type: string
+                      id:
+                        description: The event ID.
+                        type: integer
+                      retry:
+                        description: The retry time in milliseconds.
+                        type: integer
+                    required:
+                    - data
+                    - event
+                    title: Event alert
+                    type: object
+                  - properties:
+                      data:
+                        $ref: '#/components/schemas/SSEWarning'
+                      event:
+                        const: error
+                        description: The event name.
+                        type: string
+                      id:
+                        description: The event ID.
+                        type: integer
+                      retry:
+                        description: The retry time in milliseconds.
+                        type: integer
+                    required:
+                    - data
+                    - event
+                    title: Event error
+                    type: object
+                title: Server Sent Events
+                type: array
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Error
+      security:
+      - AccessTokenAuth:
+        - notifications:read
+      - APIKeyAuth:
+        - notifications:read
+      summary: Stream alert notifications
+      tags:
+      - Alerts
+  /alerts/{alert_id}:
+    delete:
+      description: Permanently delete an alert
+      operationId: delete-alert
+      parameters:
+      - description: ID of the alert to delete
+        in: path
+        name: alert_id
+        required: true
+        schema:
+          description: ID of the alert to delete
+          type: string
+      responses:
+        '204':
+          description: No Content
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Error
+      security:
+      - AccessTokenAuth:
+        - notifications:delete
+      - APIKeyAuth:
+        - notifications:delete
+      summary: Delete alert
+      tags:
+      - Alerts
+  /alerts/{alert_seq}/acknowledge:
+    post:
+      description: Mark an alert as acknowledged
+      operationId: acknowledge-alert
+      parameters:
+      - description: Seq of the alert to acknowledge
+        in: path
+        name: alert_seq
+        required: true
+        schema:
+          description: Seq of the alert to acknowledge
+          format: int64
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcknowledgeAlertResponse'
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Error
+      security:
+      - AccessTokenAuth:
+        - notifications:update
+      - APIKeyAuth:
+        - notifications:update
+      summary: Acknowledge alert
+      tags:
+      - Alerts
+components:
+  schemas:
+    SSEWarning:
+      additionalProperties: false
+      properties:
+        content:
+          description: Contents of the warning.
+          type: string
+        end_of_stream:
+          description: When true, the server has delivered every log line and is closing the stream; clients should stop and not reconnect.
+          type: boolean
+        reported_at:
+          description: Timestamp of the event.
+          format: date-time
+          type: string
+      required:
+      - reported_at
+      - content
+      type: object
+    RunRetryPolicy:
+      additionalProperties: false
+      properties:
+        max_retries:
+          format: int64
+          type: integer
+        retry_delay_seconds:
+          format: int64
+          type: integer
+        use_exponential_backoff:
+          type: boolean
+      required:
+      - max_retries
+      - retry_delay_seconds
+      - use_exponential_backoff
+      type: object
+    RunCreator:
+      additionalProperties: false
+      properties:
+        name:
+          description: 'The creator''s name: a user''s full name (or email) or a service account''s name.'
+          readOnly: true
+          type: string
+        type:
+          description: The kind of principal that created the run.
+          enum:
+          - user
+          - service_account
+          type: string
+      required:
+      - type
+      - name
+      type: object
+    Alert:
+      additionalProperties: false
+      properties:
+        acked:
+          type: boolean
+        alert_type:
+          type: string
+        created_at:
+          format: date-time
+          type: string
+        detail:
+          oneOf:
+          - $ref: '#/components/schemas/RunFailureAlert'
+          type: object
+        seq:
+          format: int64
+          type: integer
+        status:
+          type: string
+      required:
+      - alert_type
+      - seq
+      - detail
+      - created_at
+      - status
+      - acked
+      type: object
+    ErrorDetail:
+      additionalProperties: false
+      properties:
+        location:
+          description: Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id'
+          type: string
+        message:
+          description: Error message text
+          type: string
+        value:
+          description: The value at the given location
+      type: object
+    Pagination:
+      additionalProperties: false
+      properties:
+        num_pages:
+          format: int64
+          type: integer
+        page:
+          format: int64
+          type: integer
+        page_size:
+          format: int64
+          type: integer
+        total:
+          format: int64
+          type: integer
+      required:
+      - page
+      - total
+      - num_pages
+      - page_size
+      type: object
+    Run:
+      additionalProperties: false
+      properties:
+        $link:
+          deprecated: true
+          description: $link is deprecated. Individual responses include links.
+          type: string
+        app_name:
+          type: string
+        app_slug:
+          deprecated: true
+          description: This property is deprecated. Use app_name instead.
+          type: string
+        app_version:
+          type: string
+        attempts:
+          description: Previous attempt details. Populated on describe, omitted on list.
+          items:
+            $ref: '#/components/schemas/RunAttempt'
+          type: array
+        cancelled_at:
+          format: date-time
+          type:
+          - string
+          - 'null'
+        created_at:
+          format: date-time
+          type: string
+        created_by:
+          $ref: '#/components/schemas/RunCreator'
+          description: The principal that created this run. Null on legacy rows that predate principal tracking.
+        ended_at:
+          format: date-time
+          type:
+          - string
+          - 'null'
+        environment:
+          type: string
+        exit_code:
+          description: Exit code of the run, if the run is completed. Null if there is no exit code
+          format: int64
+          type:
+          - integer
+          - 'null'
+        hostname:
+          deprecated: true
+          description: hostname is deprecated, use subdomain
+          type: string
+        initiator:
+          $ref: '#/components/schemas/RunInitiator'
+          description: Run initiator information
+        is_scheduled:
+          description: Whether this run was triggered by a schedule (true) or on-demand (false). Historical records default to false.
+          type: boolean
+        num_attempts:
+          description: Number of attempts for this run (1 = original, 2+ = retries).
+          format: int64
+          type: integer
+        number:
+          format: int64
+          type: integer
+        parameters:
+          description: Parameters used to invoke this run.
+          items:
+            $ref: '#/components/schemas/RunParameter'
+          type: array
+        retry_policy:
+          $ref: '#/components/schemas/RunRetryPolicy'
+          description: Retry policy configured for this run.
+        run_id:
+          type: string
+        scheduled_at:
+          format: date-time
+          type: string
+        started_at:
+          description: When the run started executing your code.
+          format: date-time
+          type:
+          - string
+          - 'null'
+        starting_at:
+          description: When the runner environment started to get setup.
+          format: date-time
+          type:
+          - string
+          - 'null'
+        status:
+          enum:
+          - scheduled
+          - retrying
+          - pending
+          - starting
+          - running
+          - crashed
+          - errored
+          - exited
+          - cancelled
+          type: string
+        status_group:
+          enum:
+          - successful
+          - failed
+          - ''
+          type: string
+        subdomain:
+          description: If app is externally accessible, then you can access this run with this hostname.
+          type:
+          - string
+          - 'null'
+      required:
+      - run_id
+      - number
+      - app_name
+      - status
+      - status_group
+      - is_scheduled
+      - parameters
+      - environment
+      - exit_code
+      - created_at
+      - scheduled_at
+      - cancelled_at
+      - starting_at
+      - started_at
+      - ended_at
+      - app_version
+      - initiator
+      - num_attempts
+      - $link
+      type: object
+    RunResults:
+      additionalProperties: false
+      properties:
+        cancelled:
+          format: int64
+          type: integer
+        crashed:
+          format: int64
+          type: integer
+        errored:
+          format: int64
+          type: integer
+        exited:
+          format: int64
+          type: integer
+        pending:
+          format: int64
+          type: integer
+        retrying:
+          format: int64
+          type: integer
+        running:
+          format: int64
+          type: integer
+        starting:
+          format: int64
+          type: integer
+      required:
+      - pending
+      - starting
+      - running
+      - exited
+      - errored
+      - crashed
+      - cancelled
+      - retrying
+      type: object
+    RunAttempt:
+      additionalProperties: false
+      properties:
+        ended_at:
+          description: When this attempt ended.
+          format: date-time
+          type:
+          - string
+          - 'null'
+        exit_code:
+          description: Exit code for this attempt.
+          format: int64
+          type:
+          - integer
+          - 'null'
+        seq:
+          description: 1-based attempt number.
+          format: int64
+          type: integer
+        started_at:
+          description: When the run started executing your code.
+          format: date-time
+          type:
+          - string
+          - 'null'
+        starting_at:
+          description: When the runner environment started to get setup.
+          format: date-time
+          type:
+          - string
+          - 'null'
+        status:
+          description: Terminal status of this attempt.
+          type: string
+      required:
+      - seq
+      - status
+      - starting_at
+      - started_at
+      - ended_at
+      - exit_code
+      type: object
+    AppTag:
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+        value:
+          type: string
+      required:
+      - name
+      - value
+      type: object
+    RunInitiator:
+      additionalProperties: false
+      properties:
+        details:
+          description: Additional information about the initiator of a run.
+          oneOf:
+          - $ref: '#/components/schemas/ScheduleRunInitiatorDetails'
+          - $ref: '#/components/schemas/RunRunInitiatorDetails'
+          type: object
+        type:
+          description: The type of initiator for this run. Null if none or unknown.
+          type:
+          - string
+          - 'null'
+      required:
+      - type
+      - details
+      type: object
+    ScheduleRunInitiatorDetails:
+      additionalProperties: false
+      properties:
+        schedule_name:
+          description: The name of the schedule that initiated this run, if type is 'tower_schedule'
+          type: string
+      type: object
+    RunParameter:
+      additionalProperties: false
+      properties:
+        hidden:
+          default: false
+          description: Whether this parameter is hidden/secret. Defaults to false.
+          type: boolean
+        is_override:
+          description: Whether this parameter's value was supplied as an override at run/schedule creation time (true) or comes from the app version's default (false).
+          type:
+          - boolean
+          - 'null'
+        name:
+          type: string
+        value:
+          type: string
+      required:
+      - name
+      - value
+      type: object
+    AcknowledgeAllAlertsResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/AcknowledgeAllAlertsResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        count:
+          description: Number of alerts that were acknowledged
+          format: int64
+          type: integer
+        status:
+          type: string
+      required:
+      - status
+      - count
+      type: object
+    RunFailureAlert:
+      additionalProperties: false
+      properties:
+        app:
+          $ref: '#/components/schemas/App'
+          description: App that the failed Run belongs to
+        environment:
+          description: Environment this run was in
+          type: string
+        run:
+          $ref: '#/components/schemas/Run'
+          description: Run that failed
+      required:
+      - run
+      - app
+      - environment
+      type: object
+    AcknowledgeAlertResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/AcknowledgeAlertResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        status:
+          type: string
+      required:
+      - status
+      type: object
+    RunRunInitiatorDetails:
+      additionalProperties: false
+      properties:
+        run_app_name:
+          description: The name of the app that initiated this run, if type is 'tower_run'
+          type: string
+        run_number:
+          description: The number of the run that initaited this run, if type is 'tower_run'
+          format: int64
+          type: integer
+      type: object
+    ErrorModel:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/ErrorModel.json
+          format: uri
+          readOnly: true
+          type: string
+        detail:
+          description: A human-readable explanation specific to this occurrence of the problem.
+          examples:
+          - Property foo is required but is missing.
+          type: string
+        errors:
+          description: Optional list of individual error details
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+        instance:
+          description: A URI reference that identifies the specific occurrence of the problem.
+          examples:
+          - https://example.com/error-log/abc123
+          format: uri
+          type: string
+        status:
+          description: HTTP status code
+          examples:
+          - 400
+          format: int64
+          type: integer
+        title:
+          description: A short, human-readable summary of the problem type. This value should not change between occurrences of the error.
+          examples:
+          - Bad Request
+          type: string
+        type:
+          default: about:blank
+          description: A URI reference to human-readable documentation for the error.
+          examples:
+          - https://example.com/errors/example
+          format: uri
+          type: string
+      type: object
+    App:
+      additionalProperties: false
+      properties:
+        created_at:
+          description: The date and time this app was created.
+          format: date-time
+          type: string
+        health_status:
+          deprecated: true
+          description: This property is deprecated. It will always be 'healthy'.
+          enum:
+          - healthy
+          - warning
+          type: string
+        is_externally_accessible:
+          type: boolean
+        last_run:
+          $ref: '#/components/schemas/Run'
+          deprecated: true
+          description: 'Deprecated: always null, previously latest run of this app. Use "runs" in app summary instead.'
+        name:
+          description: The name of the app.
+          type: string
+        next_run_at:
+          description: The next time this app will run as part of it's schedule, null if none.
+          format: date-time
+          type:
+          - string
+          - 'null'
+        owner:
+          description: The account slug that owns this app.
+          type: string
+        pending_timeout:
+          default: 600
+          description: The maximum time in seconds that a run can stay in the pending state before being marked as cancelled.
+          format: int64
+          type: integer
+        retry_policy:
+          $ref: '#/components/schemas/RunRetryPolicy'
+          description: The retry policy for failed runs of this app.
+        run_results:
+          $ref: '#/components/schemas/RunResults'
+          description: The stats of all the runs of this app.
+        running_timeout:
+          default: 0
+          description: The number of seconds that a run can stay running before it gets cancelled. Value of 0 (default) means no timeout.
+          format: int64
+          type: integer
+        schedule:
+          deprecated: true
+          description: The schedule associated with this app, null if none.
+          type:
+          - string
+          - 'null'
+        short_description:
+          description: A short description of the app. Can be empty.
+          type: string
+        slug:
+          deprecated: true
+          description: This property is deprecated. Use name instead.
+          type: string
+        status:
+          description: The status of the app.
+          enum:
+          - active
+          - disabled
+          type: string
+        subdomain:
+          description: The subdomain that this app is accessible via. Must be externally accessible first.
+          type: string
+        tags:
+          description: The tags applied to the app.
+          items:
+            $ref: '#/components/schemas/AppTag'
+          type: array
+        version:
+          description: The current version of this app, null if none.
+          type:
+          - string
+          - 'null'
+      required:
+      - name
+      - owner
+      - short_description
+      - version
+      - schedule
+      - created_at
+      - next_run_at
+      - health_status
+      - is_externally_accessible
+      - pending_timeout
+      - running_timeout
+      type: object
+    ListAlertsResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/ListAlertsResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        alerts:
+          description: List of alerts
+          items:
+            $ref: '#/components/schemas/Alert'
+          type: array
+        pages:
+          $ref: '#/components/schemas/Pagination'
+          description: Pagination information
+      required:
+      - alerts
+      - pages
+      type: object
+  securitySchemes:
+    APIKeyAuth:
+      description: API key created by a Tower user or Tower service account to authenticate an API request.
+      in: header
+      name: X-API-Key
+      type: apiKey
+    AccessTokenAuth:
+      description: Access token authentication scheme which uses an access token provided by the Tower API as part of a Tower session (see documentation about creating sessions).
+      scheme: Bearer
+      type: http

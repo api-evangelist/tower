@@ -1,0 +1,224 @@
+openapi: 3.1.0
+info:
+  contact:
+    email: hello@tower.dev
+    name: Tower Computing GmbH
+    url: https://tower.dev
+  description: REST API to interact with Tower Services.
+  termsOfService: https://tower.dev/terms
+  title: Tower Accounts Usage API
+  version: v0.11.16
+servers:
+- url: https://api.tower.dev/v1
+tags:
+- name: Usage
+paths:
+  /usage:
+    get:
+      description: Describe usage statistics for the user's organization for the current billing cycle.
+      operationId: describe-organization-usage
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationUsage'
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Error
+      security:
+      - AccessTokenAuth:
+        - orgs
+      - APIKeyAuth:
+        - orgs
+      summary: Describe organization usage
+      tags:
+      - Usage
+  /usage/time-series:
+    get:
+      description: Get the previous 30 days of usage as a time series.
+      operationId: generate-organization-usage-time-series
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenerateOrganizationUsageTimeSeriesResponse'
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Error
+      security:
+      - AccessTokenAuth:
+        - orgs
+      - APIKeyAuth:
+        - orgs
+      summary: Generate organization usage
+      tags:
+      - Usage
+components:
+  schemas:
+    UsageMetricTimeSeriesPoint:
+      additionalProperties: false
+      properties:
+        date:
+          format: date-time
+          type: string
+        name:
+          enum:
+          - run_seconds
+          type: string
+        value:
+          format: int64
+          type: integer
+      required:
+      - date
+      - value
+      - name
+      type: object
+    UsageLimit:
+      additionalProperties: false
+      properties:
+        limit:
+          description: 'For numeric quotas: the maximum number of units allowed (-1 means unlimited). For boolean entitlements (e.g. self_hosted_runners): 0 = disabled, 1 = enabled.'
+          format: int64
+          type: integer
+        used:
+          description: The number of units used for this resource.
+          format: int64
+          type: integer
+      required:
+      - used
+      - limit
+      type: object
+    ErrorModel:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/ErrorModel.json
+          format: uri
+          readOnly: true
+          type: string
+        detail:
+          description: A human-readable explanation specific to this occurrence of the problem.
+          examples:
+          - Property foo is required but is missing.
+          type: string
+        errors:
+          description: Optional list of individual error details
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+        instance:
+          description: A URI reference that identifies the specific occurrence of the problem.
+          examples:
+          - https://example.com/error-log/abc123
+          format: uri
+          type: string
+        status:
+          description: HTTP status code
+          examples:
+          - 400
+          format: int64
+          type: integer
+        title:
+          description: A short, human-readable summary of the problem type. This value should not change between occurrences of the error.
+          examples:
+          - Bad Request
+          type: string
+        type:
+          default: about:blank
+          description: A URI reference to human-readable documentation for the error.
+          examples:
+          - https://example.com/errors/example
+          format: uri
+          type: string
+      type: object
+    GenerateOrganizationUsageTimeSeriesResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/GenerateOrganizationUsageTimeSeriesResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        series:
+          items:
+            $ref: '#/components/schemas/UsageMetricTimeSeriesPoint'
+          type: array
+      required:
+      - series
+      type: object
+    OrganizationUsage:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/OrganizationUsage.json
+          format: uri
+          readOnly: true
+          type: string
+        active_schedules:
+          $ref: '#/components/schemas/UsageLimit'
+          description: Number of active schedules in the organization.
+        apps:
+          $ref: '#/components/schemas/UsageLimit'
+          description: Number of applications in the organization.
+        base_plan_name:
+          description: The name of the organization's base plan.
+          type: string
+        compute_minutes:
+          $ref: '#/components/schemas/UsageLimit'
+          description: Number of compute minutes used in the current billing cycle.
+        members:
+          $ref: '#/components/schemas/UsageLimit'
+          description: Number of users in the organization.
+        organization_name:
+          description: The name of the organization.
+          type: string
+        self_hosted_runners:
+          $ref: '#/components/schemas/UsageLimit'
+          description: Whether the organization has the ability to use self-hosted runners.
+      required:
+      - organization_name
+      - base_plan_name
+      - members
+      - apps
+      - active_schedules
+      - compute_minutes
+      - self_hosted_runners
+      type: object
+    ErrorDetail:
+      additionalProperties: false
+      properties:
+        location:
+          description: Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id'
+          type: string
+        message:
+          description: Error message text
+          type: string
+        value:
+          description: The value at the given location
+      type: object
+  securitySchemes:
+    APIKeyAuth:
+      description: API key created by a Tower user or Tower service account to authenticate an API request.
+      in: header
+      name: X-API-Key
+      type: apiKey
+    AccessTokenAuth:
+      description: Access token authentication scheme which uses an access token provided by the Tower API as part of a Tower session (see documentation about creating sessions).
+      scheme: Bearer
+      type: http

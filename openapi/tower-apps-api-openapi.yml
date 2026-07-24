@@ -1,0 +1,2118 @@
+openapi: 3.1.0
+info:
+  contact:
+    email: hello@tower.dev
+    name: Tower Computing GmbH
+    url: https://tower.dev
+  description: REST API to interact with Tower Services.
+  termsOfService: https://tower.dev/terms
+  title: Tower Accounts Apps API
+  version: v0.11.16
+servers:
+- url: https://api.tower.dev/v1
+tags:
+- name: Apps
+paths:
+  /apps:
+    get:
+      description: Get all the apps for the current account.
+      operationId: list-apps
+      parameters:
+      - description: The page number to fetch.
+        explode: false
+        in: query
+        name: page
+        schema:
+          default: 1
+          description: The page number to fetch.
+          format: int64
+          type: integer
+      - description: The number of records to fetch on each page.
+        explode: false
+        in: query
+        name: page_size
+        schema:
+          default: 20
+          description: The number of records to fetch on each page.
+          format: int64
+          type: integer
+      - description: The tag query to filter apps by. Provide a serialized TagFilter as the value for the parameter.
+        example: tag_filter={"op":"eq","name":"foo","value":"bar"}
+        explode: false
+        in: query
+        name: tag_filter
+        schema:
+          description: The tag query to filter apps by. Provide a serialized TagFilter as the value for the parameter.
+          examples:
+          - tag_filter={"op":"eq","name":"foo","value":"bar"}
+          type: string
+      - description: The search query to filter apps by.
+        explode: false
+        in: query
+        name: query
+        schema:
+          description: The search query to filter apps by.
+          type: string
+      - description: Number of recent runs to fetch (-1 for all runs, defaults to 20)
+        explode: false
+        in: query
+        name: num_runs
+        schema:
+          default: 20
+          description: Number of recent runs to fetch (-1 for all runs, defaults to 20)
+          format: int64
+          type: integer
+      - description: Sort order for the results.
+        explode: false
+        in: query
+        name: sort
+        schema:
+          default: created_at
+          description: Sort order for the results.
+          enum:
+          - most_recent_run
+          - a_to_z
+          - created_at
+          - updated_at
+          type: string
+      - description: Filter to see apps with certain statuses.
+        explode: false
+        in: query
+        name: filter
+        schema:
+          description: Filter to see apps with certain statuses.
+          enum:
+          - disabled
+          - running
+          - withWarning
+          - healthy
+          - scheduled
+          type: string
+      - description: The environment to filter the apps by. If not provided, apps for all environments will be returned.
+        explode: false
+        in: query
+        name: environment
+        schema:
+          description: The environment to filter the apps by. If not provided, apps for all environments will be returned.
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListAppsResponse'
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Error
+      security:
+      - AccessTokenAuth:
+        - apps:read
+      - APIKeyAuth:
+        - apps:read
+      summary: List apps
+      x-shoulder-tap-events:
+      - apps.*
+      - runs.*
+      tags:
+      - Apps
+    post:
+      description: Create a new app in the current account.
+      operationId: create-app
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAppParams'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateAppResponse'
+          description: Created
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Error
+      security:
+      - AccessTokenAuth:
+        - apps:create
+      - APIKeyAuth:
+        - apps:create
+      summary: Create app
+      tags:
+      - Apps
+  /apps/{name}:
+    delete:
+      description: Delete one of your apps, the associated code, and all the runs as well.
+      operationId: delete-app
+      parameters:
+      - description: The name of the app to delete.
+        in: path
+        name: name
+        required: true
+        schema:
+          description: The name of the app to delete.
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteAppResponse'
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Error
+      security:
+      - AccessTokenAuth:
+        - apps:delete
+      - APIKeyAuth:
+        - apps:delete
+      summary: Delete app
+      tags:
+      - Apps
+    get:
+      description: Get all the runs for the current account.
+      operationId: describe-app
+      parameters:
+      - description: The name of the app to fetch.
+        in: path
+        name: name
+        required: true
+        schema:
+          description: The name of the app to fetch.
+          type: string
+      - description: The number of recent runs to fetch for the app.
+        explode: false
+        in: query
+        name: runs
+        schema:
+          description: The number of recent runs to fetch for the app.
+          format: int64
+          type: integer
+      - description: Filter runs scheduled after this datetime (inclusive). Provide timestamps in ISO-8601 format.
+        explode: false
+        in: query
+        name: start_at
+        schema:
+          description: Filter runs scheduled after this datetime (inclusive). Provide timestamps in ISO-8601 format.
+          format: date-time
+          type: string
+      - description: Filter runs scheduled before or at this datetime (inclusive). Provide timestamps in ISO-8601 format.
+        explode: false
+        in: query
+        name: end_at
+        schema:
+          description: Filter runs scheduled before or at this datetime (inclusive). Provide timestamps in ISO-8601 format.
+          format: date-time
+          type: string
+      - description: Timezone for the statistics (e.g., 'Europe/Berlin'). Defaults to UTC.
+        explode: false
+        in: query
+        name: timezone
+        schema:
+          default: UTC
+          description: Timezone for the statistics (e.g., 'Europe/Berlin'). Defaults to UTC.
+          type: string
+      - description: The environment to resolve the app version against. Defaults to 'default'.
+        explode: false
+        in: query
+        name: environment
+        schema:
+          default: default
+          description: The environment to resolve the app version against. Defaults to 'default'.
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DescribeAppResponse'
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Error
+      security:
+      - AccessTokenAuth:
+        - apps:read
+      - APIKeyAuth:
+        - apps:read
+      summary: Describe app
+      x-shoulder-tap-events:
+      - apps.{name}.*
+      - runs.{name}.*
+      tags:
+      - Apps
+    put:
+      description: Update an app in the currently authenticated account.
+      operationId: update-app
+      parameters:
+      - description: The name of the App to update.
+        in: path
+        name: name
+        required: true
+        schema:
+          description: The name of the App to update.
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAppParams'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateAppResponse'
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Error
+      security:
+      - AccessTokenAuth:
+        - apps:update
+      - APIKeyAuth:
+        - apps:update
+      summary: Update app
+      tags:
+      - Apps
+  /apps/{name}/deploy:
+    post:
+      description: Deploy a new version of an app. Accepts either a TAR file upload (application/tar) or a JSON body with source_uri (application/json) for deploying from a GitHub repository.
+      operationId: deploy-app
+      parameters:
+      - description: The name of the app to deploy.
+        in: path
+        name: name
+        required: true
+        schema:
+          description: The name of the app to deploy.
+          type: string
+      - description: The SHA256 hash of the content, used to verify integrity.
+        in: header
+        name: X-Tower-Checksum-SHA256
+        schema:
+          description: The SHA256 hash of the content, used to verify integrity.
+          type: string
+      - description: Optional opaque key (typically a git commit SHA or CI build ID). If a prior deploy for this app supplied the same value, the server reuses that AppVersion instead of creating a new one — letting consecutive deploys to different environments share a single version when the source hasn't changed.
+        in: header
+        name: X-Tower-Idempotency-Key
+        schema:
+          description: Optional opaque key (typically a git commit SHA or CI build ID). If a prior deploy for this app supplied the same value, the server reuses that AppVersion instead of creating a new one — letting consecutive deploys to different environments share a single version when the source hasn't changed.
+          type: string
+      - description: Size of the uploaded bundle in bytes.
+        in: header
+        name: Content-Length
+        schema:
+          description: Size of the uploaded bundle in bytes.
+          format: int64
+          type: integer
+      - description: The environment to deploy to.
+        explode: false
+        in: query
+        name: environment
+        schema:
+          description: The environment to deploy to.
+          type: string
+      - description: Whether to deploy to all environments for this app. If true, the 'environment' query parameter is ignored.
+        explode: false
+        in: query
+        name: all_environments
+        schema:
+          default: false
+          description: Whether to deploy to all environments for this app. If true, the 'environment' query parameter is ignored.
+          type: boolean
+      requestBody:
+        content:
+          application/json:
+            schema:
+              examples:
+              - source_uri: https://github.com/tower/tower-examples/tree/main/01-hello-world
+              properties:
+                source_uri:
+                  description: GitHub repository URL for deploying from source
+                  format: uri
+                  type: string
+              required:
+              - source_uri
+              type: object
+          application/octet-stream:
+            schema:
+              contentMediaType: application/octet-stream
+              description: A .tar or .tar.gz file containing the code to deploy and MANIFEST
+              examples:
+              - <binary tar file stream>
+              format: binary
+              type: string
+        description: Deploy app using either a tar file upload or GitHub source URL
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeployAppResponse'
+          description: Created
+        '400':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Bad Request
+        '422':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Unprocessable Entity
+        '500':
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Internal Server Error
+      security:
+      - AccessTokenAuth:
+        - apps:deploy
+      - APIKeyAuth:
+        - apps:deploy
+      summary: Deploy app
+      tags:
+      - Apps
+  /apps/{name}/environments:
+    get:
+      description: Generates a list of all the known environments for a given app in the current account.
+      operationId: list-app-environments
+      parameters:
+      - description: The name of the app to get the version for.
+        in: path
+        name: name
+        required: true
+        schema:
+          description: The name of the app to get the version for.
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListAppEnvironmentsResponse'
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Error
+      security:
+      - AccessTokenAuth:
+        - apps:read
+      - APIKeyAuth:
+        - apps:read
+      summary: List app environments
+      x-shoulder-tap-events:
+      - apps.{name}.*
+      tags:
+      - Apps
+  /apps/{name}/environments/{environment}:
+    put:
+      description: Update the configuration of an app in a specific environment, such as which version is deployed.
+      operationId: update-app-environment
+      parameters:
+      - description: The name of the app.
+        in: path
+        name: name
+        required: true
+        schema:
+          description: The name of the app.
+          type: string
+      - description: The name of the environment.
+        in: path
+        name: environment
+        required: true
+        schema:
+          description: The name of the environment.
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAppEnvironmentParams'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateAppEnvironmentResponse'
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Error
+      security:
+      - AccessTokenAuth:
+        - apps:deploy
+      - APIKeyAuth:
+        - apps:deploy
+      summary: Update app environment
+      tags:
+      - Apps
+  /apps/{name}/runs:
+    get:
+      description: Generates a list of all the runs for a given app. The list is paginated based on the query string parameters passed in.
+      operationId: list-runs
+      parameters:
+      - description: The page number to fetch.
+        explode: false
+        in: query
+        name: page
+        schema:
+          default: 1
+          description: The page number to fetch.
+          format: int64
+          type: integer
+      - description: The number of records to fetch on each page.
+        explode: false
+        in: query
+        name: page_size
+        schema:
+          default: 20
+          description: The number of records to fetch on each page.
+          format: int64
+          type: integer
+      - description: The name of the app to fetch runs for.
+        in: path
+        name: name
+        required: true
+        schema:
+          description: The name of the app to fetch runs for.
+          type: string
+      - description: Filter runs by status(es). Define multiple with a comma-separated list. Supplying none will return all statuses.
+        explode: false
+        in: query
+        name: status
+        schema:
+          default:
+          - pending
+          - starting
+          - running
+          - crashed
+          - errored
+          - exited
+          - cancelled
+          - retrying
+          description: Filter runs by status(es). Define multiple with a comma-separated list. Supplying none will return all statuses.
+          items:
+            enum:
+            - pending
+            - starting
+            - running
+            - crashed
+            - errored
+            - exited
+            - cancelled
+            - retrying
+            type: string
+          type: array
+      - description: Filter runs scheduled after or at this datetime (inclusive)
+        explode: false
+        in: query
+        name: start_at
+        schema:
+          description: Filter runs scheduled after or at this datetime (inclusive)
+          format: date-time
+          type: string
+      - description: Filter runs scheduled before or at this datetime (inclusive)
+        explode: false
+        in: query
+        name: end_at
+        schema:
+          description: Filter runs scheduled before or at this datetime (inclusive)
+          format: date-time
+          type: string
+      - description: Filter runs by environment. If not provided, all environments will be included.
+        explode: false
+        in: query
+        name: environment
+        schema:
+          description: Filter runs by environment. If not provided, all environments will be included.
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListRunsResponse'
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Error
+      security:
+      - AccessTokenAuth:
+        - runs:read
+      - APIKeyAuth:
+        - runs:read
+      summary: List runs
+      x-shoulder-tap-events:
+      - runs.*
+      tags:
+      - Apps
+    post:
+      description: Runs an app with the supplied parameters.
+      operationId: run-app
+      parameters:
+      - description: The name of the app to fetch runs for.
+        in: path
+        name: name
+        required: true
+        schema:
+          description: The name of the app to fetch runs for.
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RunAppParams'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RunAppResponse'
+                type: object
+          description: Created
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+                type: object
+          description: Unauthorized
+      security:
+      - AccessTokenAuth:
+        - apps:run
+      - APIKeyAuth:
+        - apps:run
+      summary: Run app
+      tags:
+      - Apps
+  /apps/{name}/runs/{seq}:
+    get:
+      description: Describe a run of an app.
+      operationId: describe-run
+      parameters:
+      - description: The name of the app to fetch runs for.
+        in: path
+        name: name
+        required: true
+        schema:
+          description: The name of the app to fetch runs for.
+          type: string
+      - description: The number of the run to fetch.
+        in: path
+        name: seq
+        required: true
+        schema:
+          description: The number of the run to fetch.
+          format: int64
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DescribeRunResponse'
+          description: OK
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+                type: object
+          description: Unauthorized
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+                type: object
+          description: Not found
+      security:
+      - AccessTokenAuth:
+        - runs:read
+      - APIKeyAuth:
+        - runs:read
+      summary: Describe run
+      x-shoulder-tap-events:
+      - runs.{name}.{seq}.*
+      tags:
+      - Apps
+    post:
+      description: Cancel a run
+      operationId: cancel-run
+      parameters:
+      - description: The name of the app to fetch runs for.
+        in: path
+        name: name
+        required: true
+        schema:
+          description: The name of the app to fetch runs for.
+          type: string
+      - description: The number of the run to fetch.
+        in: path
+        name: seq
+        required: true
+        schema:
+          description: The number of the run to fetch.
+          format: int64
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CancelRunResponse'
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Error
+      security:
+      - AccessTokenAuth:
+        - runs:cancel
+      - APIKeyAuth:
+        - runs:cancel
+      summary: Cancel run
+      tags:
+      - Apps
+  /apps/{name}/runs/{seq}/graph:
+    get:
+      description: Describe the graph that a run belongs to.
+      operationId: describe-run-graph
+      parameters:
+      - description: The name of the app.
+        in: path
+        name: name
+        required: true
+        schema:
+          description: The name of the app.
+          type: string
+      - description: The number of the run to fetch.
+        in: path
+        name: seq
+        required: true
+        schema:
+          description: The number of the run to fetch.
+          format: int64
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DescribeRunGraphResponse'
+          description: OK
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+                type: object
+          description: Unauthorized
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+                type: object
+          description: Not found
+      security:
+      - AccessTokenAuth:
+        - runs:read
+      - APIKeyAuth:
+        - runs:read
+      summary: Describe run graph
+      x-shoulder-tap-events:
+      - run-graph.{name}.{seq}.updated
+      tags:
+      - Apps
+  /apps/{name}/runs/{seq}/logs:
+    get:
+      description: Retrieves the logs associated with a particular run of an app.
+      operationId: describe-run-logs
+      parameters:
+      - description: The name of the app to get logs for.
+        in: path
+        name: name
+        required: true
+        schema:
+          description: The name of the app to get logs for.
+          type: string
+      - description: The sequence number of the run to get logs for.
+        in: path
+        name: seq
+        required: true
+        schema:
+          description: The sequence number of the run to get logs for.
+          format: int64
+          type: integer
+      - description: Fetch logs from this timestamp onwards (inclusive).
+        explode: false
+        in: query
+        name: start_at
+        schema:
+          description: Fetch logs from this timestamp onwards (inclusive).
+          format: date-time
+          type: string
+      - description: Return only the first N log lines. Cannot be combined with tail.
+        explode: false
+        in: query
+        name: head
+        schema:
+          description: Return only the first N log lines. Cannot be combined with tail.
+          format: int64
+          minimum: 1
+          type: integer
+      - description: Return only the last N log lines. Cannot be combined with head.
+        explode: false
+        in: query
+        name: tail
+        schema:
+          description: Return only the last N log lines. Cannot be combined with head.
+          format: int64
+          minimum: 1
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DescribeRunLogsResponse'
+          description: OK
+          headers:
+            ContentType:
+              schema:
+                type: string
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Error
+      security:
+      - AccessTokenAuth:
+        - runs:read
+      - APIKeyAuth:
+        - runs:read
+      summary: Describe run logs
+      tags:
+      - Apps
+  /apps/{name}/runs/{seq}/logs/stream:
+    get:
+      description: Streams the logs associated with a particular run of an app in real-time.
+      operationId: stream-run-logs
+      parameters:
+      - description: The name of the app to get logs for.
+        in: path
+        name: name
+        required: true
+        schema:
+          description: The name of the app to get logs for.
+          type: string
+      - description: The sequence number of the run to get logs for.
+        in: path
+        name: seq
+        required: true
+        schema:
+          description: The sequence number of the run to get logs for.
+          format: int64
+          type: integer
+      responses:
+        '200':
+          content:
+            text/event-stream:
+              schema:
+                description: Each oneOf object in the array represents one possible Server Sent Events (SSE) message, serialized as UTF-8 text according to the SSE specification.
+                items:
+                  oneOf:
+                  - properties:
+                      data:
+                        $ref: '#/components/schemas/RunLogLine'
+                      event:
+                        const: log
+                        description: The event name.
+                        type: string
+                      id:
+                        description: The event ID.
+                        type: integer
+                      retry:
+                        description: The retry time in milliseconds.
+                        type: integer
+                    required:
+                    - data
+                    - event
+                    title: Event log
+                    type: object
+                  - properties:
+                      data:
+                        $ref: '#/components/schemas/SSEWarning'
+                      event:
+                        const: warning
+                        description: The event name.
+                        type: string
+                      id:
+                        description: The event ID.
+                        type: integer
+                      retry:
+                        description: The retry time in milliseconds.
+                        type: integer
+                    required:
+                    - data
+                    - event
+                    title: Event warning
+                    type: object
+                title: Server Sent Events
+                type: array
+          description: SSE log stream
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Error
+      security:
+      - AccessTokenAuth:
+        - runs:read
+      - APIKeyAuth:
+        - runs:read
+      summary: Stream run logs
+      tags:
+      - Apps
+  /apps/{name}/versions:
+    get:
+      description: List all versions of an app in the current account, sorted with the most recent first.
+      operationId: list-app-versions
+      parameters:
+      - description: The name of the app to list versions for.
+        in: path
+        name: name
+        required: true
+        schema:
+          description: The name of the app to list versions for.
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListAppVersionsResponse'
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Error
+      security:
+      - AccessTokenAuth:
+        - apps:read
+      - APIKeyAuth:
+        - apps:read
+      summary: List app versions
+      x-shoulder-tap-events:
+      - apps.{name}.*
+      tags:
+      - Apps
+  /apps/{name}/versions/{num}:
+    get:
+      description: Describe an app version for an app in the current account.
+      operationId: describe-app-version
+      parameters:
+      - description: The name of the app to get the version for.
+        in: path
+        name: name
+        required: true
+        schema:
+          description: The name of the app to get the version for.
+          type: string
+      - description: The version string to get the version for.
+        in: path
+        name: num
+        required: true
+        schema:
+          description: The version string to get the version for.
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DescribeAppVersionResponse'
+          description: OK
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorModel'
+          description: Error
+      security:
+      - AccessTokenAuth:
+        - apps:read
+      - APIKeyAuth:
+        - apps:read
+      summary: Describe app version
+      tags:
+      - Apps
+components:
+  schemas:
+    SSEWarning:
+      additionalProperties: false
+      properties:
+        content:
+          description: Contents of the warning.
+          type: string
+        end_of_stream:
+          description: When true, the server has delivered every log line and is closing the stream; clients should stop and not reconnect.
+          type: boolean
+        reported_at:
+          description: Timestamp of the event.
+          format: date-time
+          type: string
+      required:
+      - reported_at
+      - content
+      type: object
+    RunAppResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/RunAppResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        run:
+          $ref: '#/components/schemas/Run'
+      required:
+      - run
+      type: object
+    ListRunsResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/ListRunsResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        pages:
+          $ref: '#/components/schemas/Pagination'
+        runs:
+          items:
+            $ref: '#/components/schemas/Run'
+          type: array
+      required:
+      - pages
+      - runs
+      type: object
+    ListAppsResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/ListAppsResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        apps:
+          items:
+            $ref: '#/components/schemas/AppSummary'
+          type: array
+        pages:
+          $ref: '#/components/schemas/Pagination'
+      required:
+      - apps
+      - pages
+      type: object
+    RunRetryPolicy:
+      additionalProperties: false
+      properties:
+        max_retries:
+          format: int64
+          type: integer
+        retry_delay_seconds:
+          format: int64
+          type: integer
+        use_exponential_backoff:
+          type: boolean
+      required:
+      - max_retries
+      - retry_delay_seconds
+      - use_exponential_backoff
+      type: object
+    RunGraphNode:
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/RunGraphRunID'
+        parent_id:
+          $ref: '#/components/schemas/RunGraphRunID'
+      required:
+      - id
+      - parent_id
+      type: object
+    RunCreator:
+      additionalProperties: false
+      properties:
+        name:
+          description: 'The creator''s name: a user''s full name (or email) or a service account''s name.'
+          readOnly: true
+          type: string
+        type:
+          description: The kind of principal that created the run.
+          enum:
+          - user
+          - service_account
+          type: string
+      required:
+      - type
+      - name
+      type: object
+    RunAppInitiatorData:
+      additionalProperties: false
+      properties:
+        type:
+          description: The type of the initiator for this run.
+          enum:
+          - tower_run
+          - tower_cli
+          - tower_ui
+          type: string
+      required:
+      - type
+      type: object
+    ErrorDetail:
+      additionalProperties: false
+      properties:
+        location:
+          description: Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id'
+          type: string
+        message:
+          description: Error message text
+          type: string
+        value:
+          description: The value at the given location
+      type: object
+    CreateAppParams:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/CreateAppParams.json
+          format: uri
+          readOnly: true
+          type: string
+        is_externally_accessible:
+          default: false
+          description: Indicates that web traffic should be routed to this app and that its runs should get a hostname assigned to it.
+          type: boolean
+        name:
+          description: The name of the app.
+          maxLength: 100
+          minLength: 1
+          type: string
+        pending_timeout:
+          description: The amount of time in seconds that runs of this app can stay in pending state before being marked as failed.
+          format: int64
+          type:
+          - integer
+          - 'null'
+        retry_policy:
+          $ref: '#/components/schemas/RunRetryPolicy'
+          description: The retry policy for failed runs of this app. Defines different retry behavior for infrastructure (errored) vs application (crashed) failures.
+        running_timeout:
+          description: The amount of time in seconds that runs of this app can stay in running state before being marked as failed.
+          format: int64
+          type:
+          - integer
+          - 'null'
+        short_description:
+          description: A description of the app.
+          type: string
+        slug:
+          deprecated: true
+          description: The slug of the app. Legacy CLI will send it but we don't need it.
+          type: string
+        subdomain:
+          description: The subdomain this app is accessible under. Requires is_externally_accessible to be true.
+          type:
+          - string
+          - 'null'
+        tags:
+          description: The tags for this app.
+          items:
+            $ref: '#/components/schemas/AppTag'
+          type: array
+      required:
+      - name
+      type: object
+    DescribeAppVersionResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/DescribeAppVersionResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        version:
+          $ref: '#/components/schemas/AppVersion'
+      required:
+      - version
+      type: object
+    UpdateAppParams:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/UpdateAppParams.json
+          format: uri
+          readOnly: true
+          type: string
+        description:
+          deprecated: true
+          description: 'Deprecated: use short_description instead.'
+          type:
+          - string
+          - 'null'
+        is_externally_accessible:
+          description: Indicates that web traffic should be routed to this app and that its runs should get a hostname assigned to it.
+          type:
+          - boolean
+          - 'null'
+        pending_timeout:
+          description: The amount of time in seconds that runs of this app can stay in pending state before being marked as failed.
+          format: int64
+          type:
+          - integer
+          - 'null'
+        retry_policy:
+          $ref: '#/components/schemas/RunRetryPolicy'
+          description: The retry policy for failed runs of this app. Defines different retry behavior for infrastructure (errored) vs application (crashed) failures.
+        running_timeout:
+          description: The amount of time in seconds that runs of this app can stay in running state before being marked as failed.
+          format: int64
+          type:
+          - integer
+          - 'null'
+        short_description:
+          description: New description for the app.
+          type:
+          - string
+          - 'null'
+        status:
+          description: New status for the App
+          type:
+          - string
+          - 'null'
+        subdomain:
+          description: The subdomain this app is accessible under. Requires is_externally_accessible to be true.
+          type:
+          - string
+          - 'null'
+        tags:
+          description: The tags for this app.
+          items:
+            $ref: '#/components/schemas/AppTag'
+          type: array
+      type: object
+    AppVersion:
+      additionalProperties: false
+      properties:
+        content_checksum:
+          description: Server-computed SHA256 of the bundle contents for this version.
+          type: string
+        created_at:
+          format: date-time
+          type: string
+        idempotency_key:
+          description: Client-supplied key (e.g. git SHA) that produced this version, or empty if none was supplied at deploy time.
+          type: string
+        parameters:
+          items:
+            $ref: '#/components/schemas/Parameter'
+          type: array
+        towerfile:
+          description: The Towerfile that this version was created from.
+          type: string
+        version:
+          type: string
+      required:
+      - version
+      - parameters
+      - created_at
+      - towerfile
+      type: object
+    Parameter:
+      additionalProperties: false
+      properties:
+        default:
+          type: string
+        description:
+          type: string
+        hidden:
+          default: false
+          description: Whether this parameter is hidden/secret. Defaults to false.
+          type: boolean
+        name:
+          type: string
+      required:
+      - name
+      - default
+      - description
+      type: object
+    ListAppVersionsResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/ListAppVersionsResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        versions:
+          items:
+            $ref: '#/components/schemas/AppVersion'
+          type: array
+      required:
+      - versions
+      type: object
+    RunLogLine:
+      additionalProperties: false
+      properties:
+        attempt_seq:
+          description: The attempt number this log line belongs to (1-based). Attempt 1 is the original execution; 2+ are retries.
+          format: int64
+          type: integer
+        channel:
+          description: The channel this log line belongs to.
+          enum:
+          - program
+          - setup
+          type: string
+        content:
+          description: Contents of the log message.
+          type: string
+        line_num:
+          description: Line number.
+          format: int64
+          type: integer
+        message:
+          deprecated: true
+          description: This property is deprecated. Use content instead.
+          type: string
+        reported_at:
+          description: Timestamp of the log line.
+          format: date-time
+          type: string
+        run_id:
+          description: The uuid of the Run.
+          type: string
+        timestamp:
+          deprecated: true
+          description: This property is deprecated. Use reported_at instead.
+          format: date-time
+          type: string
+      required:
+      - run_id
+      - channel
+      - reported_at
+      - line_num
+      - content
+      - attempt_seq
+      type: object
+    AppSummary:
+      additionalProperties: false
+      properties:
+        app:
+          $ref: '#/components/schemas/App'
+        runs:
+          items:
+            $ref: '#/components/schemas/Run'
+          type: array
+      required:
+      - app
+      - runs
+      type: object
+    Pagination:
+      additionalProperties: false
+      properties:
+        num_pages:
+          format: int64
+          type: integer
+        page:
+          format: int64
+          type: integer
+        page_size:
+          format: int64
+          type: integer
+        total:
+          format: int64
+          type: integer
+      required:
+      - page
+      - total
+      - num_pages
+      - page_size
+      type: object
+    Run:
+      additionalProperties: false
+      properties:
+        $link:
+          deprecated: true
+          description: $link is deprecated. Individual responses include links.
+          type: string
+        app_name:
+          type: string
+        app_slug:
+          deprecated: true
+          description: This property is deprecated. Use app_name instead.
+          type: string
+        app_version:
+          type: string
+        attempts:
+          description: Previous attempt details. Populated on describe, omitted on list.
+          items:
+            $ref: '#/components/schemas/RunAttempt'
+          type: array
+        cancelled_at:
+          format: date-time
+          type:
+          - string
+          - 'null'
+        created_at:
+          format: date-time
+          type: string
+        created_by:
+          $ref: '#/components/schemas/RunCreator'
+          description: The principal that created this run. Null on legacy rows that predate principal tracking.
+        ended_at:
+          format: date-time
+          type:
+          - string
+          - 'null'
+        environment:
+          type: string
+        exit_code:
+          description: Exit code of the run, if the run is completed. Null if there is no exit code
+          format: int64
+          type:
+          - integer
+          - 'null'
+        hostname:
+          deprecated: true
+          description: hostname is deprecated, use subdomain
+          type: string
+        initiator:
+          $ref: '#/components/schemas/RunInitiator'
+          description: Run initiator information
+        is_scheduled:
+          description: Whether this run was triggered by a schedule (true) or on-demand (false). Historical records default to false.
+          type: boolean
+        num_attempts:
+          description: Number of attempts for this run (1 = original, 2+ = retries).
+          format: int64
+          type: integer
+        number:
+          format: int64
+          type: integer
+        parameters:
+          description: Parameters used to invoke this run.
+          items:
+            $ref: '#/components/schemas/RunParameter'
+          type: array
+        retry_policy:
+          $ref: '#/components/schemas/RunRetryPolicy'
+          description: Retry policy configured for this run.
+        run_id:
+          type: string
+        scheduled_at:
+          format: date-time
+          type: string
+        started_at:
+          description: When the run started executing your code.
+          format: date-time
+          type:
+          - string
+          - 'null'
+        starting_at:
+          description: When the runner environment started to get setup.
+          format: date-time
+          type:
+          - string
+          - 'null'
+        status:
+          enum:
+          - scheduled
+          - retrying
+          - pending
+          - starting
+          - running
+          - crashed
+          - errored
+          - exited
+          - cancelled
+          type: string
+        status_group:
+          enum:
+          - successful
+          - failed
+          - ''
+          type: string
+        subdomain:
+          description: If app is externally accessible, then you can access this run with this hostname.
+          type:
+          - string
+          - 'null'
+      required:
+      - run_id
+      - number
+      - app_name
+      - status
+      - status_group
+      - is_scheduled
+      - parameters
+      - environment
+      - exit_code
+      - created_at
+      - scheduled_at
+      - cancelled_at
+      - starting_at
+      - started_at
+      - ended_at
+      - app_version
+      - initiator
+      - num_attempts
+      - $link
+      type: object
+    RunResults:
+      additionalProperties: false
+      properties:
+        cancelled:
+          format: int64
+          type: integer
+        crashed:
+          format: int64
+          type: integer
+        errored:
+          format: int64
+          type: integer
+        exited:
+          format: int64
+          type: integer
+        pending:
+          format: int64
+          type: integer
+        retrying:
+          format: int64
+          type: integer
+        running:
+          format: int64
+          type: integer
+        starting:
+          format: int64
+          type: integer
+      required:
+      - pending
+      - starting
+      - running
+      - exited
+      - errored
+      - crashed
+      - cancelled
+      - retrying
+      type: object
+    RunGraphRunID:
+      additionalProperties: false
+      properties:
+        app_name:
+          type: string
+        number:
+          format: int64
+          type: integer
+      required:
+      - app_name
+      - number
+      type: object
+    App:
+      additionalProperties: false
+      properties:
+        created_at:
+          description: The date and time this app was created.
+          format: date-time
+          type: string
+        health_status:
+          deprecated: true
+          description: This property is deprecated. It will always be 'healthy'.
+          enum:
+          - healthy
+          - warning
+          type: string
+        is_externally_accessible:
+          type: boolean
+        last_run:
+          $ref: '#/components/schemas/Run'
+          deprecated: true
+          description: 'Deprecated: always null, previously latest run of this app. Use "runs" in app summary instead.'
+        name:
+          description: The name of the app.
+          type: string
+        next_run_at:
+          description: The next time this app will run as part of it's schedule, null if none.
+          format: date-time
+          type:
+          - string
+          - 'null'
+        owner:
+          description: The account slug that owns this app.
+          type: string
+        pending_timeout:
+          default: 600
+          description: The maximum time in seconds that a run can stay in the pending state before being marked as cancelled.
+          format: int64
+          type: integer
+        retry_policy:
+          $ref: '#/components/schemas/RunRetryPolicy'
+          description: The retry policy for failed runs of this app.
+        run_results:
+          $ref: '#/components/schemas/RunResults'
+          description: The stats of all the runs of this app.
+        running_timeout:
+          default: 0
+          description: The number of seconds that a run can stay running before it gets cancelled. Value of 0 (default) means no timeout.
+          format: int64
+          type: integer
+        schedule:
+          deprecated: true
+          description: The schedule associated with this app, null if none.
+          type:
+          - string
+          - 'null'
+        short_description:
+          description: A short description of the app. Can be empty.
+          type: string
+        slug:
+          deprecated: true
+          description: This property is deprecated. Use name instead.
+          type: string
+        status:
+          description: The status of the app.
+          enum:
+          - active
+          - disabled
+          type: string
+        subdomain:
+          description: The subdomain that this app is accessible via. Must be externally accessible first.
+          type: string
+        tags:
+          description: The tags applied to the app.
+          items:
+            $ref: '#/components/schemas/AppTag'
+          type: array
+        version:
+          description: The current version of this app, null if none.
+          type:
+          - string
+          - 'null'
+      required:
+      - name
+      - owner
+      - short_description
+      - version
+      - schedule
+      - created_at
+      - next_run_at
+      - health_status
+      - is_externally_accessible
+      - pending_timeout
+      - running_timeout
+      type: object
+    RunAttempt:
+      additionalProperties: false
+      properties:
+        ended_at:
+          description: When this attempt ended.
+          format: date-time
+          type:
+          - string
+          - 'null'
+        exit_code:
+          description: Exit code for this attempt.
+          format: int64
+          type:
+          - integer
+          - 'null'
+        seq:
+          description: 1-based attempt number.
+          format: int64
+          type: integer
+        started_at:
+          description: When the run started executing your code.
+          format: date-time
+          type:
+          - string
+          - 'null'
+        starting_at:
+          description: When the runner environment started to get setup.
+          format: date-time
+          type:
+          - string
+          - 'null'
+        status:
+          description: Terminal status of this attempt.
+          type: string
+      required:
+      - seq
+      - status
+      - starting_at
+      - started_at
+      - ended_at
+      - exit_code
+      type: object
+    AppTag:
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+        value:
+          type: string
+      required:
+      - name
+      - value
+      type: object
+    DescribeRunGraphResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/DescribeRunGraphResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        runs:
+          items:
+            $ref: '#/components/schemas/RunGraphNode'
+          type: array
+      required:
+      - runs
+      type: object
+    RunInitiator:
+      additionalProperties: false
+      properties:
+        details:
+          description: Additional information about the initiator of a run.
+          oneOf:
+          - $ref: '#/components/schemas/ScheduleRunInitiatorDetails'
+          - $ref: '#/components/schemas/RunRunInitiatorDetails'
+          type: object
+        type:
+          description: The type of initiator for this run. Null if none or unknown.
+          type:
+          - string
+          - 'null'
+      required:
+      - type
+      - details
+      type: object
+    UpdateAppResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/UpdateAppResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        App:
+          $ref: '#/components/schemas/App'
+          deprecated: true
+          description: Deprecated field. Use 'app' instead.
+        app:
+          $ref: '#/components/schemas/App'
+      required:
+      - app
+      - App
+      type: object
+    DescribeAppResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/DescribeAppResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        app:
+          $ref: '#/components/schemas/App'
+        runs:
+          items:
+            $ref: '#/components/schemas/Run'
+          type: array
+      required:
+      - app
+      - runs
+      type: object
+    UpdateAppEnvironmentParams:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/UpdateAppEnvironmentParams.json
+          format: uri
+          readOnly: true
+          type: string
+        version:
+          description: The version to deploy to this environment, e.g. 'v1', 'v2'.
+          minLength: 2
+          type: string
+      required:
+      - version
+      type: object
+    ScheduleRunInitiatorDetails:
+      additionalProperties: false
+      properties:
+        schedule_name:
+          description: The name of the schedule that initiated this run, if type is 'tower_schedule'
+          type: string
+      type: object
+    DescribeRunResponse:
+      additionalProperties: false
+      properties:
+        $links:
+          $ref: '#/components/schemas/DescribeRunLinks'
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/DescribeRunResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        run:
+          $ref: '#/components/schemas/Run'
+      required:
+      - run
+      - $links
+      type: object
+    RunParameter:
+      additionalProperties: false
+      properties:
+        hidden:
+          default: false
+          description: Whether this parameter is hidden/secret. Defaults to false.
+          type: boolean
+        is_override:
+          description: Whether this parameter's value was supplied as an override at run/schedule creation time (true) or comes from the app version's default (false).
+          type:
+          - boolean
+          - 'null'
+        name:
+          type: string
+        value:
+          type: string
+      required:
+      - name
+      - value
+      type: object
+    DescribeRunLinks:
+      additionalProperties: false
+      properties:
+        next:
+          deprecated: true
+          description: The URL of the next run, if any.
+          type:
+          - string
+          - 'null'
+        next_number:
+          description: The number of the next run, if any.
+          format: int64
+          type:
+          - integer
+          - 'null'
+        prev:
+          deprecated: true
+          description: The URL of the previous run, if any.
+          type:
+          - string
+          - 'null'
+        prev_number:
+          description: The number of the previous run, if any.
+          format: int64
+          type:
+          - integer
+          - 'null'
+        self:
+          deprecated: true
+          description: The URL of this run.
+          type: string
+      required:
+      - self
+      - next
+      - prev
+      - next_number
+      - prev_number
+      type: object
+    DeleteAppResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/DeleteAppResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        app:
+          $ref: '#/components/schemas/App'
+      required:
+      - app
+      type: object
+    DescribeRunLogsResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/DescribeRunLogsResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        log_lines:
+          items:
+            $ref: '#/components/schemas/RunLogLine'
+          type: array
+      required:
+      - log_lines
+      type: object
+    CreateAppResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/CreateAppResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        app:
+          $ref: '#/components/schemas/App'
+      required:
+      - app
+      type: object
+    ListAppEnvironmentsResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/ListAppEnvironmentsResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        environments:
+          items:
+            type: string
+          type: array
+      required:
+      - environments
+      type: object
+    RunRunInitiatorDetails:
+      additionalProperties: false
+      properties:
+        run_app_name:
+          description: The name of the app that initiated this run, if type is 'tower_run'
+          type: string
+        run_number:
+          description: The number of the run that initaited this run, if type is 'tower_run'
+          format: int64
+          type: integer
+      type: object
+    ErrorModel:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/ErrorModel.json
+          format: uri
+          readOnly: true
+          type: string
+        detail:
+          description: A human-readable explanation specific to this occurrence of the problem.
+          examples:
+          - Property foo is required but is missing.
+          type: string
+        errors:
+          description: Optional list of individual error details
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+        instance:
+          description: A URI reference that identifies the specific occurrence of the problem.
+          examples:
+          - https://example.com/error-log/abc123
+          format: uri
+          type: string
+        status:
+          description: HTTP status code
+          examples:
+          - 400
+          format: int64
+          type: integer
+        title:
+          description: A short, human-readable summary of the problem type. This value should not change between occurrences of the error.
+          examples:
+          - Bad Request
+          type: string
+        type:
+          default: about:blank
+          description: A URI reference to human-readable documentation for the error.
+          examples:
+          - https://example.com/errors/example
+          format: uri
+          type: string
+      type: object
+    UpdateAppEnvironmentResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/UpdateAppEnvironmentResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        environment:
+          type: string
+        version:
+          type: string
+      required:
+      - environment
+      - version
+      type: object
+    DeployAppResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/DeployAppResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        version:
+          $ref: '#/components/schemas/AppVersion'
+      required:
+      - version
+      type: object
+    RunAppParams:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/RunAppParams.json
+          format: uri
+          readOnly: true
+          type: string
+        environment:
+          description: The environment to run this app in.
+          type: string
+        initiator:
+          $ref: '#/components/schemas/RunAppInitiatorData'
+          description: Initiator information for this run
+        parameters:
+          additionalProperties:
+            type: string
+          description: The parameters to pass into this app.
+          type: object
+        parent_run_id:
+          description: The ID of the run that invoked this run, if relevant. Should be null, if none.
+          type:
+          - string
+          - 'null'
+        retry_policy:
+          $ref: '#/components/schemas/RunRetryPolicy'
+          description: Override the retry policy for this specific run. If not provided, inherits from the app's retry policy.
+      required:
+      - environment
+      - parameters
+      type: object
+    CancelRunResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/CancelRunResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        cancelled_child_runs:
+          description: Number of descendant runs that were also cancelled as part of this cascade.
+          format: int64
+          type: integer
+        run:
+          $ref: '#/components/schemas/Run'
+      required:
+      - run
+      - cancelled_child_runs
+      type: object
+  securitySchemes:
+    APIKeyAuth:
+      description: API key created by a Tower user or Tower service account to authenticate an API request.
+      in: header
+      name: X-API-Key
+      type: apiKey
+    AccessTokenAuth:
+      description: Access token authentication scheme which uses an access token provided by the Tower API as part of a Tower session (see documentation about creating sessions).
+      scheme: Bearer
+      type: http

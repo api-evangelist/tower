@@ -1,0 +1,107 @@
+openapi: 3.1.0
+info:
+  contact:
+    email: hello@tower.dev
+    name: Tower Computing GmbH
+    url: https://tower.dev
+  description: REST API to interact with Tower Services.
+  termsOfService: https://tower.dev/terms
+  title: Tower Accounts Storage API
+  version: v0.11.16
+servers:
+- url: https://api.tower.dev/v1
+tags:
+- name: Storage
+paths:
+  /storage/catalogs/default:
+    get:
+      description: 'Returns the team''s default catalog, provisioning it lazily if it does not yet exist.
+
+
+        When two concurrent first calls race to provision the catalog, the loser receives 202 Accepted; retry after a few seconds and the catalog will be ready.'
+      operationId: describe-default-catalog
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DescribeCatalogResponse'
+          description: OK
+        '202':
+          description: Provisioning is in progress; retry after a few seconds.
+      security:
+      - AccessTokenAuth:
+        - catalogs:read
+      - APIKeyAuth:
+        - catalogs:read
+      summary: Describe default catalog
+      tags:
+      - Storage
+components:
+  schemas:
+    Catalog:
+      additionalProperties: false
+      properties:
+        CreatedAt:
+          format: date-time
+          type: string
+        environment:
+          type: string
+        name:
+          type: string
+        properties:
+          items:
+            $ref: '#/components/schemas/CatalogProperty'
+          type: array
+        slug:
+          deprecated: true
+          description: This property is deprecated. Use name instead.
+          type: string
+        type:
+          type: string
+      required:
+      - type
+      - name
+      - environment
+      - properties
+      - CreatedAt
+      type: object
+    DescribeCatalogResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/DescribeCatalogResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        catalog:
+          $ref: '#/components/schemas/Catalog'
+      required:
+      - catalog
+      type: object
+    CatalogProperty:
+      additionalProperties: false
+      properties:
+        environment_variable:
+          description: The environment variable name this property is injected as at runtime.
+          type: string
+        name:
+          type: string
+        preview:
+          type: string
+      required:
+      - name
+      - preview
+      type: object
+  securitySchemes:
+    APIKeyAuth:
+      description: API key created by a Tower user or Tower service account to authenticate an API request.
+      in: header
+      name: X-API-Key
+      type: apiKey
+    AccessTokenAuth:
+      description: Access token authentication scheme which uses an access token provided by the Tower API as part of a Tower session (see documentation about creating sessions).
+      scheme: Bearer
+      type: http
