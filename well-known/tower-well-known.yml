@@ -1,0 +1,66 @@
+generated: '2026-07-21'
+method: searched
+description: >-
+  Results of probing the /.well-known/ discovery surface for the Tower hosts
+  found in apis.yml and the OpenAPI servers[] (https://api.tower.dev/v1). Status
+  is the HTTP code observed at fetch time. api.tower.dev serves a real JWKS
+  document (RFC 7517) used to verify the RS256-signed identity JWT returned by
+  the describe-whoami operation; it was saved verbatim as tower-jwks.json.
+  docs.tower.dev (Docusaurus) and app.tower.dev (SPA) answer 200 with an HTML
+  shell for every /.well-known/ path, so those are recorded as
+  present-but-not-a-real-document and not saved. tower.dev redirects unknown
+  paths to its 404 page.
+hosts:
+  - host: https://api.tower.dev
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /.well-known/jwks.json
+        status: 200
+        type: application/json
+        file: tower-jwks.json
+        note: RFC 7517 JSON Web Key Set; verifies the identity JWT from GET /v1/whoami (describe-whoami).
+  - host: https://tower.dev
+    documents:
+      - path: /.well-known/security.txt
+        status: 302
+        note: Redirects to https://tower.dev/404.html — no security.txt published.
+      - path: /.well-known/openid-configuration
+        status: 301
+        note: Redirects to the site 404 page.
+      - path: /.well-known/oauth-authorization-server
+        status: 301
+        note: Redirects to the site 404 page.
+      - path: /.well-known/api-catalog
+        status: 301
+        note: Redirects to the site 404 page.
+      - path: /.well-known/ai-plugin.json
+        status: 302
+        note: Redirects to the site 404 page.
+  - host: https://docs.tower.dev
+    documents:
+      - path: /.well-known/security.txt
+        status: 200
+        note: HTML Docusaurus shell for every path — not a real security.txt; not saved.
+      - path: /.well-known/openid-configuration
+        status: 200
+        note: HTML shell — not a real document.
+      - path: /.well-known/api-catalog
+        status: 200
+        note: HTML shell — not a real document.
+  - host: https://app.tower.dev
+    documents:
+      - path: /.well-known/security.txt
+        status: 200
+        note: HTML SPA shell for every path — not a real security.txt; not saved.
+      - path: /.well-known/openid-configuration
+        status: 200
+        note: HTML shell — not a real document.

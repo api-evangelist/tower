@@ -1,0 +1,50 @@
+generated: '2026-07-21'
+method: searched
+source: https://docs.tower.dev/docs/using-tower/webhooks
+type: Webhooks
+description: >-
+  Tower's event surface. No AsyncAPI document is published; Tower documents
+  webhooks — HTTP POST events from Tower (e.g. when a run starts or finishes)
+  delivered in real time to endpoints you register from Team Settings →
+  Webhooks or via the webhook CRUD operations in the REST API (create-webhook,
+  list-webhooks, describe-webhook, update-webhook, delete-webhook,
+  check-webhook). The API also exposes three SSE streaming endpoints
+  (run logs, alerts, and "shouldertap" data-staleness notifications).
+webhooks:
+  registration:
+    ui: Team Settings → Webhooks
+    api: POST /v1/webhooks (create-webhook; name + url)
+    test: POST /v1/webhooks/{name}/test (check-webhook)
+    states: [healthy, unhealthy, unknown]
+    note: Tower skips delivery to unhealthy webhooks; the shared secret is shown once at creation.
+  delivery:
+    method: POST
+    content_type: application/json
+    success: HTTP 200 only — any non-200 (even other 2xx) counts as failure and is retried later
+    timeout_seconds: 30
+  security:
+    headers:
+      - name: X-Tower-Signature
+        description: Padded base64-encoded HMAC SHA512 hash of timestamp + raw request body, keyed with the decoded shared secret.
+      - name: X-Tower-Webhook-Timestamp
+        description: Unix-milliseconds timestamp when the webhook was sent; check freshness to prevent replay.
+    verification: >-
+      HMAC-SHA512(secret, timestamp_bytes + raw_body_bytes), base64-encoded
+      (padded), compared against X-Tower-Signature.
+  events:
+    documented_examples:
+      - run started
+      - run finished
+    note: >-
+      Tower's docs describe webhook events narratively ("such as when a run
+      starts or finishes"); no formal event-type catalog is published yet.
+sse_streams:
+  - operation: stream-run-logs
+    path: GET /v1/apps/{name}/runs/{seq}/logs/stream
+    description: Real-time run log stream.
+  - operation: stream-alerts
+    path: GET /v1/alerts/stream
+    description: Real-time alert notifications.
+  - operation: stream-shouldertaps
+    path: GET /v1/shouldertaps/stream
+    description: SSE events notifying of potential data staleness.

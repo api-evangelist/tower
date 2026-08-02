@@ -1,0 +1,41 @@
+generated: '2026-07-21'
+method: searched
+source: https://docs.tower.dev/docs/using-tower/api-keys
+spec_source: openapi/tower-openapi-original.json
+description: >-
+  Tower API authentication profile, from the OpenAPI securitySchemes and the
+  API-keys documentation. Two schemes: an API key in the X-API-Key header
+  (keys are prefixed sk-, created in Team Settings or via the create-api-key
+  operation, and can be scoped down with the documented permission scopes —
+  see scopes/tower-scopes.yml), and a Bearer access token issued as part of a
+  Tower session (create-session / refresh-session; the CLI logs in via a
+  device-login flow). Service accounts can mint their own API keys
+  (create-service-account-api-key, team admin only). The describe-whoami
+  operation returns an RS256-signed identity JWT verifiable against the JWKS
+  at https://api.tower.dev/.well-known/jwks.json.
+summary:
+  types: [apiKey, http-bearer]
+  api_key_in: [header]
+  api_key_header: X-API-Key
+  api_key_prefix: sk-
+  oauth2_flows: []
+schemes:
+  - name: APIKeyAuth
+    type: apiKey
+    in: header
+    parameter: X-API-Key
+    description: >-
+      API key created by a Tower user or Tower service account to authenticate
+      an API request. Keys are prefixed sk- and default to the creating
+      account's role; pass `scopes` to create-api-key to mint a
+      reduced-privilege key. Wrong/missing scope returns 403 Forbidden.
+    sources: [openapi/tower-openapi-original.json]
+  - name: AccessTokenAuth
+    type: http
+    scheme: bearer
+    description: >-
+      Access token provided by the Tower API as part of a Tower session (see
+      create-session, refresh-session, and the device-login operations).
+    sources: [openapi/tower-openapi-original.json]
+docs: https://docs.tower.dev/docs/using-tower/api-keys
+scopes_reference: scopes/tower-scopes.yml

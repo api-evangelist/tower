@@ -1,0 +1,74 @@
+generated: '2026-07-21'
+method: searched
+source: >-
+  https://docs.tower.dev/docs/reference/api/tower-api plus
+  openapi/tower-openapi-original.json (pagination and error parameters) and
+  https://docs.tower.dev/docs/using-tower/api-keys. Cross-cutting
+  request/response semantics of the Tower REST API.
+description: >-
+  How the Tower API behaves across operations: API-key or session-bearer
+  authentication, offset pagination (page/page_size), RFC 9457 problem+json
+  errors with per-object JSON Schema links, URI-path versioning (/v1), SSE
+  streaming endpoints for logs/alerts/staleness events, and HMAC-signed
+  webhooks. Idempotency keys are NOT part of the contract — Tower documents no
+  Idempotency-Key header.
+base_url: https://api.tower.dev/v1
+api_style: REST over HTTPS, JSON requests and responses (OpenAPI 3.1, Huma-style $schema links)
+
+authentication:
+  scheme: X-API-Key header (keys prefixed sk-) or Bearer access token from a Tower session
+  scoping: per-operation permission scopes on API keys; missing scope returns 403
+  detail: authentication/tower-authentication.yml
+  docs: https://docs.tower.dev/docs/using-tower/api-keys
+
+idempotency:
+  supported: false
+  notes: >-
+    No Idempotency-Key request header or equivalent is documented in the
+    OpenAPI or the docs. Mutating operations are not declared idempotent
+    beyond standard HTTP semantics (PUT updates by name).
+
+pagination:
+  style: offset
+  request_params:
+    page: page number
+    page_size: results per page
+  applies_to: list-runs, search-runs and other list operations (per the OpenAPI parameters)
+  notes: List responses on paginated endpoints include page metadata.
+
+versioning:
+  scheme: uri-path
+  current: v1
+  detail: lifecycle/tower-lifecycle.yml
+
+error_envelope:
+  format: rfc9457
+  content_type: application/problem+json
+  schema: ErrorModel ($schema, type, title, status, detail, instance, errors[])
+  detail: errors/tower-problem-types.yml
+
+streaming:
+  style: server-sent-events
+  endpoints:
+    - stream-run-logs (GET /apps/{name}/runs/{seq}/logs/stream)
+    - stream-alerts (GET /alerts/stream)
+    - stream-shouldertaps (GET /shouldertaps/stream) — data-staleness notifications
+
+webhooks:
+  signature_headers: [X-Tower-Signature, X-Tower-Webhook-Timestamp]
+  algorithm: HMAC SHA512 over timestamp + raw body, padded base64
+  detail: asyncapi/tower-webhooks.yml
+  docs: https://docs.tower.dev/docs/using-tower/webhooks
+
+rate_limits:
+  documented: false
+  notes: No rate-limit headers or quotas are documented in the OpenAPI or docs.
+
+request_tracing:
+  documented: false
+
+object_schemas:
+  notes: >-
+    Every response object carries a readOnly $schema URL pointing at its JSON
+    Schema, e.g. https://api.tower.dev/v1/schemas/ErrorModel.json — the API is
+    self-describing at the schema level.

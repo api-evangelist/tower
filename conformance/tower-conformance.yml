@@ -1,0 +1,52 @@
+generated: '2026-07-21'
+method: derived
+source: >-
+  Derived from openapi/tower-openapi-original.json (securitySchemes, error
+  media types, pagination parameters) and Tower's published security
+  architecture documentation (https://docs.tower.dev/docs/architecture/security).
+standards:
+  - id: openapi-3.1
+    conforms: true
+    evidence: Live spec at https://api.tower.dev/v1/openapi.json declares openapi 3.1.0.
+  - id: rfc9457-problem-details
+    conforms: true
+    evidence: Error responses use application/problem+json with an ErrorModel (type/title/status/detail/instance).
+  - id: rfc7517-jwks
+    conforms: true
+    evidence: JWKS published at https://api.tower.dev/.well-known/jwks.json; describe-whoami returns an RS256-signed identity JWT.
+  - id: api-key-auth
+    conforms: true
+    evidence: apiKey securityScheme (X-API-Key header) with documented per-operation permission scopes.
+  - id: http-bearer-auth
+    conforms: true
+    evidence: AccessTokenAuth http bearer securityScheme for session access tokens.
+  - id: oauth2
+    conforms: false
+    evidence: >-
+      No oauth2 securityScheme in the spec; the only OAuth-shaped surface is
+      vend-catalog-credentials, which mints short-lived OAuth bearer tokens
+      for Iceberg catalog access.
+  - id: oidc
+    conforms: false
+    evidence: No /.well-known/openid-configuration on any Tower host.
+  - id: tls-1.3
+    conforms: true
+    evidence: Security docs state all Tower services use TLS 1.3.
+  - id: apache-iceberg-rest-catalog
+    conforms: true
+    evidence: >-
+      Tower Tables are Apache Iceberg; managed catalogs are accessed with
+      vended credentials and are documented as compatible with Snowflake,
+      Spark, and DuckDB clients.
+  - id: pagination-offset
+    conforms: true
+    evidence: List endpoints take page/page_size query parameters.
+  - id: sse-streaming
+    conforms: true
+    evidence: stream-run-logs, stream-alerts, and stream-shouldertaps are Server-Sent Events endpoints.
+  - id: rfc9116-security-txt
+    conforms: false
+    evidence: No /.well-known/security.txt on tower.dev or api.tower.dev (404/redirect to 404 page).
+  - id: idempotency-keys
+    conforms: false
+    evidence: No Idempotency-Key header documented in spec or docs.

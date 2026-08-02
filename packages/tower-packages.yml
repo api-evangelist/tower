@@ -1,0 +1,37 @@
+generated: '2026-07-21'
+method: searched
+source: https://docs.tower.dev/docs/getting-started/download-the-cli
+description: >-
+  First-party Tower packages. The single `tower` package on PyPI carries the
+  CLI, the MCP server, and the Python SDK/runtime (Iceberg tables, LLM helpers,
+  orchestration); verified first-party via pyproject.toml in tower/tower-cli
+  (authors: Tower Computing Inc., brad@tower.dev). Prebuilt binaries for Linux,
+  macOS, and Windows plus a shell installer and a Homebrew tap ship on every
+  GitHub release. Note: the `tower` crate on crates.io and the `tower` npm
+  package are unrelated third-party projects — do not confuse them with this
+  provider.
+packages:
+  - language: python
+    registry: pypi
+    name: tower
+    url: https://pypi.org/project/tower/
+    source: https://github.com/tower/tower-cli
+    install: pip install -U tower
+    version_seen: 0.3.69
+    official: true
+    note: CLI + MCP server + Python SDK/runtime in one package; also runnable via `uvx tower`.
+  - language: binary
+    registry: homebrew
+    name: tower/tower-cli/tower
+    url: https://github.com/tower/tower-cli/releases/latest
+    install: brew install tower/tower-cli/tower
+    official: true
+    note: Homebrew tap published on each GitHub release.
+  - language: binary
+    registry: github-releases
+    name: tower-cli
+    url: https://github.com/tower/tower-cli/releases/latest
+    install: "curl --proto '=https' --tlsv1.2 -LsSf https://github.com/tower/tower-cli/releases/download/<version>/tower-installer.sh | sh"
+    official: true
+    note: Prebuilt binaries for Linux, macOS, Windows with checksums.
+sdk_docs: https://docs.tower.dev/docs/reference/tower-sdk

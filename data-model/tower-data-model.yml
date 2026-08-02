@@ -1,0 +1,51 @@
+generated: '2026-07-21'
+method: derived
+source: openapi/tower-openapi-original.json
+docs: https://docs.tower.dev/docs/concepts/apps
+notation: >-
+  relationships use has_one / has_many / belongs_to with the referencing field
+  or path segment; direction is from the entity that owns the reference.
+description: >-
+  Entity-relationship graph of the Tower control plane, derived from the
+  OpenAPI paths and schema references. The core chain is Account → App →
+  AppVersion → Run, with Environments carrying per-environment secrets and
+  deployed versions, Schedules driving recurring runs, and Catalogs exposing
+  the Iceberg lakehouse. Teams/ServiceAccounts/APIKeys/Guests model access;
+  Webhooks/Alerts model eventing and observability.
+entities:
+  - {name: Account, description: A user or team account; the namespace all resources live in.}
+  - {name: Organization, description: Billing/usage umbrella for accounts (describe-organization-usage, update-organization).}
+  - {name: Team, description: Shared workspace of users with members and invitations.}
+  - {name: ServiceAccount, description: Non-human principal that can hold API keys; team-admin managed.}
+  - {name: APIKey, description: sk--prefixed credential, optionally scope-reduced; owned by a user or service account.}
+  - {name: Guest, description: External principal granted access to a specific externally accessible app via a login URL.}
+  - {name: Session, description: Authenticated session carrying access + refresh tokens (device-login flow).}
+  - {name: App, description: Deployable package of Python code + Towerfile config.}
+  - {name: AppVersion, description: Immutable versioned build of an app (v1, v2, ...), created by deploy-app.}
+  - {name: Environment, description: Runtime context (config, secrets, deployed version) for an app, e.g. default/production.}
+  - {name: Run, description: Execution of an app version in an environment; has logs, a graph, and statistics.}
+  - {name: Schedule, description: Cron schedule that runs an app; can be activated/deactivated in bulk.}
+  - {name: Secret, description: Encrypted runtime value injected into app runs, per environment.}
+  - {name: Catalog, description: Iceberg lakehouse catalog; credentials vended as short-lived OAuth bearer tokens.}
+  - {name: Runner, description: Self-hosted execution infrastructure registered with credentials.}
+  - {name: Webhook, description: HTTP event destination with HMAC-signed deliveries and health state.}
+  - {name: Alert, description: Operational notification, acknowledgeable and streamable over SSE.}
+relationships:
+  - {from: App, to: Account, type: belongs_to, via: "account (path /apps under account context)"}
+  - {from: AppVersion, to: App, type: belongs_to, via: "/apps/{name}/versions/{num}"}
+  - {from: Run, to: App, type: belongs_to, via: "/apps/{name}/runs/{seq}"}
+  - {from: Run, to: AppVersion, type: belongs_to, via: "version executed"}
+  - {from: Run, to: Environment, type: belongs_to, via: "environment selected at run time"}
+  - {from: Environment, to: App, type: belongs_to, via: "/apps/{name}/environments/{environment}"}
+  - {from: Environment, to: AppVersion, type: has_one, via: "deployed version (update-app-environment)"}
+  - {from: Schedule, to: App, type: belongs_to, via: "app parameter"}
+  - {from: Schedule, to: Environment, type: belongs_to, via: "environment filter"}
+  - {from: Secret, to: Environment, type: belongs_to, via: "environment association (list-secret-environments)"}
+  - {from: Secret, to: Account, type: belongs_to, via: "current account"}
+  - {from: Catalog, to: Account, type: belongs_to, via: "current account"}
+  - {from: Team, to: Account, type: has_one, via: "team account context"}
+  - {from: ServiceAccount, to: APIKey, type: has_many, via: "/service-accounts/{idOrName}/api-keys"}
+  - {from: Guest, to: App, type: belongs_to, via: "app access grant"}
+  - {from: Webhook, to: Account, type: belongs_to, via: "account_id"}
+  - {from: Alert, to: Account, type: belongs_to, via: "current account"}
+  - {from: Runner, to: Account, type: belongs_to, via: "current account"}

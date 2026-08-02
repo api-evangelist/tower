@@ -1,0 +1,160 @@
+# Tower Documentation
+
+> Documentation for how Tower works
+
+This file contains links to documentation sections following the llmstxt.org standard.
+
+## Table of Contents
+
+- [Data Plane](https://docs.tower.dev/docs/architecture/data-plane.md): Tower's uses a modern distributed system architectural pattern that separates the control plane from the data plane. This design gives your data ap...
+- [How Tower works](https://docs.tower.dev/docs/architecture/how-tower-works.md): This is a high-level, technical description of how Tower works. It brings
+- [Networking](https://docs.tower.dev/docs/architecture/networking.md): The documentation on the Tower [data plane](/docs/architecture/data-plane) describes how Tower separates its control plane from its data plane arch...
+- [Security](https://docs.tower.dev/docs/architecture/security.md): This document covers the most important security topics to understand when using Tower.
+- [Apps](https://docs.tower.dev/docs/concepts/apps.md): Apps are packages of Python code, shell scripts, requirements.txt and other config files that you deploy to and manage with Tower. You describe how...
+- [Data Agents](https://docs.tower.dev/docs/concepts/data-agents.md): A Data Agent is a Tower app that runs a reasoning loop powered by a language model. Based on a user prompt and the results of previous tool calls, ...
+- [Environments](https://docs.tower.dev/docs/concepts/environments.md): An environment defines the runtime context for your application. It encapsulates the app's configuration, including secrets for dataset connections...
+- [Models](https://docs.tower.dev/docs/concepts/models.md): Tower Models provide easy access to Large Language Models (LLMs) through a unified interface. They abstract away the complexity of different infere...
+- [Runs](https://docs.tower.dev/docs/concepts/runs.md): Runs are executions of a particular app version inside a chosen environment.
+- [Tables](https://docs.tower.dev/docs/concepts/tables.md): Tower Tables make it easy for users to onboard to Apache Iceberg. They provide methods for accessing and processing tabular and semi-structured dat...
+- [Teams](https://docs.tower.dev/docs/concepts/teams.md): Teams are shared workspaces that enable groups of users to collaboratively develop and run apps in Tower. By creating a team, you establish a commo...
+- [Deploying Agentic Flows](https://docs.tower.dev/docs/examples/agents.md): Agents are a special form of orchestration flows. They iterate in a reasoning loop, decide which tools to call, process the tool results, and itera...
+- [Running dbt Core](https://docs.tower.dev/docs/examples/dbt.md): Tower can run dbt Core projects with remote seed hydration and integrated secrets management.
+- [End-to-End Data Platform Demo](https://docs.tower.dev/docs/examples/end-to-end-demo.md): The [tower-demo](https://github.com/tower/tower-demo) repository showcases a complete data platform for **Orbita Supply Co.**, a fictional retail c...
+- [Introduction](https://docs.tower.dev/docs/examples/intro.md): The [tower-examples](https://github.com/tower/tower-examples) repository on GitHub contains a collection of sample applications that can be run on ...
+- [Working with Models](https://docs.tower.dev/docs/examples/models.md): Tower provides flexible options for running LLM inference, supporting both local development with free inference and production deployments with se...
+- [Orchestration](https://docs.tower.dev/docs/examples/orchestration.md): Tower provides orchestration capabilities for scheduling and coordinating app runs.
+- [Working with Tables](https://docs.tower.dev/docs/examples/tables.md): Tower integrates with Apache Iceberg for lakehouse storage. These examples demonstrate reading, writing, and maintaining Iceberg tables.
+- [Using dltHub](https://docs.tower.dev/docs/examples/using-dlthub.md): Tower can run [dltHub](https://dlthub.com) pipelines with integrated secrets management. Tower integrates directly with dlt's configuration system,...
+- [Download the CLI](https://docs.tower.dev/docs/getting-started/download-the-cli.md): The Tower command line interface (CLI) offers commonly used commands to create, manage and run your apps in Tower. It can be installed from `pip` a...
+- [Quickstart](https://docs.tower.dev/docs/getting-started/quick-start.md): This guide will get you up and running using Tower quickly. It uses the publicly available Tower examples as a starting point, and should show you ...
+- [Quickstart with MCP](https://docs.tower.dev/docs/getting-started/quickstart-with-mcp.md): Use the Tower MCP Server with AI coding assistants like Claude Code to build, deploy, and manage Tower apps through natural language conversations....
+- [Introduction](https://docs.tower.dev/docs/intro.md): Tower is a **Python-native data flow orchestrator** for pipelines, agents, and data applications-with optional Iceberg-based lakehouse data managem...
+- [Acknowledge alert](https://docs.tower.dev/docs/reference/api/acknowledge-alert.md): Mark an alert as acknowledged
+- [Acknowledge all alerts](https://docs.tower.dev/docs/reference/api/acknowledge-all-alerts.md): Mark all unacknowledged alerts as acknowledged for the current user in the current account
+- [Activate multiple schedules](https://docs.tower.dev/docs/reference/api/activate-schedules.md): Activate multiple schedules to enable their execution.
+- [Cancel run](https://docs.tower.dev/docs/reference/api/cancel-run.md): Cancel a run
+- [Check webhook](https://docs.tower.dev/docs/reference/api/check-webhook.md): Check webhook
+- [Claim a device login ticket](https://docs.tower.dev/docs/reference/api/claim-device-login-ticket.md): Claims a device login ticket code for the authenticated user.
+- [Create account](https://docs.tower.dev/docs/reference/api/create-account.md): This is the primary way that users register new accounts with Tower.
+- [Create API Key](https://docs.tower.dev/docs/reference/api/create-api-key.md): Create API Key
+- [Create app](https://docs.tower.dev/docs/reference/api/create-app.md): Create a new app in the current account.
+- [Create catalog](https://docs.tower.dev/docs/reference/api/create-catalog.md): Create a new catalog object in the currently authenticated account.
+- [Create device login ticket](https://docs.tower.dev/docs/reference/api/create-device-login-ticket.md): Creates a new device login ticket and returns the codes and urls needed for authentication.
+- [Create environment](https://docs.tower.dev/docs/reference/api/create-environment.md): Create a new environment for an app.
+- [Create guest](https://docs.tower.dev/docs/reference/api/create-guest.md): Creates a new guest with access to a specific externally accessible app and returns a login URL to share with them.
+- [Create Tower-provided sandbox secrets](https://docs.tower.dev/docs/reference/api/create-sandbox-secrets.md): Creates secrets with Tower-provided default values for the specified keys in the given environment.
+- [Create schedule](https://docs.tower.dev/docs/reference/api/create-schedule.md): Create a new schedule for an app.
+- [Create secret](https://docs.tower.dev/docs/reference/api/create-secret.md): Creates a new secret and associates it with the current account.
+- [Create API key for service account](https://docs.tower.dev/docs/reference/api/create-service-account-api-key.md): Mint a new API key bound to a service account. The full identifier is only returned on this response. Team admin only.
+- [Create service account](https://docs.tower.dev/docs/reference/api/create-service-account.md): Create a new service account in the current account. Team admin only.
+- [Create session](https://docs.tower.dev/docs/reference/api/create-session.md): Create a new session and return it.
+- [Create team](https://docs.tower.dev/docs/reference/api/create-team.md): Create a new team
+- [Create webhook](https://docs.tower.dev/docs/reference/api/create-webhook.md): Create webhook
+- [Deactivate multiple schedules](https://docs.tower.dev/docs/reference/api/deactivate-schedules.md): Deactivate multiple schedules to disable their execution.
+- [Delete alert](https://docs.tower.dev/docs/reference/api/delete-alert.md): Permanently delete an alert
+- [Delete API key](https://docs.tower.dev/docs/reference/api/delete-api-key.md): Delete API key
+- [Delete app](https://docs.tower.dev/docs/reference/api/delete-app.md): Delete one of your apps, the associated code, and all the runs as well.
+- [Delete catalog](https://docs.tower.dev/docs/reference/api/delete-catalog.md): Delete a new catalog object in the currently authenticated account.
+- [Delete environment](https://docs.tower.dev/docs/reference/api/delete-environment.md): Delete an environment by name
+- [Delete guest](https://docs.tower.dev/docs/reference/api/delete-guest.md): Deletes a guest and revokes their access. Any active sessions will be invalidated.
+- [Delete schedule](https://docs.tower.dev/docs/reference/api/delete-schedule.md): Delete an existing schedule for an app.
+- [Delete secret](https://docs.tower.dev/docs/reference/api/delete-secret.md): Delete a secret by name.
+- [Delete API key for service account](https://docs.tower.dev/docs/reference/api/delete-service-account-api-key.md): Revoke an API key bound to a service account. Team admin only.
+- [Delete service account](https://docs.tower.dev/docs/reference/api/delete-service-account.md): Tombstones a service account: revokes API keys, disables owned schedules, cancels in-flight runs, then soft-deletes the SA. Team admin only.
+- [Delete session](https://docs.tower.dev/docs/reference/api/delete-session.md): Terminate a session and revoke the access keys associated with it.
+- [Delete team invitation](https://docs.tower.dev/docs/reference/api/delete-team-invitation.md): Delete a pending team invitation that you have previously sent
+- [Delete team](https://docs.tower.dev/docs/reference/api/delete-team.md): Delete a new team
+- [Delete webhook](https://docs.tower.dev/docs/reference/api/delete-webhook.md): Delete webhook
+- [Deploy app](https://docs.tower.dev/docs/reference/api/deploy-app.md): Deploy a new version of an app. Accepts either a TAR file upload (application/tar) or a JSON body with source_uri (application/json) for deploying ...
+- [Describe account](https://docs.tower.dev/docs/reference/api/describe-account.md): Get information about a specific account by name.
+- [Describe app version](https://docs.tower.dev/docs/reference/api/describe-app-version.md): Describe an app version for an app in the current account.
+- [Describe app](https://docs.tower.dev/docs/reference/api/describe-app.md): Get all the runs for the current account.
+- [Describe authentication context](https://docs.tower.dev/docs/reference/api/describe-authentication-context.md): This API endpoint returns information about the current authentication context for the user that's used for various internal processes in Tower UI.
+- [Describe catalog](https://docs.tower.dev/docs/reference/api/describe-catalog.md): Returns details for a specific catalog, including its property names and previews.
+- [Describe default catalog](https://docs.tower.dev/docs/reference/api/describe-default-catalog.md): Returns the team's default catalog, provisioning it lazily if it does not yet exist.
+- [Describe device login session](https://docs.tower.dev/docs/reference/api/describe-device-login-session.md): Checks if a device login code has been claimed and returns the user session if so.
+- [Describe email preferences](https://docs.tower.dev/docs/reference/api/describe-email-preferences.md): Describes the current user's email preferences.
+- [Describe environment](https://docs.tower.dev/docs/reference/api/describe-environment.md): Describe an environment and counts of its resources
+- [Describe organization usage](https://docs.tower.dev/docs/reference/api/describe-organization-usage.md): Describe usage statistics for the user's organization for the current billing cycle.
+- [Describe plan](https://docs.tower.dev/docs/reference/api/describe-plan.md): Get the current plan for the account.
+- [Describe run graph](https://docs.tower.dev/docs/reference/api/describe-run-graph.md): Describe the graph that a run belongs to.
+- [Describe run logs](https://docs.tower.dev/docs/reference/api/describe-run-logs.md): Retrieves the logs associated with a particular run of an app.
+- [Describe run](https://docs.tower.dev/docs/reference/api/describe-run.md): Describe a run of an app.
+- [Describe encryption key](https://docs.tower.dev/docs/reference/api/describe-secrets-key.md): Gets the encryption key used for encrypting secrets that you want to create in Tower.
+- [Describe service account](https://docs.tower.dev/docs/reference/api/describe-service-account.md): Fetch a single service account by ID or name. Team admin only.
+- [Describe session](https://docs.tower.dev/docs/reference/api/describe-session.md): Validate your current session and return the user information associated with the session.
+- [Describe team](https://docs.tower.dev/docs/reference/api/describe-team.md): Get details about a team, including its members and invitations.
+- [Describe webhook](https://docs.tower.dev/docs/reference/api/describe-webhook.md): Describe webhook
+- [Describe whoami](https://docs.tower.dev/docs/reference/api/describe-whoami.md): Returns an RS256-signed identity JWT for the authenticated user. The token's signature can be verified using the public keys served at /.well-known...
+- [Export catalogs](https://docs.tower.dev/docs/reference/api/export-catalogs.md): Lists all the catalogs in your current account and re-encrypt them with the public key you supplied.
+- [Export secrets](https://docs.tower.dev/docs/reference/api/export-secrets.md): Lists all the secrets in your current account and re-encrypt them with the public key you supplied.
+- [Generate app statistics](https://docs.tower.dev/docs/reference/api/generate-app-statistics.md): Generates current statistics about apps
+- [Generate organization usage](https://docs.tower.dev/docs/reference/api/generate-organization-usage-time-series.md): Get the previous 30 days of usage as a time series.
+- [Generate run statistics](https://docs.tower.dev/docs/reference/api/generate-run-statistics.md): Generates statistics about runs over a specified time period.
+- [Generate runner credentials](https://docs.tower.dev/docs/reference/api/generate-runner-credentials.md): Uses your current authentication context to generate runner credentials that are used for authenticating runner requests
+- [Get feature flag value](https://docs.tower.dev/docs/reference/api/get-feature-flag-value.md): Get the current value of a feature flag. Returns the flag value if enabled, or a default falsey value if disabled.
+- [Invite team member](https://docs.tower.dev/docs/reference/api/invite-team-member.md): Invite a new team
+- [Leave team](https://docs.tower.dev/docs/reference/api/leave-team.md): Remove yourself from a team. If you're the last member of a team, you cannot remove yourself. You should delete the team instead.
+- [List alerts](https://docs.tower.dev/docs/reference/api/list-alerts.md): List alerts for the current account with optional filtering
+- [List API keys](https://docs.tower.dev/docs/reference/api/list-api-keys.md): List all the API keys associated with your current account.
+- [List app environments](https://docs.tower.dev/docs/reference/api/list-app-environments.md): Generates a list of all the known environments for a given app in the current account.
+- [List app versions](https://docs.tower.dev/docs/reference/api/list-app-versions.md): List all versions of an app in the current account, sorted with the most recent first.
+- [List apps](https://docs.tower.dev/docs/reference/api/list-apps.md): Get all the apps for the current account.
+- [List catalogs](https://docs.tower.dev/docs/reference/api/list-catalogs.md): Lists all the catalogs associated with your current account.
+- [List environments](https://docs.tower.dev/docs/reference/api/list-environments.md): List all environments in your account.
+- [List guests](https://docs.tower.dev/docs/reference/api/list-guests.md): Lists all guests for the current account, optionally filtered by app.
+- [List my team invitations](https://docs.tower.dev/docs/reference/api/list-my-team-invitations.md): List your pending invitations for teams
+- [List runners](https://docs.tower.dev/docs/reference/api/list-runners.md): Get all self-hosted runners for the current account.
+- [List runs](https://docs.tower.dev/docs/reference/api/list-runs.md): Generates a list of all the runs for a given app. The list is paginated based on the query string parameters passed in.
+- [List schedules](https://docs.tower.dev/docs/reference/api/list-schedules.md): Lists all schedules for the current account, optionally filtered by environment and app.
+- [List secret environments](https://docs.tower.dev/docs/reference/api/list-secret-environments.md): Lists all the environments associated with secrets.
+- [List secrets](https://docs.tower.dev/docs/reference/api/list-secrets.md): Lists all the secrets associated with your current account.
+- [List API keys for service account](https://docs.tower.dev/docs/reference/api/list-service-account-api-keys.md): List API keys bound to a service account. Team admin only.
+- [List service accounts](https://docs.tower.dev/docs/reference/api/list-service-accounts.md): List all service accounts in the current account. Team admin only.
+- [List team invitations](https://docs.tower.dev/docs/reference/api/list-team-invitations.md): List the pending invitations for a team
+- [List team members](https://docs.tower.dev/docs/reference/api/list-team-members.md): List the members of a team
+- [List teams](https://docs.tower.dev/docs/reference/api/list-teams.md): List all the teams that you are a member of.
+- [List webhooks](https://docs.tower.dev/docs/reference/api/list-webhooks.md): List webhooks
+- [Refresh session](https://docs.tower.dev/docs/reference/api/refresh-session.md): If your access tokens expire, this API endpoint takes a Refresh Token and returns a new set of Access Tokens for your session. Note that we don't r...
+- [Regenerate guest login URL](https://docs.tower.dev/docs/reference/api/regenerate-guest-login-url.md): Creates a new login URL for an existing guest. Use this if the previous URL expired or was compromised.
+- [Remove team member](https://docs.tower.dev/docs/reference/api/remove-team-member.md): Remove team member
+- [Resend team invitation](https://docs.tower.dev/docs/reference/api/resend-team-invitation.md): Resend a team invitation to a user if they need a reminder or if they lost it
+- [Run app](https://docs.tower.dev/docs/reference/api/run-app.md): Runs an app with the supplied parameters.
+- [Search runs](https://docs.tower.dev/docs/reference/api/search-runs.md): Search, filter, and list runs across all of the apps in your account.
+- [Stream alert notifications](https://docs.tower.dev/docs/reference/api/stream-alerts.md): Streams alert notifications in real-time
+- [Stream run logs](https://docs.tower.dev/docs/reference/api/stream-run-logs.md): Streams the logs associated with a particular run of an app in real-time.
+- [Stream shouldertaps](https://docs.tower.dev/docs/reference/api/stream-shouldertaps.md): Stream events over SSE that notify you of potential data staleness
+- [Tower API](https://docs.tower.dev/docs/reference/api/tower-api.md): REST API to interact with Tower Services.
+- [Update account](https://docs.tower.dev/docs/reference/api/update-account.md): Update the properties of an account
+- [Update app environment](https://docs.tower.dev/docs/reference/api/update-app-environment.md): Update the configuration of an app in a specific environment, such as which version is deployed.
+- [Update app](https://docs.tower.dev/docs/reference/api/update-app.md): Update an app in the currently authenticated account.
+- [Update catalog](https://docs.tower.dev/docs/reference/api/update-catalog.md): Update a new catalog object in the currently authenticated account.
+- [Update email preferences](https://docs.tower.dev/docs/reference/api/update-email-preferences.md): Updates the set of email preferences the current user has. If a partial set of preferences is submitted, it will be updated accordingly.
+- [Update environment](https://docs.tower.dev/docs/reference/api/update-environment.md): Rename your environment
+- [Update my team invitation](https://docs.tower.dev/docs/reference/api/update-my-team-invitation.md): Update a team invitation that you have pending
+- [Update organization](https://docs.tower.dev/docs/reference/api/update-organization.md): Update an organization's name. Only the current owner can perform this operation.
+- [Update plan](https://docs.tower.dev/docs/reference/api/update-plan.md): Update plan
+- [Update schedule](https://docs.tower.dev/docs/reference/api/update-schedule.md): Update an existing schedule for an app.
+- [Update secret](https://docs.tower.dev/docs/reference/api/update-secret.md): Updates a secret that has previously been created in your account
+- [Update service account](https://docs.tower.dev/docs/reference/api/update-service-account.md): Update one or more fields on an existing service account. Team admin only.
+- [Update team member](https://docs.tower.dev/docs/reference/api/update-team-member.md): Update team member
+- [Update team](https://docs.tower.dev/docs/reference/api/update-team.md): Update a team with a new name or name. Note that updating the team with a new name will cause all your URLs to change!
+- [Update user profile](https://docs.tower.dev/docs/reference/api/update-user.md): Updates your current user profile.
+- [Update webhook](https://docs.tower.dev/docs/reference/api/update-webhook.md): Updates webhook. Note: it is not possible to update the URL. To do so, you should delete and recreate the webhook instead.
+- [Vend catalog credentials](https://docs.tower.dev/docs/reference/api/vend-catalog-credentials.md): Mints a short-lived OAuth bearer token for browser or SDK access to a managed (tower-catalog) catalog. Defaults to read-only (`mode: 'read'`); pass...
+- [MCP Server](https://docs.tower.dev/docs/reference/mcp-server.md): The Tower CLI includes an MCP (Model Context Protocol) server that allows AI assistants and editors to interact with your Tower account directly.
+- [Tower CLI](https://docs.tower.dev/docs/reference/tower-cli.md): The Tower CLI is one of the primary ways to interact with the Tower service. It lets you deploy apps to Tower, run them, and then manage them. It a...
+- [Tower SDK](https://docs.tower.dev/docs/reference/tower-sdk.md): The Tower SDK provides helpful extensions to your Python code, including easy access to Apache Iceberg tables, LLMs, and orchestrating the executio...
+- [Towerfile](https://docs.tower.dev/docs/reference/towerfile.md): A Towerfile is a text file that contains Tower instructions for how to package an application and how to run it in a Tower runner.
+- [Advanced use cases](https://docs.tower.dev/docs/using-tower/advanced.md): Sometimes you will want to adjust your app logic depending on the environment the app is running in. For example, you might want to write to DuckDB...
+- [API keys](https://docs.tower.dev/docs/using-tower/api-keys.md): You can use API keys to programmatically access Tower's APIs, and in general you can access any endpoint with an API key.
+- [Develop apps](https://docs.tower.dev/docs/using-tower/develop.md): In Tower, you will be developing data applications, or “apps” for short. All *source code-based* data engineering artifacts - ETL/ELT pipelines, ba...
+- [Observe and improve](https://docs.tower.dev/docs/using-tower/observe.md): Tower's observability features help you monitor the health of your data system, quickly identify issues, and take targeted action where needed. Thi...
+- [Orchestrate apps](https://docs.tower.dev/docs/using-tower/orchestrate.md): Orchestration in Tower gives you control over when and how your apps execute, allowing you to automate and compose more complex flows.
+- [Retrying failed runs](https://docs.tower.dev/docs/using-tower/retries.md): Tower can automatically retry runs that fail due to infrastructure errors (`errored`) or application crashes (`crashed`). Retry policies let you co...
+- [Install and run Self-Hosted runners](https://docs.tower.dev/docs/using-tower/self-hosted-runner-installation.md): This guide covers installing, configuring, and operating the Tower Runner on your own infrastructure across Linux, macOS, Windows, and Docker.
+- [Test apps](https://docs.tower.dev/docs/using-tower/test.md): Once you have prepared a Towerfile and changed your app code to receive secrets and parameters, you are ready to test the app. We recommend startin...
+- [Webhooks](https://docs.tower.dev/docs/using-tower/webhooks.md): Webhooks are events from Tower that are sent via HTTP. They provide a way for
+- [Working in teams](https://docs.tower.dev/docs/using-tower/working-in-teams.md): Teams in Tower enable groups of users to collaboratively develop and run apps. By creating a team, you establish a shared workspace where multiple ...
+- [Working with Models](https://docs.tower.dev/docs/using-tower/working-with-models.md): The `Llm` class and the `llms()` helper function provide the programmatic interface for model inference in Tower. For an overview of these concepts...
+- [Working with Tables](https://docs.tower.dev/docs/using-tower/working-with-tables.md): This guide demonstrates Tower's table capabilities using two example apps:

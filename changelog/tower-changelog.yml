@@ -1,0 +1,34 @@
+generated: '2026-07-21'
+method: searched
+source: https://github.com/tower/tower-cli/releases
+docs: https://github.com/tower/tower-cli/releases
+description: >-
+  Tower publishes no dated changelog page on tower.dev or docs.tower.dev
+  (tower.dev/changelog 404s); the platform's public release record is the
+  GitHub releases feed of tower/tower-cli — the semver-versioned package that
+  carries the CLI, MCP server, and Python SDK. Release notes are
+  install/download manifests (shell installer, Homebrew tap, per-platform
+  binaries with checksums) rather than narrative change lists. Recent window
+  captured below; the live releases page is the source of truth. In-product,
+  each Tower app additionally has its own Changelog view for version
+  promote/rollback (see lifecycle/tower-lifecycle.yml).
+scheme: semver
+current: 0.3.69
+entries:
+  - version: v0.3.70-rc.1
+    date: '2026-07-17'
+    prerelease: true
+  - version: v0.3.69
+    date: '2026-07-06'
+  - version: v0.3.68
+    date: '2026-07-01'
+  - version: v0.3.67
+    date: '2026-06-19'
+  - version: v0.3.66
+    date: '2026-06-17'
+  - version: v0.3.65
+    date: '2026-06-12'
+  - version: v0.3.64
+    date: '2026-06-08'
+  - version: v0.3.63
+    date: '2026-05-20'

@@ -1,0 +1,59 @@
+generated: '2026-07-21'
+method: derived
+source: openapi/tower-openapi-original.json
+format: rfc9457
+description: >-
+  Error catalog derived from the 4xx/5xx responses in Tower's OpenAPI 3.1
+  spec. Tower returns RFC 9457 Problem Details: error responses are typed
+  ErrorModel and are served as application/problem+json (default error
+  responses also appear as application/json on some operations). ErrorModel
+  carries $schema (a URL to the JSON Schema for the object, e.g.
+  https://api.tower.dev/v1/schemas/ErrorModel.json), type, title, status,
+  detail, instance, and an optional errors[] array of ErrorDetail items
+  (message/location/value) for per-field validation problems. Additionally,
+  API-key authorization failures return 403 when the key lacks the required
+  scope (documented at https://docs.tower.dev/docs/using-tower/api-keys).
+envelope:
+  schema: ErrorModel
+  content_types: [application/problem+json, application/json]
+  fields:
+    $schema: URL of the JSON Schema for this object
+    type: URI reference identifying the problem type
+    title: Short human-readable summary of the problem type
+    status: HTTP status code
+    detail: Human-readable explanation specific to this occurrence
+    instance: URI reference identifying the specific occurrence
+    errors: Optional list of ErrorDetail items (message, location, value)
+problems:
+  - status: 400
+    title: Bad Request
+    occurrences: 1
+    note: Malformed request.
+  - status: 401
+    title: Unauthorized
+    occurrences: 5
+    note: Missing or invalid credentials (X-API-Key or Bearer access token).
+  - status: 403
+    title: Forbidden
+    occurrences: 2
+    note: >-
+      Authenticated but not permitted — including API keys lacking the
+      operation's required scope (see scopes/tower-scopes.yml).
+  - status: 404
+    title: Not Found
+    occurrences: 5
+    note: Resource (app, run, secret, catalog, team, webhook, ...) does not exist.
+  - status: 409
+    title: Conflict
+    occurrences: 2
+    note: State conflict (e.g. resource already exists).
+  - status: 412
+    title: Precondition Failed
+    occurrences: 1
+  - status: 422
+    title: Unprocessable Entity
+    occurrences: 4
+    note: Validation failure; ErrorModel.errors[] details the offending fields.
+  - status: 500
+    title: Internal Server Error
+    occurrences: 5

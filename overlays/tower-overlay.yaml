@@ -1,0 +1,35 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Tower API
+  version: 1.0.0
+x-generated: '2026-07-21'
+x-method: generated
+extends: openapi/tower-openapi-original.json
+actions:
+  - target: $.info
+    description: Link the harvested spec to the API Evangelist artifact set for Tower.
+    update:
+      x-apievangelist:
+        provider: tower
+        harvested: '2026-07-21'
+        source: https://api.tower.dev/v1/openapi.json
+        artifacts:
+          authentication: authentication/tower-authentication.yml
+          scopes: scopes/tower-scopes.yml
+          errors: errors/tower-problem-types.yml
+          conventions: conventions/tower-conventions.yml
+          webhooks: asyncapi/tower-webhooks.yml
+          mcp: mcp/tower-mcp.yml
+          skills: skills/_index.yml
+  - target: $.info
+    description: Note the documented API-key scope model that the spec does not encode per-operation.
+    update:
+      x-scopes-reference: https://docs.tower.dev/docs/using-tower/api-keys
+  - target: $.components.securitySchemes.APIKeyAuth
+    description: Record the documented sk- key prefix.
+    update:
+      x-key-prefix: sk-
+  - target: $.paths['/webhooks'].post
+    description: Cross-link webhook delivery semantics (HMAC SHA512 signatures, 30s timeout, 200-only success).
+    update:
+      x-webhook-delivery: asyncapi/tower-webhooks.yml

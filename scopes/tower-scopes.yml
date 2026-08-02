@@ -1,0 +1,69 @@
+generated: '2026-07-21'
+method: searched
+source: https://docs.tower.dev/docs/using-tower/api-keys
+docs: https://docs.tower.dev/docs/using-tower/api-keys
+description: >-
+  Tower's documented permission-scope system for API keys (not OAuth — Tower's
+  OpenAPI declares apiKey + bearer schemes, no oauth2 flows). Every API endpoint
+  requires a scope, listed per-operation in the API reference under
+  "Authorization"; API keys default to the creating account's role and can be
+  minted with a reduced scope set via the create-api-key operation's `scopes`
+  parameter. A key lacking the required scope receives 403 Forbidden. Captured
+  verbatim from the "Available scopes" table. (The only OAuth-shaped surface is
+  vend-catalog-credentials, which mints short-lived OAuth bearer tokens for
+  Iceberg catalog access.)
+scheme: api-key-scopes
+scopes:
+  - {scope: "api_keys", description: "Access to all API key operations."}
+  - {scope: "api_keys:read", description: "Read access for API keys."}
+  - {scope: "api_keys:create", description: "Create access for API keys."}
+  - {scope: "api_keys:delete", description: "Delete access for API keys."}
+  - {scope: "apps", description: "Access to all apps operations."}
+  - {scope: "apps:read", description: "Read access for apps."}
+  - {scope: "apps:run", description: "Allows the API to run apps."}
+  - {scope: "apps:deploy", description: "Allows the API key to be used to deploy a new app version."}
+  - {scope: "apps:create", description: "Create access for apps."}
+  - {scope: "apps:update", description: "Update access for apps (e.g. renaming app)."}
+  - {scope: "apps:delete", description: "Delete access for apps."}
+  - {scope: "catalogs", description: "Access to all Tower catalog operations."}
+  - {scope: "catalogs:read", description: "Read access for catalogs."}
+  - {scope: "catalogs:create", description: "Create access for catalogs."}
+  - {scope: "catalogs:update", description: "Update access for catalogs."}
+  - {scope: "catalogs:delete", description: "Delete access for catalogs."}
+  - {scope: "catalogs:export", description: "Export access for catalogs."}
+  - {scope: "envs", description: "Access to all environment operations."}
+  - {scope: "envs:create", description: "Create access for environments."}
+  - {scope: "envs:read", description: "Read access for environments."}
+  - {scope: "envs:update", description: "Update access for environments."}
+  - {scope: "notifications", description: "Access to all notification operations."}
+  - {scope: "notifications:read", description: "Read access for notifications."}
+  - {scope: "notifications:delete", description: "Delete access for notifications."}
+  - {scope: "runs", description: "Access to all run operations."}
+  - {scope: "runs:read", description: "Read access for runs."}
+  - {scope: "runs:cancel", description: "Allows for canceling an active run."}
+  - {scope: "runs:logs", description: "Read access for run logs, including the stream of logs."}
+  - {scope: "runners", description: "Access to all self-hosted runner operations."}
+  - {scope: "runners:read", description: "Read access to runners."}
+  - {scope: "runners:credentials:create", description: "Allows for creating credentials for self-hosted runners."}
+  - {scope: "sandbox", description: "Access to all Tower sandbox operations."}
+  - {scope: "sandbox:secrets:create", description: "Allows for creating a new secret in a sandbox."}
+  - {scope: "schedules", description: "Access to all schedules operations."}
+  - {scope: "schedules:create", description: "Create access for schedules."}
+  - {scope: "schedules:read", description: "Read access for schedules."}
+  - {scope: "schedules:update", description: "Update access for schedules."}
+  - {scope: "schedules:delete", description: "Delete access for schedules."}
+  - {scope: "secrets", description: "Access to all secrets operations."}
+  - {scope: "secrets:read", description: "Read access for secrets."}
+  - {scope: "secrets:create", description: "Create access for secrets."}
+  - {scope: "secrets:update", description: "Update access for secrets."}
+  - {scope: "secrets:delete", description: "Delete access for secrets."}
+  - {scope: "teams", description: "Access to all team operations."}
+  - {scope: "teams:create", description: "Create access for teams."}
+  - {scope: "teams:read", description: "Read access for teams."}
+  - {scope: "teams:update", description: "Update access for teams."}
+  - {scope: "teams:delete", description: "Delete access for teams."}
+  - {scope: "webhooks", description: "Access to all webhooks operations."}
+  - {scope: "webhooks:read", description: "Read access for webhooks."}
+  - {scope: "webhooks:create", description: "Create access for webhooks."}
+  - {scope: "webhooks:update", description: "Update access for webhooks."}
+  - {scope: "webhooks:delete", description: "Delete access for webhooks."}

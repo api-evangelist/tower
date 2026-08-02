@@ -1,0 +1,29 @@
+generated: '2026-07-21'
+method: searched
+source: >-
+  https://status.tower.dev (live status page, "Tower Status"),
+  https://github.com/tower/tower-cli/releases (semver CLI/platform releases),
+  openapi/tower-openapi-original.json (API version v0.11.16, URI-path /v1);
+  deprecated operations derived from the OpenAPI (none flagged).
+versioning:
+  api:
+    scheme: uri-path
+    current: v1
+    spec_version: v0.11.16
+    docs: https://docs.tower.dev/docs/reference/api/tower-api
+  platform:
+    scheme: semver
+    current: 0.3.69 (stable), 0.3.70-rc.1 (pre-release)
+    releases: https://github.com/tower/tower-cli/releases
+  app_versions:
+    notes: >-
+      Tower apps themselves are versioned immutably (v1, v2, ...) per deploy;
+      versions are always pinned to environments, with UI promote/rollback via
+      the app Changelog (docs.tower.dev/docs/using-tower/test).
+deprecation:
+  policy_url: null
+  sunset_header: false
+  notes: No published deprecation policy or Sunset/Deprecation header support found in docs or spec.
+sla: null
+status_page: https://status.tower.dev
+deprecated_operations: []

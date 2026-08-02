@@ -1,0 +1,45 @@
+generated: '2026-07-21'
+method: searched
+source: https://docs.tower.dev/docs/reference/tower-cli
+description: >-
+  The Tower CLI command surface — the primary developer interface to the Tower
+  service (deploy apps, run them locally or in the cloud, manage secrets and
+  teams). The package itself is catalogued in packages/tower-packages.yml; it
+  also embeds the official MCP server (mcp/tower-mcp.yml). Command surface
+  captured from the CLI reference plus the download and MCP docs; the
+  provider-published agent skills (skills/) document additional catalog
+  commands (tower catalogs show/query) available from 0.3.70+.
+docs: https://docs.tower.dev/docs/reference/tower-cli
+repo: https://github.com/tower/tower-cli
+install:
+  pip: pip install -U tower
+  uvx: uvx tower
+  homebrew: brew install tower/tower-cli/tower
+  shell: "curl --proto '=https' --tlsv1.2 -LsSf https://github.com/tower/tower-cli/releases/download/<version>/tower-installer.sh | sh"
+  nix: nix run nixpkgs#tower
+commands:
+  auth:
+    - {name: login, description: Authenticate the CLI with your Tower account (opens a browser; device-login flow).}
+    - {name: version, description: Show the installed CLI version.}
+  apps:
+    - {name: apps list, description: List all of your Tower apps.}
+    - {name: apps create, description: Create a new app (--name required, --description optional).}
+    - {name: apps show, description: Show app details and recent run statuses.}
+    - {name: apps logs, description: Fetch logs for a specific run (app-name#run-number).}
+    - {name: apps delete, description: Delete an app permanently.}
+  deploy_run:
+    - {name: deploy, description: Build and deploy a new immutable app version from the local Towerfile (--environment, --all).}
+    - {name: run, description: Run an app remotely, or locally with --local; --environment selects the runtime context.}
+  secrets:
+    - {name: secrets list, description: List secrets (previews by default; --show for plain text, --environment, --all).}
+    - {name: secrets create, description: Create a secret (--name, --value, --environment).}
+    - {name: secrets delete, description: Delete a secret.}
+  teams:
+    - {name: teams list, description: List teams you belong to (active team marked).}
+    - {name: teams switch, description: Switch the active team context.}
+  catalogs:
+    - {name: catalogs list, description: List Tower-managed Iceberg catalogs (per provider agent skills).}
+    - {name: catalogs show, description: Show schemas and tables in a catalog.}
+    - {name: catalogs query, description: Run read-only SQL against a catalog via DuckDB with auto-vended short-lived credentials (0.3.70+).}
+  agent:
+    - {name: mcp-server, description: Start the official Tower MCP server (stdio, http, or sse transport).}

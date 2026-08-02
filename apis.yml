@@ -1,22 +1,602 @@
 aid: tower
 name: Tower
-description: Tower is a company surfaced as a portfolio company of speedinvest and added to the API Evangelist
-  network as a stub for enrichment. This profile is a lead awaiting the enrichment pipeline.
+description: >-
+  Tower is a Python-native data flow orchestrator and fully-managed data
+  backend for pipelines, agents, and data applications, pairing serverless (or
+  self-hosted) Python compute with an open Apache Iceberg-based lakehouse that
+  is compatible with Snowflake, Spark, and DuckDB. Teams deploy versioned
+  apps with a Towerfile, run dbt Core and dlt ingestion pipelines, schedule
+  and observe runs, and power data agents grounded in fresh company data.
+  Founded by engineers from Snowflake, Databricks, Google Cloud Dataflow, and
+  Puppet, and backed by Speedinvest, Tower ships a REST API, a CLI, a Python
+  SDK, an official MCP server, and provider-published agent skills.
 url: https://raw.githubusercontent.com/api-evangelist/tower/refs/heads/main/apis.yml
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://github.com/tower.png
 x-type: company
 x-source: vc-portfolio
 x-backed-by:
 - speedinvest
-x-tier: stub
-x-tier-reason: portfolio-lead
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-21'
 tags:
-- Company
-apis: []
+- Data Infrastructure
+- Data Engineering
+- Python
+- Apache Iceberg
+- Lakehouse
+- Orchestration
+- Data Pipelines
+- AI Agents
+- MCP
+- ETL
+apis:
+- aid: tower:tower-accounts-api
+  name: Tower Accounts API
+  description: The Accounts API from Tower — 2 operation(s) for accounts.
+  humanURL: https://docs.tower.dev/docs/reference/api/tower-api
+  baseURL: https://api.tower.dev/v1
+  tags:
+  - Accounts
+  properties:
+  - type: OpenAPI
+    url: openapi/tower-accounts-api-openapi.yml
+  - type: Documentation
+    url: https://docs.tower.dev/docs/reference/api/tower-api
+  - type: APIReference
+    url: https://docs.tower.dev/docs/reference/api/tower-api
+  - type: ErrorCatalog
+    url: errors/tower-problem-types.yml
+  - type: Webhooks
+    url: asyncapi/tower-webhooks.yml
+- aid: tower:tower-alerts-api
+  name: Tower Alerts API
+  description: The Alerts API from Tower — 5 operation(s) for alerts.
+  humanURL: https://docs.tower.dev/docs/reference/api/tower-api
+  baseURL: https://api.tower.dev/v1
+  tags:
+  - Alerts
+  properties:
+  - type: OpenAPI
+    url: openapi/tower-alerts-api-openapi.yml
+  - type: Documentation
+    url: https://docs.tower.dev/docs/reference/api/tower-api
+  - type: APIReference
+    url: https://docs.tower.dev/docs/reference/api/tower-api
+  - type: ErrorCatalog
+    url: errors/tower-problem-types.yml
+  - type: Webhooks
+    url: asyncapi/tower-webhooks.yml
+- aid: tower:tower-api-keys-api
+  name: Tower Api Keys API
+  description: The Api Keys API from Tower — 1 operation(s) for api keys.
+  humanURL: https://docs.tower.dev/docs/reference/api/tower-api
+  baseURL: https://api.tower.dev/v1
+  tags:
+  - Api Keys
+  properties:
+  - type: OpenAPI
+    url: openapi/tower-api-keys-api-openapi.yml
+  - type: Documentation
+    url: https://docs.tower.dev/docs/reference/api/tower-api
+  - type: APIReference
+    url: https://docs.tower.dev/docs/reference/api/tower-api
+  - type: ErrorCatalog
+    url: errors/tower-problem-types.yml
+  - type: Webhooks
+    url: asyncapi/tower-webhooks.yml
+- aid: tower:tower-apps-api
+  name: Tower Apps API
+  description: The Apps API from Tower — 12 operation(s) for apps.
+  humanURL: https://docs.tower.dev/docs/reference/api/tower-api
+  baseURL: https://api.tower.dev/v1
+  tags:
+  - Apps
+  properties:
+  - type: OpenAPI
+    url: openapi/tower-apps-api-openapi.yml
+  - type: Documentation
+    url: https://docs.tower.dev/docs/reference/api/tower-api
+  - type: APIReference
+    url: https://docs.tower.dev/docs/reference/api/tower-api
+  - type: ErrorCatalog
+    url: errors/tower-problem-types.yml
+  - type: Webhooks
+    url: asyncapi/tower-webhooks.yml
+- aid: tower:tower-catalogs-api
+  name: Tower Catalogs API
+  description: The Catalogs API from Tower — 4 operation(s) for catalogs.
+  humanURL: https://docs.tower.dev/docs/reference/api/tower-api
+  baseURL: https://api.tower.dev/v1
+  tags:
+  - Catalogs
+  properties:
+  - type: OpenAPI
+    url: openapi/tower-catalogs-api-openapi.yml
+  - type: Documentation
+    url: https://docs.tower.dev/docs/reference/api/tower-api
+  - type: APIReference
+    url: https://docs.tower.dev/docs/reference/api/tower-api
+  - type: ErrorCatalog
+    url: errors/tower-problem-types.yml
+  - type: Webhooks
+    url: asyncapi/tower-webhooks.yml
+- aid: tower:tower-environments-api
+  name: Tower Environments API
+  description: The Environments API from Tower — 2 operation(s) for environments.
+  humanURL: https://docs.tower.dev/docs/reference/api/tower-api
+  baseURL: https://api.tower.dev/v1
+  tags:
+  - Environments
+  properties:
+  - type: OpenAPI
+    url: openapi/tower-environments-api-openapi.yml
+  - type: Documentation
+    url: https://docs.tower.dev/docs/reference/api/tower-api
+  - type: APIReference
+    url: https://docs.tower.dev/docs/reference/api/tower-api
+  - type: ErrorCatalog
+    url: errors/tower-problem-types.yml
+  - type: Webhooks
+    url: asyncapi/tower-webhooks.yml
+- aid: tower:tower-feature-flags-api
+  name: Tower Feature Flags API
+  description: The Feature Flags API from Tower — 1 operation(s) for feature flags.
+  humanURL: https://docs.tower.dev/docs/reference/api/tower-api
+  baseURL: https://api.tower.dev/v1
+  tags:
+  - Feature Flags
+  properties:
+  - type: OpenAPI
+    url: openapi/tower-feature-flags-api-openapi.yml
+  - type: Documentation
+    url: https://docs.tower.dev/docs/reference/api/tower-api
+  - type: APIReference
+    url: https://docs.tower.dev/docs/reference/api/tower-api
+  - type: ErrorCatalog
+    url: errors/tower-problem-types.yml
+  - type: Webhooks
+    url: asyncapi/tower-webhooks.yml
+- aid: tower:tower-guests-api
+  name: Tower Guests API
+  description: The Guests API from Tower — 3 operation(s) for guests.
+  humanURL: https://docs.tower.dev/docs/reference/api/tower-api
+  baseURL: https://api.tower.dev/v1
+  tags:
+  - Guests
+  properties:
+  - type: OpenAPI
+    url: openapi/tower-guests-api-openapi.yml
+  - type: Documentation
+    url: https://docs.tower.dev/docs/reference/api/tower-api
+  - type: APIReference
+    url: https://docs.tower.dev/docs/reference/api/tower-api
+  - type: ErrorCatalog
+    url: errors/tower-problem-types.yml
+  - type: Webhooks
+    url: asyncapi/tower-webhooks.yml
+- aid: tower:tower-login-api
+  name: Tower Login API
+  description: The Login API from Tower — 3 operation(s) for login.
+  humanURL: https://docs.tower.dev/docs/reference/api/tower-api
+  baseURL: https://api.tower.dev/v1
+  tags:
+  - Login
+  properties:
+  - type: OpenAPI
+    url: openapi/tower-login-api-openapi.yml
+  - type: Documentation
+    url: https://docs.tower.dev/docs/reference/api/tower-api
+  - type: APIReference
+    url: https://docs.tower.dev/docs/reference/api/tower-api
+  - type: ErrorCatalog
+    url: errors/tower-problem-types.yml
+  - type: Webhooks
+    url: asyncapi/tower-webhooks.yml
+- aid: tower:tower-organizations-api
+  name: Tower Organizations API
+  description: The Organizations API from Tower — 1 operation(s) for organizations.
+  humanURL: https://docs.tower.dev/docs/reference/api/tower-api
+  baseURL: https://api.tower.dev/v1
+  tags:
+  - Organizations
+  properties:
+  - type: OpenAPI
+    url: openapi/tower-organizations-api-openapi.yml
+  - type: Documentation
+    url: https://docs.tower.dev/docs/reference/api/tower-api
+  - type: APIReference
+    url: https://docs.tower.dev/docs/reference/api/tower-api
+  - type: ErrorCatalog
+    url: errors/tower-problem-types.yml
+  - type: Webhooks
+    url: asyncapi/tower-webhooks.yml
+- aid: tower:tower-plan-api
+  name: Tower Plan API
+  description: The Plan API from Tower — 1 operation(s) for plan.
+  humanURL: https://docs.tower.dev/docs/reference/api/tower-api
+  baseURL: https://api.tower.dev/v1
+  tags:
+  - Plan
+  properties:
+  - type: OpenAPI
+    url: openapi/tower-plan-api-openapi.yml
+  - type: Documentation
+    url: https://docs.tower.dev/docs/reference/api/tower-api
+  - type: APIReference
+    url: https://docs.tower.dev/docs/reference/api/tower-api
+  - type: ErrorCatalog
+    url: errors/tower-problem-types.yml
+  - type: Webhooks
+    url: asyncapi/tower-webhooks.yml
+- aid: tower:tower-runners-api
+  name: Tower Runners API
+  description: The Runners API from Tower — 2 operation(s) for runners.
+  humanURL: https://docs.tower.dev/docs/reference/api/tower-api
+  baseURL: https://api.tower.dev/v1
+  tags:
+  - Runners
+  properties:
+  - type: OpenAPI
+    url: openapi/tower-runners-api-openapi.yml
+  - type: Documentation
+    url: https://docs.tower.dev/docs/reference/api/tower-api
+  - type: APIReference
+    url: https://docs.tower.dev/docs/reference/api/tower-api
+  - type: ErrorCatalog
+    url: errors/tower-problem-types.yml
+  - type: Webhooks
+    url: asyncapi/tower-webhooks.yml
+- aid: tower:tower-runs-api
+  name: Tower Runs API
+  description: The Runs API from Tower — 1 operation(s) for runs.
+  humanURL: https://docs.tower.dev/docs/reference/api/tower-api
+  baseURL: https://api.tower.dev/v1
+  tags:
+  - Runs
+  properties:
+  - type: OpenAPI
+    url: openapi/tower-runs-api-openapi.yml
+  - type: Documentation
+    url: https://docs.tower.dev/docs/reference/api/tower-api
+  - type: APIReference
+    url: https://docs.tower.dev/docs/reference/api/tower-api
+  - type: ErrorCatalog
+    url: errors/tower-problem-types.yml
+  - type: Webhooks
+    url: asyncapi/tower-webhooks.yml
+- aid: tower:tower-sandbox-api
+  name: Tower Sandbox API
+  description: The Sandbox API from Tower — 1 operation(s) for sandbox.
+  humanURL: https://docs.tower.dev/docs/reference/api/tower-api
+  baseURL: https://api.tower.dev/v1
+  tags:
+  - Sandbox
+  properties:
+  - type: OpenAPI
+    url: openapi/tower-sandbox-api-openapi.yml
+  - type: Documentation
+    url: https://docs.tower.dev/docs/reference/api/tower-api
+  - type: APIReference
+    url: https://docs.tower.dev/docs/reference/api/tower-api
+  - type: ErrorCatalog
+    url: errors/tower-problem-types.yml
+  - type: Webhooks
+    url: asyncapi/tower-webhooks.yml
+- aid: tower:tower-schedules-api
+  name: Tower Schedules API
+  description: The Schedules API from Tower — 4 operation(s) for schedules.
+  humanURL: https://docs.tower.dev/docs/reference/api/tower-api
+  baseURL: https://api.tower.dev/v1
+  tags:
+  - Schedules
+  properties:
+  - type: OpenAPI
+    url: openapi/tower-schedules-api-openapi.yml
+  - type: Documentation
+    url: https://docs.tower.dev/docs/reference/api/tower-api
+  - type: APIReference
+    url: https://docs.tower.dev/docs/reference/api/tower-api
+  - type: ErrorCatalog
+    url: errors/tower-problem-types.yml
+  - type: Webhooks
+    url: asyncapi/tower-webhooks.yml
+- aid: tower:tower-secrets-api
+  name: Tower Secrets API
+  description: The Secrets API from Tower — 5 operation(s) for secrets.
+  humanURL: https://docs.tower.dev/docs/reference/api/tower-api
+  baseURL: https://api.tower.dev/v1
+  tags:
+  - Secrets
+  properties:
+  - type: OpenAPI
+    url: openapi/tower-secrets-api-openapi.yml
+  - type: Documentation
+    url: https://docs.tower.dev/docs/reference/api/tower-api
+  - type: APIReference
+    url: https://docs.tower.dev/docs/reference/api/tower-api
+  - type: ErrorCatalog
+    url: errors/tower-problem-types.yml
+  - type: Webhooks
+    url: asyncapi/tower-webhooks.yml
+- aid: tower:tower-service-accounts-api
+  name: Tower Service Accounts API
+  description: The Service Accounts API from Tower — 3 operation(s) for service accounts.
+  humanURL: https://docs.tower.dev/docs/reference/api/tower-api
+  baseURL: https://api.tower.dev/v1
+  tags:
+  - Service Accounts
+  properties:
+  - type: OpenAPI
+    url: openapi/tower-service-accounts-api-openapi.yml
+  - type: Documentation
+    url: https://docs.tower.dev/docs/reference/api/tower-api
+  - type: APIReference
+    url: https://docs.tower.dev/docs/reference/api/tower-api
+  - type: ErrorCatalog
+    url: errors/tower-problem-types.yml
+  - type: Webhooks
+    url: asyncapi/tower-webhooks.yml
+- aid: tower:tower-session-api
+  name: Tower Session API
+  description: The Session API from Tower — 2 operation(s) for session.
+  humanURL: https://docs.tower.dev/docs/reference/api/tower-api
+  baseURL: https://api.tower.dev/v1
+  tags:
+  - Session
+  properties:
+  - type: OpenAPI
+    url: openapi/tower-session-api-openapi.yml
+  - type: Documentation
+    url: https://docs.tower.dev/docs/reference/api/tower-api
+  - type: APIReference
+    url: https://docs.tower.dev/docs/reference/api/tower-api
+  - type: ErrorCatalog
+    url: errors/tower-problem-types.yml
+  - type: Webhooks
+    url: asyncapi/tower-webhooks.yml
+- aid: tower:tower-shouldertaps-api
+  name: Tower Shouldertaps API
+  description: The Shouldertaps API from Tower — 1 operation(s) for shouldertaps.
+  humanURL: https://docs.tower.dev/docs/reference/api/tower-api
+  baseURL: https://api.tower.dev/v1
+  tags:
+  - Shouldertaps
+  properties:
+  - type: OpenAPI
+    url: openapi/tower-shouldertaps-api-openapi.yml
+  - type: Documentation
+    url: https://docs.tower.dev/docs/reference/api/tower-api
+  - type: APIReference
+    url: https://docs.tower.dev/docs/reference/api/tower-api
+  - type: ErrorCatalog
+    url: errors/tower-problem-types.yml
+  - type: Webhooks
+    url: asyncapi/tower-webhooks.yml
+- aid: tower:tower-stats-api
+  name: Tower Stats API
+  description: The Stats API from Tower — 2 operation(s) for stats.
+  humanURL: https://docs.tower.dev/docs/reference/api/tower-api
+  baseURL: https://api.tower.dev/v1
+  tags:
+  - Stats
+  properties:
+  - type: OpenAPI
+    url: openapi/tower-stats-api-openapi.yml
+  - type: Documentation
+    url: https://docs.tower.dev/docs/reference/api/tower-api
+  - type: APIReference
+    url: https://docs.tower.dev/docs/reference/api/tower-api
+  - type: ErrorCatalog
+    url: errors/tower-problem-types.yml
+  - type: Webhooks
+    url: asyncapi/tower-webhooks.yml
+- aid: tower:tower-storage-api
+  name: Tower Storage API
+  description: The Storage API from Tower — 1 operation(s) for storage.
+  humanURL: https://docs.tower.dev/docs/reference/api/tower-api
+  baseURL: https://api.tower.dev/v1
+  tags:
+  - Storage
+  properties:
+  - type: OpenAPI
+    url: openapi/tower-storage-api-openapi.yml
+  - type: Documentation
+    url: https://docs.tower.dev/docs/reference/api/tower-api
+  - type: APIReference
+    url: https://docs.tower.dev/docs/reference/api/tower-api
+  - type: ErrorCatalog
+    url: errors/tower-problem-types.yml
+  - type: Webhooks
+    url: asyncapi/tower-webhooks.yml
+- aid: tower:tower-team-invites-api
+  name: Tower Team Invites API
+  description: The Team Invites API from Tower — 1 operation(s) for team invites.
+  humanURL: https://docs.tower.dev/docs/reference/api/tower-api
+  baseURL: https://api.tower.dev/v1
+  tags:
+  - Team Invites
+  properties:
+  - type: OpenAPI
+    url: openapi/tower-team-invites-api-openapi.yml
+  - type: Documentation
+    url: https://docs.tower.dev/docs/reference/api/tower-api
+  - type: APIReference
+    url: https://docs.tower.dev/docs/reference/api/tower-api
+  - type: ErrorCatalog
+    url: errors/tower-problem-types.yml
+  - type: Webhooks
+    url: asyncapi/tower-webhooks.yml
+- aid: tower:tower-teams-api
+  name: Tower Teams API
+  description: The Teams API from Tower — 6 operation(s) for teams.
+  humanURL: https://docs.tower.dev/docs/reference/api/tower-api
+  baseURL: https://api.tower.dev/v1
+  tags:
+  - Teams
+  properties:
+  - type: OpenAPI
+    url: openapi/tower-teams-api-openapi.yml
+  - type: Documentation
+    url: https://docs.tower.dev/docs/reference/api/tower-api
+  - type: APIReference
+    url: https://docs.tower.dev/docs/reference/api/tower-api
+  - type: ErrorCatalog
+    url: errors/tower-problem-types.yml
+  - type: Webhooks
+    url: asyncapi/tower-webhooks.yml
+- aid: tower:tower-usage-api
+  name: Tower Usage API
+  description: The Usage API from Tower — 2 operation(s) for usage.
+  humanURL: https://docs.tower.dev/docs/reference/api/tower-api
+  baseURL: https://api.tower.dev/v1
+  tags:
+  - Usage
+  properties:
+  - type: OpenAPI
+    url: openapi/tower-usage-api-openapi.yml
+  - type: Documentation
+    url: https://docs.tower.dev/docs/reference/api/tower-api
+  - type: APIReference
+    url: https://docs.tower.dev/docs/reference/api/tower-api
+  - type: ErrorCatalog
+    url: errors/tower-problem-types.yml
+  - type: Webhooks
+    url: asyncapi/tower-webhooks.yml
+- aid: tower:tower-user-api
+  name: Tower User API
+  description: The User API from Tower — 3 operation(s) for user.
+  humanURL: https://docs.tower.dev/docs/reference/api/tower-api
+  baseURL: https://api.tower.dev/v1
+  tags:
+  - User
+  properties:
+  - type: OpenAPI
+    url: openapi/tower-user-api-openapi.yml
+  - type: Documentation
+    url: https://docs.tower.dev/docs/reference/api/tower-api
+  - type: APIReference
+    url: https://docs.tower.dev/docs/reference/api/tower-api
+  - type: ErrorCatalog
+    url: errors/tower-problem-types.yml
+  - type: Webhooks
+    url: asyncapi/tower-webhooks.yml
+- aid: tower:tower-webhooks-api
+  name: Tower Webhooks API
+  description: The Webhooks API from Tower — 3 operation(s) for webhooks.
+  humanURL: https://docs.tower.dev/docs/reference/api/tower-api
+  baseURL: https://api.tower.dev/v1
+  tags:
+  - Webhooks
+  properties:
+  - type: OpenAPI
+    url: openapi/tower-webhooks-api-openapi.yml
+  - type: Documentation
+    url: https://docs.tower.dev/docs/reference/api/tower-api
+  - type: APIReference
+    url: https://docs.tower.dev/docs/reference/api/tower-api
+  - type: ErrorCatalog
+    url: errors/tower-problem-types.yml
+  - type: Webhooks
+    url: asyncapi/tower-webhooks.yml
+- aid: tower:tower-whoami-api
+  name: Tower Whoami API
+  description: The Whoami API from Tower — 1 operation(s) for whoami.
+  humanURL: https://docs.tower.dev/docs/reference/api/tower-api
+  baseURL: https://api.tower.dev/v1
+  tags:
+  - Whoami
+  properties:
+  - type: OpenAPI
+    url: openapi/tower-whoami-api-openapi.yml
+  - type: Documentation
+    url: https://docs.tower.dev/docs/reference/api/tower-api
+  - type: APIReference
+    url: https://docs.tower.dev/docs/reference/api/tower-api
+  - type: ErrorCatalog
+    url: errors/tower-problem-types.yml
+  - type: Webhooks
+    url: asyncapi/tower-webhooks.yml
+common:
+- type: DomainSecurity
+  url: security/tower-domain-security.yml
+- url: https://tower.dev
+  type: Website
+- url: https://docs.tower.dev
+  type: DeveloperPortal
+- url: https://docs.tower.dev/docs/intro
+  type: Documentation
+- url: https://docs.tower.dev/docs/getting-started/quick-start
+  type: GettingStarted
+- url: https://tower.dev/blog
+  type: Blog
+- url: https://github.com/tower
+  type: GitHubOrganization
+- url: https://tower.dev/pricing
+  type: Pricing
+- url: https://app.tower.dev/register
+  type: SignUp
+- url: https://app.tower.dev
+  type: Login
+- url: https://tower.dev/legal/privacy
+  type: PrivacyPolicy
+- url: https://tower.dev/legal/sfa
+  type: TermsOfService
+- url: https://status.tower.dev
+  type: StatusPage
+- url: lifecycle/tower-lifecycle.yml
+  type: Lifecycle
+- url: changelog/tower-changelog.yml
+  type: ChangeLog
+- url: llms/tower-llms.txt
+  type: LLMsTxt
+- url: well-known/tower-well-known.yml
+  type: WellKnown
+- url: mcp/tower-mcp.yml
+  type: MCPServer
+- url: packages/tower-packages.yml
+  type: Packages
+- url: packages/tower-packages.yml
+  type: SDKs
+- url: cli/tower-cli.yml
+  type: CLI
+- url: authentication/tower-authentication.yml
+  type: Authentication
+- url: scopes/tower-scopes.yml
+  type: OAuthScopes
+- url: conventions/tower-conventions.yml
+  type: Conventions
+- url: conformance/tower-conformance.yml
+  type: Conformance
+- url: errors/tower-problem-types.yml
+  type: ErrorCatalog
+- url: asyncapi/tower-webhooks.yml
+  type: Webhooks
+- url: sandbox/tower-sandbox.yml
+  type: Sandbox
+- url: data-model/tower-data-model.yml
+  type: DataModel
+- url: skills/_index.yml
+  type: AgentSkill
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
+x-enrichment:
+  date: '2026-07-21'
+  status: enriched
+  artifacts_added: 24
+  pass: local-v1

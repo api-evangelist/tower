@@ -1,0 +1,74 @@
+generated: '2026-07-21'
+method: searched
+status: published
+source: https://docs.tower.dev/docs/reference/mcp-server
+description: >-
+  Tower ships an official first-party MCP server as part of the Tower CLI
+  (pip install tower / uvx tower). It runs locally against your authenticated
+  Tower session and supports three transports: stdio (recommended; the AI tool
+  spawns `tower mcp-server` directly), streamable HTTP
+  (http://127.0.0.1:34567/mcp), and legacy SSE (http://127.0.0.1:34567/sse).
+  Tower also publishes a Claude Code plugin (tower-cli repo, plugin/ dir with
+  .mcp.json) and documents one-click installs for Cursor, VS Code, Gemini CLI,
+  Windsurf, and Zed. Tool list captured verbatim from the MCP server reference.
+server:
+  name: tower
+  transport: stdio
+  command: tower mcp-server
+  install: pip install tower
+  alt_install: uvx tower mcp-server
+  auth: Tower CLI session (tower login)
+  http: tower mcp-server --transport http --port 34567  # http://127.0.0.1:34567/mcp
+  sse: tower mcp-server --transport sse --port 34567    # http://127.0.0.1:34567/sse
+  claude_code: claude mcp add tower -- tower mcp-server
+  plugin: https://github.com/tower/tower-cli/tree/main/plugin
+docs:
+  - https://docs.tower.dev/docs/reference/mcp-server
+  - https://docs.tower.dev/docs/getting-started/quickstart-with-mcp
+tools:
+  - name: tower_apps_list
+    description: List all Tower apps in your account
+  - name: tower_apps_create
+    description: Create a new Tower app
+  - name: tower_apps_show
+    description: Show details for a Tower app and its recent runs
+  - name: tower_apps_logs
+    description: Get logs for a specific Tower app run
+  - name: tower_apps_delete
+    description: Delete a Tower app
+  - name: tower_deploy
+    description: Deploy your app to Tower cloud
+  - name: tower_run_local
+    description: Run your app locally using the Towerfile
+  - name: tower_run_remote
+    description: Run your app remotely on Tower cloud
+  - name: tower_file_generate
+    description: Generate a Towerfile from pyproject.toml
+  - name: tower_file_read
+    description: Read and parse the current Towerfile configuration
+  - name: tower_file_update
+    description: Update Towerfile app configuration
+  - name: tower_file_add_parameter
+    description: Add a new parameter to the Towerfile
+  - name: tower_file_validate
+    description: Validate the current Towerfile configuration
+  - name: tower_schedules_list
+    description: List all schedules for apps
+  - name: tower_schedules_create
+    description: Create a schedule to run an app on a cron schedule
+  - name: tower_schedules_update
+    description: Update an existing schedule
+  - name: tower_schedules_delete
+    description: Delete a schedule
+  - name: tower_secrets_list
+    description: List secrets in your Tower account (previews only)
+  - name: tower_secrets_create
+    description: Create a new secret in Tower
+  - name: tower_secrets_delete
+    description: Delete a secret from Tower
+  - name: tower_teams_list
+    description: List teams you belong to
+  - name: tower_teams_switch
+    description: Switch context to a different team
+  - name: tower_workflow_help
+    description: Show the recommended workflow for Tower app development

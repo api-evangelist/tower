@@ -1,0 +1,38 @@
+generated: '2026-07-21'
+method: searched
+source: >-
+  https://docs.tower.dev/docs/using-tower/test,
+  https://docs.tower.dev/docs/concepts/apps (local execution mode) and
+  openapi/tower-openapi-original.json (create-sandbox-secrets).
+description: >-
+  Tower's test-vs-live surface. There are no magic test tokens; instead Tower
+  separates test from production along three documented axes: (1) local
+  execution mode — `tower run --local` executes the app on your machine inside
+  the Tower runtime contract, with secrets injected; (2) environments — apps
+  deploy immutable versions per environment (default/test/production), each
+  with its own secret values, so a version can "soak" in test before UI
+  promote/rollback; (3) Tower-provided sandbox secrets — the
+  create-sandbox-secrets operation (POST /v1/sandbox/secrets, scope
+  sandbox:secrets:create) creates secrets with Tower-provided default values
+  for specified keys in a given environment. Apps can branch on the runtime
+  environment via the TOWER_ENVIRONMENT variable.
+modes:
+  local_run:
+    command: tower run --local
+    description: Run the app locally to verify compatibility with the Tower remote execution environment.
+  test_environment:
+    commands:
+      - tower secrets create --name=<key> --value=<value> --environment=test
+      - tower deploy --environment=test
+      - tower run --environment=test
+    description: Per-environment secrets and pinned versions isolate test from production.
+  sandbox_secrets:
+    api: POST /v1/sandbox/secrets (create-sandbox-secrets)
+    scope: sandbox:secrets:create
+    description: Creates secrets with Tower-provided default values for the specified keys in the given environment.
+environment_variable:
+  name: TOWER_ENVIRONMENT
+  docs: https://docs.tower.dev/docs/using-tower/advanced
+promotion:
+  ui: App Changelog → Promote / Rollback
+  cli: tower deploy --environment=production
