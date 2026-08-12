@@ -530,6 +530,8 @@ apis:
   - type: Webhooks
     url: asyncapi/tower-webhooks.yml
 common:
+- type: Overlay
+  url: overlays/tower-overlay.yaml
 - type: DomainSecurity
   url: security/tower-domain-security.yml
 - url: https://tower.dev
