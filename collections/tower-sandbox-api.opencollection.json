@@ -1,0 +1,33 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Tower Accounts Sandbox API",
+    "version": "v0.11.16"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Sandbox",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create Tower-provided sandbox secrets",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.tower.dev/v1/sandbox/secrets",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates secrets with Tower-provided default values for the specified keys in the given environment."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

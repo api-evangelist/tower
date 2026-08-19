@@ -1,0 +1,133 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Tower Accounts Alerts API",
+    "version": "v0.11.16"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Alerts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List alerts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tower.dev/v1/alerts",
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "The page number to fetch."
+              },
+              {
+                "name": "page_size",
+                "value": "",
+                "type": "query",
+                "description": "The number of records to fetch on each page."
+              },
+              {
+                "name": "alert_type",
+                "value": "",
+                "type": "query",
+                "description": "Filter alerts by alert type"
+              },
+              {
+                "name": "start_at",
+                "value": "",
+                "type": "query",
+                "description": "Filter alerts created after or at this datetime (inclusive)"
+              },
+              {
+                "name": "end_at",
+                "value": "",
+                "type": "query",
+                "description": "Filter alerts created before or at this datetime (inclusive)"
+              },
+              {
+                "name": "acked",
+                "value": "",
+                "type": "query",
+                "description": "Filter alerts by acknowledged status."
+              },
+              {
+                "name": "environment",
+                "value": "",
+                "type": "query",
+                "description": "Filter alerts by environment (e.g., production, staging)"
+              }
+            ]
+          },
+          "docs": "List alerts for the current account with optional filtering"
+        },
+        {
+          "info": {
+            "name": "Acknowledge all alerts",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.tower.dev/v1/alerts/acknowledge-all"
+          },
+          "docs": "Mark all unacknowledged alerts as acknowledged for the current user in the current account"
+        },
+        {
+          "info": {
+            "name": "Stream alert notifications",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tower.dev/v1/alerts/stream"
+          },
+          "docs": "Streams alert notifications in real-time"
+        },
+        {
+          "info": {
+            "name": "Delete alert",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.tower.dev/v1/alerts/:alert_id",
+            "params": [
+              {
+                "name": "alert_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the alert to delete"
+              }
+            ]
+          },
+          "docs": "Permanently delete an alert"
+        },
+        {
+          "info": {
+            "name": "Acknowledge alert",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.tower.dev/v1/alerts/:alert_seq/acknowledge",
+            "params": [
+              {
+                "name": "alert_seq",
+                "value": "",
+                "type": "path",
+                "description": "Seq of the alert to acknowledge"
+              }
+            ]
+          },
+          "docs": "Mark an alert as acknowledged"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

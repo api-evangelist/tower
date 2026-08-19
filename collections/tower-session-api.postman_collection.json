@@ -1,0 +1,626 @@
+{
+  "item": [
+    {
+      "id": "ac7a9e44-3f18-47dd-95eb-c4978c79b637",
+      "name": "Session",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "3e0b2273-1cf4-48e5-9560-778083feabae",
+          "name": "Delete session",
+          "request": {
+            "name": "Delete session",
+            "description": {
+              "content": "Terminate a session and revoke the access keys associated with it.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "session"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"session_id\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "6bf9e00b-7b2b-4c0e-8db4-129ac40fe104",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "session"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"session_id\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "disabled": false,
+                  "key": "Set-Cookie",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"session\": {\n    \"user\": {\n      \"first_name\": \"string\",\n      \"last_name\": \"string\",\n      \"company\": \"string\",\n      \"country\": \"string\",\n      \"promo_code\": \"string\",\n      \"email\": \"string\",\n      \"profile_photo_url\": \"string\",\n      \"created_at\": \"2024-06-16T17:22:08.440Z\",\n      \"is_alerts_enabled\": false,\n      \"is_confirmed\": false,\n      \"is_subscribed_to_changelog\": true,\n      \"is_invitation_claimed\": true\n    },\n    \"token\": {\n      \"access_token\": \"string\",\n      \"jwt\": \"string\",\n      \"refresh_token\": \"string\"\n    },\n    \"teams\": [\n      {\n        \"name\": \"string\",\n        \"type\": \"string\",\n        \"organization\": \"string\",\n        \"execution_region\": \"string\",\n        \"slug\": \"string\",\n        \"token\": {\n          \"access_token\": \"string\",\n          \"jwt\": \"string\",\n          \"refresh_token\": \"string\"\n        }\n      },\n      {\n        \"name\": \"string\",\n        \"type\": \"string\",\n        \"organization\": \"string\",\n        \"execution_region\": \"string\",\n        \"slug\": \"string\",\n        \"token\": {\n          \"access_token\": \"string\",\n          \"jwt\": \"string\",\n          \"refresh_token\": \"string\"\n        }\n      }\n    ],\n    \"featurebase_identity\": {\n      \"user_hash\": \"string\",\n      \"company_hash\": \"string\"\n    }\n  },\n  \"$schema\": \"https://api.tower.dev/v1/schemas/DeleteSessionResponse.json\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "7bdf05d7-a439-4253-a24c-98f6a02f90d2",
+              "name": "Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "session"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"session_id\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"$schema\": \"https://api.tower.dev/v1/schemas/ErrorModel.json\",\n  \"detail\": \"Property foo is required but is missing.\",\n  \"errors\": [\n    {\n      \"location\": \"string\",\n      \"message\": \"string\",\n      \"value\": {}\n    },\n    {\n      \"location\": \"string\",\n      \"message\": \"string\",\n      \"value\": {}\n    }\n  ],\n  \"instance\": \"https://example.com/error-log/abc123\",\n  \"status\": 400,\n  \"title\": \"Bad Request\",\n  \"type\": \"https://example.com/errors/example\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "1384ff3e-72f8-4d52-8d8c-759abe449cc1",
+          "name": "Describe session",
+          "request": {
+            "name": "Describe session",
+            "description": {
+              "content": "Validate your current session and return the user information associated with the session.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "session"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "0e0e7dc9-5525-4e81-8d7b-663f8fa1adea",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "session"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"session\": {\n    \"user\": {\n      \"first_name\": \"string\",\n      \"last_name\": \"string\",\n      \"company\": \"string\",\n      \"country\": \"string\",\n      \"promo_code\": \"string\",\n      \"email\": \"string\",\n      \"profile_photo_url\": \"string\",\n      \"created_at\": \"1988-12-11T01:28:02.856Z\",\n      \"is_alerts_enabled\": true,\n      \"is_confirmed\": true,\n      \"is_subscribed_to_changelog\": true,\n      \"is_invitation_claimed\": true\n    },\n    \"token\": {\n      \"access_token\": \"string\",\n      \"jwt\": \"string\",\n      \"refresh_token\": \"string\"\n    },\n    \"teams\": [\n      {\n        \"name\": \"string\",\n        \"type\": \"string\",\n        \"organization\": \"string\",\n        \"execution_region\": \"string\",\n        \"slug\": \"string\",\n        \"token\": {\n          \"access_token\": \"string\",\n          \"jwt\": \"string\",\n          \"refresh_token\": \"string\"\n        }\n      },\n      {\n        \"name\": \"string\",\n        \"type\": \"string\",\n        \"organization\": \"string\",\n        \"execution_region\": \"string\",\n        \"slug\": \"string\",\n        \"token\": {\n          \"access_token\": \"string\",\n          \"jwt\": \"string\",\n          \"refresh_token\": \"string\"\n        }\n      }\n    ],\n    \"featurebase_identity\": {\n      \"user_hash\": \"string\",\n      \"company_hash\": \"string\"\n    }\n  },\n  \"$schema\": \"https://api.tower.dev/v1/schemas/DescribeSessionResponse.json\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0d6489f5-e5ed-49e9-a860-58140e8ca395",
+              "name": "Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "session"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"$schema\": \"https://api.tower.dev/v1/schemas/ErrorModel.json\",\n  \"detail\": \"Property foo is required but is missing.\",\n  \"errors\": [\n    {\n      \"location\": \"string\",\n      \"message\": \"string\",\n      \"value\": {}\n    },\n    {\n      \"location\": \"string\",\n      \"message\": \"string\",\n      \"value\": {}\n    }\n  ],\n  \"instance\": \"https://example.com/error-log/abc123\",\n  \"status\": 400,\n  \"title\": \"Bad Request\",\n  \"type\": \"https://example.com/errors/example\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "ff6b9dfa-6624-4fe3-9e5d-d5cdeebbb9ff",
+          "name": "Create session",
+          "request": {
+            "name": "Create session",
+            "description": {
+              "content": "Create a new session and return it.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "session"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"<string>\",\n  \"password\": \"<string>\",\n  \"code\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "6990aa97-5de7-43be-ae02-2a4a5306492f",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "session"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"username\": \"<string>\",\n  \"password\": \"<string>\",\n  \"code\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "disabled": false,
+                  "key": "Set-Cookie",
+                  "value": "string",
+                  "description": ""
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"session\": {\n    \"user\": {\n      \"first_name\": \"string\",\n      \"last_name\": \"string\",\n      \"company\": \"string\",\n      \"country\": \"string\",\n      \"promo_code\": \"string\",\n      \"email\": \"string\",\n      \"profile_photo_url\": \"string\",\n      \"created_at\": \"1994-08-07T00:07:52.002Z\",\n      \"is_alerts_enabled\": false,\n      \"is_confirmed\": false,\n      \"is_subscribed_to_changelog\": false,\n      \"is_invitation_claimed\": true\n    },\n    \"token\": {\n      \"access_token\": \"string\",\n      \"jwt\": \"string\",\n      \"refresh_token\": \"string\"\n    },\n    \"teams\": [\n      {\n        \"name\": \"string\",\n        \"type\": \"string\",\n        \"organization\": \"string\",\n        \"execution_region\": \"string\",\n        \"slug\": \"string\",\n        \"token\": {\n          \"access_token\": \"string\",\n          \"jwt\": \"string\",\n          \"refresh_token\": \"string\"\n        }\n      },\n      {\n        \"name\": \"string\",\n        \"type\": \"string\",\n        \"organization\": \"string\",\n        \"execution_region\": \"string\",\n        \"slug\": \"string\",\n        \"token\": {\n          \"access_token\": \"string\",\n          \"jwt\": \"string\",\n          \"refresh_token\": \"string\"\n        }\n      }\n    ],\n    \"featurebase_identity\": {\n      \"user_hash\": \"string\",\n      \"company_hash\": \"string\"\n    }\n  },\n  \"$schema\": \"https://api.tower.dev/v1/schemas/CreateSessionResponse.json\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "de26d450-5326-414d-a1ac-e08e09c6363c",
+              "name": "Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "session"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"username\": \"<string>\",\n  \"password\": \"<string>\",\n  \"code\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"$schema\": \"https://api.tower.dev/v1/schemas/ErrorModel.json\",\n  \"detail\": \"Property foo is required but is missing.\",\n  \"errors\": [\n    {\n      \"location\": \"string\",\n      \"message\": \"string\",\n      \"value\": {}\n    },\n    {\n      \"location\": \"string\",\n      \"message\": \"string\",\n      \"value\": {}\n    }\n  ],\n  \"instance\": \"https://example.com/error-log/abc123\",\n  \"status\": 400,\n  \"title\": \"Bad Request\",\n  \"type\": \"https://example.com/errors/example\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "3b1448d9-ee28-49af-9937-c1bf3d318e78",
+          "name": "Refresh session",
+          "request": {
+            "name": "Refresh session",
+            "description": {
+              "content": "If your access tokens expire, this API endpoint takes a Refresh Token and returns a new set of Access Tokens for your session. Note that we don't rotate the Refresh Token itself, and it's not returned by this API endpoint.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "session",
+                "refresh"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refresh_token\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "37f2d9e4-a3bb-4979-b824-608cc2c15f35",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "session",
+                    "refresh"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"refresh_token\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"refreshed_at\": \"1949-02-13T09:53:18.712Z\",\n  \"session\": {\n    \"user\": {\n      \"first_name\": \"string\",\n      \"last_name\": \"string\",\n      \"company\": \"string\",\n      \"country\": \"string\",\n      \"promo_code\": \"string\",\n      \"email\": \"string\",\n      \"profile_photo_url\": \"string\",\n      \"created_at\": \"1962-04-14T07:02:30.981Z\",\n      \"is_alerts_enabled\": true,\n      \"is_confirmed\": false,\n      \"is_subscribed_to_changelog\": true,\n      \"is_invitation_claimed\": false\n    },\n    \"token\": {\n      \"access_token\": \"string\",\n      \"jwt\": \"string\",\n      \"refresh_token\": \"string\"\n    },\n    \"teams\": [\n      {\n        \"name\": \"string\",\n        \"type\": \"string\",\n        \"organization\": \"string\",\n        \"execution_region\": \"string\",\n        \"slug\": \"string\",\n        \"token\": {\n          \"access_token\": \"string\",\n          \"jwt\": \"string\",\n          \"refresh_token\": \"string\"\n        }\n      },\n      {\n        \"name\": \"string\",\n        \"type\": \"string\",\n        \"organization\": \"string\",\n        \"execution_region\": \"string\",\n        \"slug\": \"string\",\n        \"token\": {\n          \"access_token\": \"string\",\n          \"jwt\": \"string\",\n          \"refresh_token\": \"string\"\n        }\n      }\n    ],\n    \"featurebase_identity\": {\n      \"user_hash\": \"string\",\n      \"company_hash\": \"string\"\n    }\n  },\n  \"$schema\": \"https://api.tower.dev/v1/schemas/RefreshSessionResponse.json\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4952725d-c7db-400e-8ca3-1d9c5bb7cecf",
+              "name": "Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "session",
+                    "refresh"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"refresh_token\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"$schema\": \"https://api.tower.dev/v1/schemas/ErrorModel.json\",\n  \"detail\": \"Property foo is required but is missing.\",\n  \"errors\": [\n    {\n      \"location\": \"string\",\n      \"message\": \"string\",\n      \"value\": {}\n    },\n    {\n      \"location\": \"string\",\n      \"message\": \"string\",\n      \"value\": {}\n    }\n  ],\n  \"instance\": \"https://example.com/error-log/abc123\",\n  \"status\": 400,\n  \"title\": \"Bad Request\",\n  \"type\": \"https://example.com/errors/example\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.tower.dev/v1",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "dd407c15-484e-4497-b97a-4144b257b8af",
+    "name": "Tower Accounts Session API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "REST API to interact with Tower Services.\n\nContact Support:\n Name: Tower Computing GmbH\n Email: hello@tower.dev",
+      "type": "text/plain"
+    }
+  }
+}

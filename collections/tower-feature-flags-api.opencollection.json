@@ -1,0 +1,37 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Tower Accounts Feature Flags API",
+    "version": "v0.11.16"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Feature Flags",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get feature flag value",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tower.dev/v1/feature-flags/:key",
+            "params": [
+              {
+                "name": "key",
+                "value": "webhooks",
+                "type": "path",
+                "description": "The feature flag key"
+              }
+            ]
+          },
+          "docs": "Get the current value of a feature flag. Returns the flag value if enabled, or a default falsey value if disabled."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

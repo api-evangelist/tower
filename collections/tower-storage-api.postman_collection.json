@@ -1,0 +1,163 @@
+{
+  "item": [
+    {
+      "id": "b8fd7965-daf2-4547-b228-8461cadfe251",
+      "name": "Storage",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "3286ed00-79b7-49e3-908b-17cbac6b396d",
+          "name": "Describe default catalog",
+          "request": {
+            "name": "Describe default catalog",
+            "description": {
+              "content": "Returns the team's default catalog, provisioning it lazily if it does not yet exist.\n\nWhen two concurrent first calls race to provision the catalog, the loser receives 202 Accepted; retry after a few seconds and the catalog will be ready.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "storage",
+                "catalogs",
+                "default"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "0dbd9355-fee4-4a97-90c4-d90aaa4d2a72",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "storage",
+                    "catalogs",
+                    "default"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"catalog\": {\n    \"type\": \"string\",\n    \"name\": \"string\",\n    \"environment\": \"string\",\n    \"properties\": [\n      {\n        \"name\": \"string\",\n        \"preview\": \"string\",\n        \"environment_variable\": \"string\"\n      },\n      {\n        \"name\": \"string\",\n        \"preview\": \"string\",\n        \"environment_variable\": \"string\"\n      }\n    ],\n    \"CreatedAt\": \"1962-07-10T09:09:58.660Z\",\n    \"slug\": \"string\"\n  },\n  \"$schema\": \"https://api.tower.dev/v1/schemas/DescribeCatalogResponse.json\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c872ccf1-f370-4a4f-b65c-9ad3431c4825",
+              "name": "Provisioning is in progress; retry after a few seconds.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "storage",
+                    "catalogs",
+                    "default"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Accepted",
+              "code": 202,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.tower.dev/v1",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "47c4bcec-d320-4097-a6ff-0714638f52c9",
+    "name": "Tower Accounts Storage API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "REST API to interact with Tower Services.\n\nContact Support:\n Name: Tower Computing GmbH\n Email: hello@tower.dev",
+      "type": "text/plain"
+    }
+  }
+}

@@ -1,0 +1,1043 @@
+{
+  "item": [
+    {
+      "id": "5cf324be-b0cd-45db-b973-d0d342ab1fbb",
+      "name": "Schedules",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "d9103580-c2c1-4fd1-86c5-8d636243f090",
+          "name": "Delete schedule",
+          "request": {
+            "name": "Delete schedule",
+            "description": {
+              "content": "Delete an existing schedule for an app.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "schedules"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ids\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "bbbe20f5-e133-4cec-85d1-73d1ca315b37",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "schedules"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"ids\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"schedules\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"cron\": \"string\",\n      \"timezone\": \"string\",\n      \"environment\": \"string\",\n      \"app_name\": \"string\",\n      \"app_status\": \"disabled\",\n      \"status\": \"active\",\n      \"overlap_policy\": \"skip\",\n      \"created_at\": \"1976-09-10T18:25:17.637Z\",\n      \"updated_at\": \"2016-12-28T07:18:09.726Z\",\n      \"app_version\": \"string\",\n      \"owner\": {\n        \"type\": \"service_account\",\n        \"name\": \"string\"\n      },\n      \"parameters\": [\n        {\n          \"name\": \"string\",\n          \"value\": \"string\",\n          \"hidden\": false,\n          \"is_override\": true\n        },\n        {\n          \"name\": \"string\",\n          \"value\": \"string\",\n          \"hidden\": false,\n          \"is_override\": true\n        }\n      ]\n    },\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"cron\": \"string\",\n      \"timezone\": \"string\",\n      \"environment\": \"string\",\n      \"app_name\": \"string\",\n      \"app_status\": \"disabled\",\n      \"status\": \"active\",\n      \"overlap_policy\": \"allow\",\n      \"created_at\": \"2024-08-01T01:03:36.987Z\",\n      \"updated_at\": \"1951-08-11T16:41:31.443Z\",\n      \"app_version\": \"string\",\n      \"owner\": {\n        \"type\": \"user\",\n        \"name\": \"string\"\n      },\n      \"parameters\": [\n        {\n          \"name\": \"string\",\n          \"value\": \"string\",\n          \"hidden\": false,\n          \"is_override\": false\n        },\n        {\n          \"name\": \"string\",\n          \"value\": \"string\",\n          \"hidden\": false,\n          \"is_override\": true\n        }\n      ]\n    }\n  ],\n  \"$schema\": \"https://api.tower.dev/v1/schemas/DeleteScheduleResponse.json\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2db14de5-5620-401f-8c98-09bff5137190",
+              "name": "Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "schedules"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"ids\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"$schema\": \"https://api.tower.dev/v1/schemas/ErrorModel.json\",\n  \"detail\": \"Property foo is required but is missing.\",\n  \"errors\": [\n    {\n      \"location\": \"string\",\n      \"message\": \"string\",\n      \"value\": {}\n    },\n    {\n      \"location\": \"string\",\n      \"message\": \"string\",\n      \"value\": {}\n    }\n  ],\n  \"instance\": \"https://example.com/error-log/abc123\",\n  \"status\": 400,\n  \"title\": \"Bad Request\",\n  \"type\": \"https://example.com/errors/example\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "85fae010-d0bb-4601-b93f-1c66a4c94c69",
+          "name": "List schedules",
+          "request": {
+            "name": "List schedules",
+            "description": {
+              "content": "Lists all schedules for the current account, optionally filtered by environment and app.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "schedules"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "1",
+                  "description": "The page number to fetch."
+                },
+                {
+                  "disabled": false,
+                  "key": "page_size",
+                  "value": "20",
+                  "description": "The number of records to fetch on each page."
+                },
+                {
+                  "disabled": false,
+                  "key": "environment",
+                  "value": "<string>",
+                  "description": "Filter schedules by environment. If not provided, all environments will be included."
+                },
+                {
+                  "disabled": false,
+                  "key": "app",
+                  "value": "<string>",
+                  "description": "Filter schedules by app name. If not provided, schedules across all apps will be included."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "0e62bb80-0747-4566-975a-efe7d1087dda",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "schedules"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "page_size",
+                      "value": "20"
+                    },
+                    {
+                      "key": "environment",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "app",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"schedules\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"cron\": \"string\",\n      \"timezone\": \"string\",\n      \"environment\": \"string\",\n      \"app_name\": \"string\",\n      \"app_status\": \"active\",\n      \"status\": \"disabled\",\n      \"overlap_policy\": \"skip\",\n      \"created_at\": \"2026-04-10T11:31:12.520Z\",\n      \"updated_at\": \"1996-10-12T20:09:54.969Z\",\n      \"app_version\": \"string\",\n      \"owner\": {\n        \"type\": \"user\",\n        \"name\": \"string\"\n      },\n      \"parameters\": [\n        {\n          \"name\": \"string\",\n          \"value\": \"string\",\n          \"hidden\": false,\n          \"is_override\": false\n        },\n        {\n          \"name\": \"string\",\n          \"value\": \"string\",\n          \"hidden\": false,\n          \"is_override\": true\n        }\n      ]\n    },\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"cron\": \"string\",\n      \"timezone\": \"string\",\n      \"environment\": \"string\",\n      \"app_name\": \"string\",\n      \"app_status\": \"active\",\n      \"status\": \"disabled\",\n      \"overlap_policy\": \"allow\",\n      \"created_at\": \"1969-03-05T02:52:15.343Z\",\n      \"updated_at\": \"1960-04-10T16:15:09.717Z\",\n      \"app_version\": \"string\",\n      \"owner\": {\n        \"type\": \"service_account\",\n        \"name\": \"string\"\n      },\n      \"parameters\": [\n        {\n          \"name\": \"string\",\n          \"value\": \"string\",\n          \"hidden\": false,\n          \"is_override\": false\n        },\n        {\n          \"name\": \"string\",\n          \"value\": \"string\",\n          \"hidden\": false,\n          \"is_override\": true\n        }\n      ]\n    }\n  ],\n  \"pages\": {\n    \"page\": 8933,\n    \"total\": 3883,\n    \"num_pages\": 2264,\n    \"page_size\": 2660\n  },\n  \"$schema\": \"https://api.tower.dev/v1/schemas/ListSchedulesResponse.json\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9c9134a3-325d-4b79-9320-7ee55837fcfa",
+              "name": "Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "schedules"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "page_size",
+                      "value": "20"
+                    },
+                    {
+                      "key": "environment",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "app",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"$schema\": \"https://api.tower.dev/v1/schemas/ErrorModel.json\",\n  \"detail\": \"Property foo is required but is missing.\",\n  \"errors\": [\n    {\n      \"location\": \"string\",\n      \"message\": \"string\",\n      \"value\": {}\n    },\n    {\n      \"location\": \"string\",\n      \"message\": \"string\",\n      \"value\": {}\n    }\n  ],\n  \"instance\": \"https://example.com/error-log/abc123\",\n  \"status\": 400,\n  \"title\": \"Bad Request\",\n  \"type\": \"https://example.com/errors/example\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "80d685a8-2fbe-4cc1-895c-7e56c599ec76",
+          "name": "Create schedule",
+          "request": {
+            "name": "Create schedule",
+            "description": {
+              "content": "Create a new schedule for an app.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "schedules"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"app_name\": \"<string>\",\n  \"cron\": \"<string>\",\n  \"app_version\": \"<string,null>\",\n  \"environment\": \"default\",\n  \"name\": \"<string,null>\",\n  \"overlap_policy\": \"allow\",\n  \"parameters\": [\n    {\n      \"name\": \"<string>\",\n      \"value\": \"<string>\",\n      \"hidden\": false,\n      \"is_override\": \"<boolean,null>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"value\": \"<string>\",\n      \"hidden\": false,\n      \"is_override\": \"<boolean,null>\"\n    }\n  ],\n  \"status\": \"<string,null>\",\n  \"timezone\": \"UTC\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "6407a793-451b-4f94-9791-5ef3507bab68",
+              "name": "Created",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "schedules"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"app_name\": \"<string>\",\n  \"cron\": \"<string>\",\n  \"app_version\": \"<string,null>\",\n  \"environment\": \"default\",\n  \"name\": \"<string,null>\",\n  \"overlap_policy\": \"allow\",\n  \"parameters\": [\n    {\n      \"name\": \"string\",\n      \"value\": \"string\",\n      \"hidden\": false,\n      \"is_override\": true\n    },\n    {\n      \"name\": \"string\",\n      \"value\": \"string\",\n      \"hidden\": false,\n      \"is_override\": false\n    }\n  ],\n  \"status\": \"<string,null>\",\n  \"timezone\": \"UTC\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"schedule\": {\n    \"id\": \"string\",\n    \"name\": \"string\",\n    \"cron\": \"string\",\n    \"timezone\": \"string\",\n    \"environment\": \"string\",\n    \"app_name\": \"string\",\n    \"app_status\": \"active\",\n    \"status\": \"active\",\n    \"overlap_policy\": \"skip\",\n    \"created_at\": \"1986-06-27T21:52:22.256Z\",\n    \"updated_at\": \"2010-09-01T01:50:34.090Z\",\n    \"app_version\": \"string\",\n    \"owner\": {\n      \"type\": \"service_account\",\n      \"name\": \"string\"\n    },\n    \"parameters\": [\n      {\n        \"name\": \"string\",\n        \"value\": \"string\",\n        \"hidden\": false,\n        \"is_override\": false\n      },\n      {\n        \"name\": \"string\",\n        \"value\": \"string\",\n        \"hidden\": false,\n        \"is_override\": false\n      }\n    ]\n  },\n  \"$schema\": \"https://api.tower.dev/v1/schemas/CreateScheduleResponse.json\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ea045efe-da1f-4c14-ae0b-ccb245a263e1",
+              "name": "Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "schedules"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"app_name\": \"<string>\",\n  \"cron\": \"<string>\",\n  \"app_version\": \"<string,null>\",\n  \"environment\": \"default\",\n  \"name\": \"<string,null>\",\n  \"overlap_policy\": \"allow\",\n  \"parameters\": [\n    {\n      \"name\": \"string\",\n      \"value\": \"string\",\n      \"hidden\": false,\n      \"is_override\": true\n    },\n    {\n      \"name\": \"string\",\n      \"value\": \"string\",\n      \"hidden\": false,\n      \"is_override\": false\n    }\n  ],\n  \"status\": \"<string,null>\",\n  \"timezone\": \"UTC\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"$schema\": \"https://api.tower.dev/v1/schemas/ErrorModel.json\",\n  \"detail\": \"Property foo is required but is missing.\",\n  \"errors\": [\n    {\n      \"location\": \"string\",\n      \"message\": \"string\",\n      \"value\": {}\n    },\n    {\n      \"location\": \"string\",\n      \"message\": \"string\",\n      \"value\": {}\n    }\n  ],\n  \"instance\": \"https://example.com/error-log/abc123\",\n  \"status\": 400,\n  \"title\": \"Bad Request\",\n  \"type\": \"https://example.com/errors/example\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "e21f097e-7acf-41b0-846d-18e15f34c75f",
+          "name": "Activate multiple schedules",
+          "request": {
+            "name": "Activate multiple schedules",
+            "description": {
+              "content": "Activate multiple schedules to enable their execution.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "schedules",
+                "activate"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ids\": [\n    \"<string>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "a2781422-83f3-42c9-9b58-69a012dc5808",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "schedules",
+                    "activate"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"ids\": [\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"schedules\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"cron\": \"string\",\n      \"timezone\": \"string\",\n      \"environment\": \"string\",\n      \"app_name\": \"string\",\n      \"app_status\": \"disabled\",\n      \"status\": \"disabled\",\n      \"overlap_policy\": \"skip\",\n      \"created_at\": \"2021-05-13T08:09:16.313Z\",\n      \"updated_at\": \"1970-04-21T15:49:02.817Z\",\n      \"app_version\": \"string\",\n      \"owner\": {\n        \"type\": \"user\",\n        \"name\": \"string\"\n      },\n      \"parameters\": [\n        {\n          \"name\": \"string\",\n          \"value\": \"string\",\n          \"hidden\": false,\n          \"is_override\": true\n        },\n        {\n          \"name\": \"string\",\n          \"value\": \"string\",\n          \"hidden\": false,\n          \"is_override\": false\n        }\n      ]\n    },\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"cron\": \"string\",\n      \"timezone\": \"string\",\n      \"environment\": \"string\",\n      \"app_name\": \"string\",\n      \"app_status\": \"active\",\n      \"status\": \"disabled\",\n      \"overlap_policy\": \"allow\",\n      \"created_at\": \"1952-02-22T13:51:20.802Z\",\n      \"updated_at\": \"1956-06-07T13:27:08.696Z\",\n      \"app_version\": \"string\",\n      \"owner\": {\n        \"type\": \"user\",\n        \"name\": \"string\"\n      },\n      \"parameters\": [\n        {\n          \"name\": \"string\",\n          \"value\": \"string\",\n          \"hidden\": false,\n          \"is_override\": false\n        },\n        {\n          \"name\": \"string\",\n          \"value\": \"string\",\n          \"hidden\": false,\n          \"is_override\": true\n        }\n      ]\n    }\n  ],\n  \"$schema\": \"https://api.tower.dev/v1/schemas/BatchScheduleResponse.json\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9331aae1-b492-4ffb-8100-414baa72136d",
+              "name": "Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "schedules",
+                    "activate"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"ids\": [\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"$schema\": \"https://api.tower.dev/v1/schemas/ErrorModel.json\",\n  \"detail\": \"Property foo is required but is missing.\",\n  \"errors\": [\n    {\n      \"location\": \"string\",\n      \"message\": \"string\",\n      \"value\": {}\n    },\n    {\n      \"location\": \"string\",\n      \"message\": \"string\",\n      \"value\": {}\n    }\n  ],\n  \"instance\": \"https://example.com/error-log/abc123\",\n  \"status\": 400,\n  \"title\": \"Bad Request\",\n  \"type\": \"https://example.com/errors/example\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "99469de0-9180-4ecc-9217-45f75dfd3747",
+          "name": "Deactivate multiple schedules",
+          "request": {
+            "name": "Deactivate multiple schedules",
+            "description": {
+              "content": "Deactivate multiple schedules to disable their execution.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "schedules",
+                "deactivate"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ids\": [\n    \"<string>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "5b1d7316-aeec-4b0a-99b2-e1ea51dee389",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "schedules",
+                    "deactivate"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"ids\": [\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"schedules\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"cron\": \"string\",\n      \"timezone\": \"string\",\n      \"environment\": \"string\",\n      \"app_name\": \"string\",\n      \"app_status\": \"disabled\",\n      \"status\": \"disabled\",\n      \"overlap_policy\": \"skip\",\n      \"created_at\": \"2021-05-13T08:09:16.313Z\",\n      \"updated_at\": \"1970-04-21T15:49:02.817Z\",\n      \"app_version\": \"string\",\n      \"owner\": {\n        \"type\": \"user\",\n        \"name\": \"string\"\n      },\n      \"parameters\": [\n        {\n          \"name\": \"string\",\n          \"value\": \"string\",\n          \"hidden\": false,\n          \"is_override\": true\n        },\n        {\n          \"name\": \"string\",\n          \"value\": \"string\",\n          \"hidden\": false,\n          \"is_override\": false\n        }\n      ]\n    },\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"cron\": \"string\",\n      \"timezone\": \"string\",\n      \"environment\": \"string\",\n      \"app_name\": \"string\",\n      \"app_status\": \"active\",\n      \"status\": \"disabled\",\n      \"overlap_policy\": \"allow\",\n      \"created_at\": \"1952-02-22T13:51:20.802Z\",\n      \"updated_at\": \"1956-06-07T13:27:08.696Z\",\n      \"app_version\": \"string\",\n      \"owner\": {\n        \"type\": \"user\",\n        \"name\": \"string\"\n      },\n      \"parameters\": [\n        {\n          \"name\": \"string\",\n          \"value\": \"string\",\n          \"hidden\": false,\n          \"is_override\": false\n        },\n        {\n          \"name\": \"string\",\n          \"value\": \"string\",\n          \"hidden\": false,\n          \"is_override\": true\n        }\n      ]\n    }\n  ],\n  \"$schema\": \"https://api.tower.dev/v1/schemas/BatchScheduleResponse.json\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1e524d07-d2d4-41ca-a8d7-bfab86e22cfa",
+              "name": "Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "schedules",
+                    "deactivate"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"ids\": [\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"$schema\": \"https://api.tower.dev/v1/schemas/ErrorModel.json\",\n  \"detail\": \"Property foo is required but is missing.\",\n  \"errors\": [\n    {\n      \"location\": \"string\",\n      \"message\": \"string\",\n      \"value\": {}\n    },\n    {\n      \"location\": \"string\",\n      \"message\": \"string\",\n      \"value\": {}\n    }\n  ],\n  \"instance\": \"https://example.com/error-log/abc123\",\n  \"status\": 400,\n  \"title\": \"Bad Request\",\n  \"type\": \"https://example.com/errors/example\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "387ec3b2-d11e-4265-853d-a5bc02aa0cbe",
+          "name": "Update schedule",
+          "request": {
+            "name": "Update schedule",
+            "description": {
+              "content": "Update an existing schedule for an app.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "schedules",
+                ":idOrName"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "idOrName",
+                  "description": "(Required) The ID or name of the schedule to update."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"app_version\": \"<string,null>\",\n  \"cron\": \"<string>\",\n  \"environment\": \"default\",\n  \"name\": \"<string,null>\",\n  \"overlap_policy\": \"<string,null>\",\n  \"owner\": {\n    \"type\": \"<string>\",\n    \"name\": \"<string>\"\n  },\n  \"parameters\": [\n    {\n      \"name\": \"<string>\",\n      \"value\": \"<string>\",\n      \"hidden\": false,\n      \"is_override\": \"<boolean,null>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"value\": \"<string>\",\n      \"hidden\": false,\n      \"is_override\": \"<boolean,null>\"\n    }\n  ],\n  \"status\": \"<string,null>\",\n  \"timezone\": \"<string,null>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "a720af5c-d798-4333-8d7d-6e8c681f4776",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "schedules",
+                    ":idOrName"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "idOrName",
+                      "description": "(Required) The ID or name of the schedule to update."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"app_version\": \"<string,null>\",\n  \"cron\": \"<string>\",\n  \"environment\": \"default\",\n  \"name\": \"<string,null>\",\n  \"overlap_policy\": \"<string,null>\",\n  \"owner\": {\n    \"type\": \"service_account\",\n    \"name\": \"string\"\n  },\n  \"parameters\": [\n    {\n      \"name\": \"string\",\n      \"value\": \"string\",\n      \"hidden\": false,\n      \"is_override\": false\n    },\n    {\n      \"name\": \"string\",\n      \"value\": \"string\",\n      \"hidden\": false,\n      \"is_override\": false\n    }\n  ],\n  \"status\": \"<string,null>\",\n  \"timezone\": \"<string,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"schedule\": {\n    \"id\": \"string\",\n    \"name\": \"string\",\n    \"cron\": \"string\",\n    \"timezone\": \"string\",\n    \"environment\": \"string\",\n    \"app_name\": \"string\",\n    \"app_status\": \"disabled\",\n    \"status\": \"active\",\n    \"overlap_policy\": \"skip\",\n    \"created_at\": \"2011-10-18T21:09:19.996Z\",\n    \"updated_at\": \"1977-05-29T00:46:04.190Z\",\n    \"app_version\": \"string\",\n    \"owner\": {\n      \"type\": \"service_account\",\n      \"name\": \"string\"\n    },\n    \"parameters\": [\n      {\n        \"name\": \"string\",\n        \"value\": \"string\",\n        \"hidden\": false,\n        \"is_override\": false\n      },\n      {\n        \"name\": \"string\",\n        \"value\": \"string\",\n        \"hidden\": false,\n        \"is_override\": true\n      }\n    ]\n  },\n  \"$schema\": \"https://api.tower.dev/v1/schemas/UpdateScheduleResponse.json\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c067abdf-3e26-454f-9a88-d8663b999d49",
+              "name": "Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "schedules",
+                    ":idOrName"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "idOrName",
+                      "description": "(Required) The ID or name of the schedule to update."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"app_version\": \"<string,null>\",\n  \"cron\": \"<string>\",\n  \"environment\": \"default\",\n  \"name\": \"<string,null>\",\n  \"overlap_policy\": \"<string,null>\",\n  \"owner\": {\n    \"type\": \"service_account\",\n    \"name\": \"string\"\n  },\n  \"parameters\": [\n    {\n      \"name\": \"string\",\n      \"value\": \"string\",\n      \"hidden\": false,\n      \"is_override\": false\n    },\n    {\n      \"name\": \"string\",\n      \"value\": \"string\",\n      \"hidden\": false,\n      \"is_override\": false\n    }\n  ],\n  \"status\": \"<string,null>\",\n  \"timezone\": \"<string,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"$schema\": \"https://api.tower.dev/v1/schemas/ErrorModel.json\",\n  \"detail\": \"Property foo is required but is missing.\",\n  \"errors\": [\n    {\n      \"location\": \"string\",\n      \"message\": \"string\",\n      \"value\": {}\n    },\n    {\n      \"location\": \"string\",\n      \"message\": \"string\",\n      \"value\": {}\n    }\n  ],\n  \"instance\": \"https://example.com/error-log/abc123\",\n  \"status\": 400,\n  \"title\": \"Bad Request\",\n  \"type\": \"https://example.com/errors/example\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.tower.dev/v1",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "82480444-2ab7-402f-82d0-3f7eb61099fe",
+    "name": "Tower Accounts Schedules API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "REST API to interact with Tower Services.\n\nContact Support:\n Name: Tower Computing GmbH\n Email: hello@tower.dev",
+      "type": "text/plain"
+    }
+  }
+}

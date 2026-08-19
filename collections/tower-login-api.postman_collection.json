@@ -1,0 +1,439 @@
+{
+  "item": [
+    {
+      "id": "134635af-ea52-4899-b09b-f15ef8931b56",
+      "name": "Login",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "1a49349e-c180-46bc-b2fe-e776fd9dd0b3",
+          "name": "Create device login ticket",
+          "request": {
+            "name": "Create device login ticket",
+            "description": {
+              "content": "Creates a new device login ticket and returns the codes and urls needed for authentication.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "login",
+                "device"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "9a416359-52df-42fc-b171-cfedaaa00dfb",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "login",
+                    "device"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"device_code\": \"string\",\n  \"user_code\": \"string\",\n  \"login_url\": \"string\",\n  \"verification_url\": \"string\",\n  \"generated_at\": \"1988-06-21T06:58:38.740Z\",\n  \"expires_in\": 2171,\n  \"interval\": 4169,\n  \"$schema\": \"https://api.tower.dev/v1/schemas/CreateDeviceLoginTicketResponse.json\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2b9bdb5a-5366-4ba1-a561-240cfb110a80",
+              "name": "Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "login",
+                    "device"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"$schema\": \"https://api.tower.dev/v1/schemas/ErrorModel.json\",\n  \"detail\": \"Property foo is required but is missing.\",\n  \"errors\": [\n    {\n      \"location\": \"string\",\n      \"message\": \"string\",\n      \"value\": {}\n    },\n    {\n      \"location\": \"string\",\n      \"message\": \"string\",\n      \"value\": {}\n    }\n  ],\n  \"instance\": \"https://example.com/error-log/abc123\",\n  \"status\": 400,\n  \"title\": \"Bad Request\",\n  \"type\": \"https://example.com/errors/example\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "0f24861d-2bf9-4461-bf63-c798e275bb76",
+          "name": "Claim a device login ticket",
+          "request": {
+            "name": "Claim a device login ticket",
+            "description": {
+              "content": "Claims a device login ticket code for the authenticated user.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "login",
+                "device",
+                "claim"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_code\": \"<string>\",\n  \"refresh_token\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "c5950e4c-dacb-4082-9adb-52cc120ef22d",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "login",
+                    "device",
+                    "claim"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"user_code\": \"<string>\",\n  \"refresh_token\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"claimed\": false,\n  \"$schema\": \"https://api.tower.dev/v1/schemas/ClaimDeviceLoginTicketResponse.json\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "03d72cd7-87e6-4387-a3e7-eb01447d5c20",
+              "name": "Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "login",
+                    "device",
+                    "claim"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"user_code\": \"<string>\",\n  \"refresh_token\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"$schema\": \"https://api.tower.dev/v1/schemas/ErrorModel.json\",\n  \"detail\": \"Property foo is required but is missing.\",\n  \"errors\": [\n    {\n      \"location\": \"string\",\n      \"message\": \"string\",\n      \"value\": {}\n    },\n    {\n      \"location\": \"string\",\n      \"message\": \"string\",\n      \"value\": {}\n    }\n  ],\n  \"instance\": \"https://example.com/error-log/abc123\",\n  \"status\": 400,\n  \"title\": \"Bad Request\",\n  \"type\": \"https://example.com/errors/example\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "3ea1f37e-2e4d-4657-88b6-3f9aac6d917a",
+          "name": "Describe device login session",
+          "request": {
+            "name": "Describe device login session",
+            "description": {
+              "content": "Checks if a device login code has been claimed and returns the user session if so.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "login",
+                "device",
+                ":device_code"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "device_code",
+                  "description": "(Required) The device code to check."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "6c1df03e-b4ec-4d52-9175-379c107caebd",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "login",
+                    "device",
+                    ":device_code"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "device_code",
+                      "description": "(Required) The device code to check."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"session\": {\n    \"user\": {\n      \"first_name\": \"string\",\n      \"last_name\": \"string\",\n      \"company\": \"string\",\n      \"country\": \"string\",\n      \"promo_code\": \"string\",\n      \"email\": \"string\",\n      \"profile_photo_url\": \"string\",\n      \"created_at\": \"1954-10-06T04:10:30.501Z\",\n      \"is_alerts_enabled\": true,\n      \"is_confirmed\": true,\n      \"is_subscribed_to_changelog\": false,\n      \"is_invitation_claimed\": false\n    },\n    \"token\": {\n      \"access_token\": \"string\",\n      \"jwt\": \"string\",\n      \"refresh_token\": \"string\"\n    },\n    \"teams\": [\n      {\n        \"name\": \"string\",\n        \"type\": \"string\",\n        \"organization\": \"string\",\n        \"execution_region\": \"string\",\n        \"slug\": \"string\",\n        \"token\": {\n          \"access_token\": \"string\",\n          \"jwt\": \"string\",\n          \"refresh_token\": \"string\"\n        }\n      },\n      {\n        \"name\": \"string\",\n        \"type\": \"string\",\n        \"organization\": \"string\",\n        \"execution_region\": \"string\",\n        \"slug\": \"string\",\n        \"token\": {\n          \"access_token\": \"string\",\n          \"jwt\": \"string\",\n          \"refresh_token\": \"string\"\n        }\n      }\n    ],\n    \"featurebase_identity\": {\n      \"user_hash\": \"string\",\n      \"company_hash\": \"string\"\n    }\n  },\n  \"$schema\": \"https://api.tower.dev/v1/schemas/DescribeDeviceLoginSessionResponse.json\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "7b6a65a0-9253-4306-82f2-38602373d173",
+              "name": "Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "login",
+                    "device",
+                    ":device_code"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "device_code",
+                      "description": "(Required) The device code to check."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"$schema\": \"https://api.tower.dev/v1/schemas/ErrorModel.json\",\n  \"detail\": \"Property foo is required but is missing.\",\n  \"errors\": [\n    {\n      \"location\": \"string\",\n      \"message\": \"string\",\n      \"value\": {}\n    },\n    {\n      \"location\": \"string\",\n      \"message\": \"string\",\n      \"value\": {}\n    }\n  ],\n  \"instance\": \"https://example.com/error-log/abc123\",\n  \"status\": 400,\n  \"title\": \"Bad Request\",\n  \"type\": \"https://example.com/errors/example\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.tower.dev/v1",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "77098b11-7993-43b8-954f-8c56e7805eff",
+    "name": "Tower Accounts Login API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "REST API to interact with Tower Services.\n\nContact Support:\n Name: Tower Computing GmbH\n Email: hello@tower.dev",
+      "type": "text/plain"
+    }
+  }
+}

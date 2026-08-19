@@ -1,0 +1,193 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Tower Accounts Catalogs API",
+    "version": "v0.11.16"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Catalogs",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List catalogs",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tower.dev/v1/catalogs",
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "The page number to fetch."
+              },
+              {
+                "name": "page_size",
+                "value": "",
+                "type": "query",
+                "description": "The number of records to fetch on each page."
+              },
+              {
+                "name": "environment",
+                "value": "",
+                "type": "query",
+                "description": "The environment to filter by. When omitted, catalogs across all environments are returned."
+              },
+              {
+                "name": "all",
+                "value": "",
+                "type": "query",
+                "description": "Whether to fetch all catalogs across all environments or only for the current environment."
+              },
+              {
+                "name": "type",
+                "value": "",
+                "type": "query",
+                "description": "Filter catalogs by type, e.g. \"tower-catalog\". When omitted, all catalog types are returned."
+              }
+            ]
+          },
+          "docs": "Lists all the catalogs associated with your current account."
+        },
+        {
+          "info": {
+            "name": "Create catalog",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.tower.dev/v1/catalogs",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a new catalog object in the currently authenticated account."
+        },
+        {
+          "info": {
+            "name": "Export catalogs",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.tower.dev/v1/catalogs/export",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Lists all the catalogs in your current account and re-encrypt them with the public key you supplied."
+        },
+        {
+          "info": {
+            "name": "Describe catalog",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tower.dev/v1/catalogs/:name",
+            "params": [
+              {
+                "name": "name",
+                "value": "",
+                "type": "path",
+                "description": "The name of the catalog."
+              },
+              {
+                "name": "environment",
+                "value": "",
+                "type": "query",
+                "description": "The environment of the catalog."
+              }
+            ]
+          },
+          "docs": "Returns details for a specific catalog, including its property names and previews."
+        },
+        {
+          "info": {
+            "name": "Update catalog",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.tower.dev/v1/catalogs/:name",
+            "params": [
+              {
+                "name": "name",
+                "value": "",
+                "type": "path",
+                "description": "The name of the catalog to update."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update a new catalog object in the currently authenticated account."
+        },
+        {
+          "info": {
+            "name": "Delete catalog",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.tower.dev/v1/catalogs/:name",
+            "params": [
+              {
+                "name": "name",
+                "value": "",
+                "type": "path",
+                "description": "The name of the catalog to update."
+              },
+              {
+                "name": "environment",
+                "value": "",
+                "type": "query",
+                "description": "The environment of the catalog to delete."
+              }
+            ]
+          },
+          "docs": "Delete a new catalog object in the currently authenticated account."
+        },
+        {
+          "info": {
+            "name": "Vend catalog credentials",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.tower.dev/v1/catalogs/:name/credentials",
+            "params": [
+              {
+                "name": "name",
+                "value": "",
+                "type": "path",
+                "description": "The name of the catalog."
+              },
+              {
+                "name": "environment",
+                "value": "",
+                "type": "query",
+                "description": "The environment of the catalog."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Mints a short-lived OAuth bearer token for browser or SDK access to a managed (tower-catalog) catalog. Defaults to read-only (`mode: \"read\"`); pass `mode: \"read-write\"` in the body (requires the catalogs:data:write scope) for a token bound to the read-write principal. Team membership is enforced before vending; the master Polaris credentials never leave Tower."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,63 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Tower Accounts Login API",
+    "version": "v0.11.16"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Login",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create device login ticket",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tower.dev/v1/login/device"
+          },
+          "docs": "Creates a new device login ticket and returns the codes and urls needed for authentication."
+        },
+        {
+          "info": {
+            "name": "Claim a device login ticket",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.tower.dev/v1/login/device/claim",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Claims a device login ticket code for the authenticated user."
+        },
+        {
+          "info": {
+            "name": "Describe device login session",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tower.dev/v1/login/device/:device_code",
+            "params": [
+              {
+                "name": "device_code",
+                "value": "",
+                "type": "path",
+                "description": "The device code to check."
+              }
+            ]
+          },
+          "docs": "Checks if a device login code has been claimed and returns the user session if so."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

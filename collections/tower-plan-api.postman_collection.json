@@ -1,0 +1,347 @@
+{
+  "item": [
+    {
+      "id": "8d68bb69-d67b-450a-86d2-74d7098f1287",
+      "name": "Plan",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "54c99b43-509b-40d3-8ce7-e0c65ad21efd",
+          "name": "Describe plan",
+          "request": {
+            "name": "Describe plan",
+            "description": {
+              "content": "Get the current plan for the account.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "plan"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "1",
+                  "description": "The page number to fetch."
+                },
+                {
+                  "disabled": false,
+                  "key": "page_size",
+                  "value": "20",
+                  "description": "The number of records to fetch on each page."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "f1654aed-25b6-4d1f-9591-6b9b839eeff9",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "plan"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "page_size",
+                      "value": "20"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"plan\": {\n    \"id\": \"string\",\n    \"base_plan_name\": \"string\",\n    \"start_at\": \"1984-12-29T14:01:08.109Z\",\n    \"created_at\": \"1984-07-09T05:11:33.539Z\",\n    \"features\": [\n      {\n        \"code\": \"string\",\n        \"name\": \"string\",\n        \"type\": \"string\",\n        \"value\": 1467\n      },\n      {\n        \"code\": \"string\",\n        \"name\": \"string\",\n        \"type\": \"string\",\n        \"value\": 5121\n      }\n    ],\n    \"end_at\": \"2020-05-02T14:55:31.994Z\",\n    \"extras\": [\n      {\n        \"code\": \"string\",\n        \"name\": \"string\",\n        \"type\": \"string\",\n        \"value\": 3554\n      },\n      {\n        \"code\": \"string\",\n        \"name\": \"string\",\n        \"type\": \"string\",\n        \"value\": 4317\n      }\n    ]\n  },\n  \"$schema\": \"https://api.tower.dev/v1/schemas/DescribePlanResponse.json\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "18085e03-4c03-4c71-aa5b-3f23d0cf5ac5",
+              "name": "Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "plan"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "page_size",
+                      "value": "20"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"$schema\": \"https://api.tower.dev/v1/schemas/ErrorModel.json\",\n  \"detail\": \"Property foo is required but is missing.\",\n  \"errors\": [\n    {\n      \"location\": \"string\",\n      \"message\": \"string\",\n      \"value\": {}\n    },\n    {\n      \"location\": \"string\",\n      \"message\": \"string\",\n      \"value\": {}\n    }\n  ],\n  \"instance\": \"https://example.com/error-log/abc123\",\n  \"status\": 400,\n  \"title\": \"Bad Request\",\n  \"type\": \"https://example.com/errors/example\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "2e7193b0-6924-4349-bcc6-c85e468aaa3d",
+          "name": "Update plan",
+          "request": {
+            "name": "Update plan",
+            "description": {},
+            "url": {
+              "path": [
+                "plan"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"base_plan_name\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "4fb5eb8e-b536-4398-b19e-6293f19e63ae",
+              "name": "Created",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "plan"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"base_plan_name\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"plan\": {\n    \"id\": \"string\",\n    \"base_plan_name\": \"string\",\n    \"start_at\": \"1947-10-05T18:45:19.405Z\",\n    \"created_at\": \"2026-06-13T02:46:41.919Z\",\n    \"features\": [\n      {\n        \"code\": \"string\",\n        \"name\": \"string\",\n        \"type\": \"string\",\n        \"value\": 2838\n      },\n      {\n        \"code\": \"string\",\n        \"name\": \"string\",\n        \"type\": \"string\",\n        \"value\": 3799\n      }\n    ],\n    \"end_at\": \"1956-07-04T23:46:53.803Z\",\n    \"extras\": [\n      {\n        \"code\": \"string\",\n        \"name\": \"string\",\n        \"type\": \"string\",\n        \"value\": 7185\n      },\n      {\n        \"code\": \"string\",\n        \"name\": \"string\",\n        \"type\": \"string\",\n        \"value\": 9905\n      }\n    ]\n  },\n  \"$schema\": \"https://api.tower.dev/v1/schemas/UpdatePlanResponse.json\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e83bf711-8431-4c13-b42f-681ac11496ec",
+              "name": "Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "plan"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"base_plan_name\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"$schema\": \"https://api.tower.dev/v1/schemas/ErrorModel.json\",\n  \"detail\": \"Property foo is required but is missing.\",\n  \"errors\": [\n    {\n      \"location\": \"string\",\n      \"message\": \"string\",\n      \"value\": {}\n    },\n    {\n      \"location\": \"string\",\n      \"message\": \"string\",\n      \"value\": {}\n    }\n  ],\n  \"instance\": \"https://example.com/error-log/abc123\",\n  \"status\": 400,\n  \"title\": \"Bad Request\",\n  \"type\": \"https://example.com/errors/example\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.tower.dev/v1",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "e2db88b9-2722-4093-9a29-7e0b0125103a",
+    "name": "Tower Accounts Plan API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "REST API to interact with Tower Services.\n\nContact Support:\n Name: Tower Computing GmbH\n Email: hello@tower.dev",
+      "type": "text/plain"
+    }
+  }
+}

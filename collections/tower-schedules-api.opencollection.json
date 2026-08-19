@@ -1,0 +1,138 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Tower Accounts Schedules API",
+    "version": "v0.11.16"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Schedules",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List schedules",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tower.dev/v1/schedules",
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "The page number to fetch."
+              },
+              {
+                "name": "page_size",
+                "value": "",
+                "type": "query",
+                "description": "The number of records to fetch on each page."
+              },
+              {
+                "name": "environment",
+                "value": "",
+                "type": "query",
+                "description": "Filter schedules by environment. If not provided, all environments will be included."
+              },
+              {
+                "name": "app",
+                "value": "",
+                "type": "query",
+                "description": "Filter schedules by app name. If not provided, schedules across all apps will be included."
+              }
+            ]
+          },
+          "docs": "Lists all schedules for the current account, optionally filtered by environment and app."
+        },
+        {
+          "info": {
+            "name": "Create schedule",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.tower.dev/v1/schedules",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a new schedule for an app."
+        },
+        {
+          "info": {
+            "name": "Delete schedule",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.tower.dev/v1/schedules",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Delete an existing schedule for an app."
+        },
+        {
+          "info": {
+            "name": "Activate multiple schedules",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.tower.dev/v1/schedules/activate",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Activate multiple schedules to enable their execution."
+        },
+        {
+          "info": {
+            "name": "Deactivate multiple schedules",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.tower.dev/v1/schedules/deactivate",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Deactivate multiple schedules to disable their execution."
+        },
+        {
+          "info": {
+            "name": "Update schedule",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.tower.dev/v1/schedules/:idOrName",
+            "params": [
+              {
+                "name": "idOrName",
+                "value": "",
+                "type": "path",
+                "description": "The ID or name of the schedule to update."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update an existing schedule for an app."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

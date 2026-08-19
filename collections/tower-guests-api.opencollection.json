@@ -1,0 +1,94 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Tower Accounts Guests API",
+    "version": "v0.11.16"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Guests",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List guests",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tower.dev/v1/guests",
+            "params": [
+              {
+                "name": "app",
+                "value": "",
+                "type": "query",
+                "description": "Filter guests by app name."
+              }
+            ]
+          },
+          "docs": "Lists all guests for the current account, optionally filtered by app."
+        },
+        {
+          "info": {
+            "name": "Create guest",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.tower.dev/v1/guests",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new guest with access to a specific externally accessible app and returns a login URL to share with them."
+        },
+        {
+          "info": {
+            "name": "Delete guest",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.tower.dev/v1/guests/:guest_id",
+            "params": [
+              {
+                "name": "guest_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the guest to delete."
+              }
+            ]
+          },
+          "docs": "Deletes a guest and revokes their access. Any active sessions will be invalidated."
+        },
+        {
+          "info": {
+            "name": "Regenerate guest login URL",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.tower.dev/v1/guests/:guest_id/login-url",
+            "params": [
+              {
+                "name": "guest_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the guest to regenerate the login URL for."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new login URL for an existing guest. Use this if the previous URL expired or was compromised."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

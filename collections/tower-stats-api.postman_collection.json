@@ -1,0 +1,386 @@
+{
+  "item": [
+    {
+      "id": "73015c08-c4a7-4816-ad3d-e422af19bd75",
+      "name": "Stats",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "063f199f-8c05-462d-b96d-d0efcb7b84c2",
+          "name": "Generate app statistics",
+          "request": {
+            "name": "Generate app statistics",
+            "description": {
+              "content": "Generates current statistics about apps",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "stats",
+                "apps"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "environment",
+                  "value": "<string>",
+                  "description": "The environment to filter the statistics by. If not provided, statistics for all environments will be returned."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "fc3aee6e-f7ed-4f4e-9a82-a8ed5fec69da",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "stats",
+                    "apps"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "environment",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"statistics\": {\n    \"all_apps\": 290,\n    \"healthy_apps\": 263,\n    \"running_apps\": 9865,\n    \"disabled_apps\": 208\n  },\n  \"$schema\": \"https://api.tower.dev/v1/schemas/GenerateAppStatisticsResponse.json\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "14a189fe-1919-46b0-8e26-591aaf5f4660",
+              "name": "Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "stats",
+                    "apps"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "environment",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"$schema\": \"https://api.tower.dev/v1/schemas/ErrorModel.json\",\n  \"detail\": \"Property foo is required but is missing.\",\n  \"errors\": [\n    {\n      \"location\": \"string\",\n      \"message\": \"string\",\n      \"value\": {}\n    },\n    {\n      \"location\": \"string\",\n      \"message\": \"string\",\n      \"value\": {}\n    }\n  ],\n  \"instance\": \"https://example.com/error-log/abc123\",\n  \"status\": 400,\n  \"title\": \"Bad Request\",\n  \"type\": \"https://example.com/errors/example\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "606f721d-34bd-4082-a2f6-79b236bddda7",
+          "name": "Generate run statistics",
+          "request": {
+            "name": "Generate run statistics",
+            "description": {
+              "content": "Generates statistics about runs over a specified time period.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "stats",
+                "runs"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "status",
+                  "value": "pending,starting,running,crashed,errored,exited,cancelled,retrying",
+                  "description": "Filter runs by status(es). Define multiple with a comma-separated list. Supplying none will return all statuses."
+                },
+                {
+                  "disabled": false,
+                  "key": "start_at",
+                  "value": "<dateTime>",
+                  "description": "(Required) Start date and time for statistics (inclusive)"
+                },
+                {
+                  "disabled": false,
+                  "key": "end_at",
+                  "value": "<dateTime>",
+                  "description": "(Required) End date and time for statistics (inclusive)"
+                },
+                {
+                  "disabled": false,
+                  "key": "timezone",
+                  "value": "UTC",
+                  "description": "Timezone for the statistics (e.g., 'Europe/Berlin'). Defaults to UTC."
+                },
+                {
+                  "disabled": false,
+                  "key": "environment",
+                  "value": "<string>",
+                  "description": "Filter runs by environment. If not provided, all environments will be included."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "b7421595-bf2f-48b5-9f4d-1d42d1cd8673",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "stats",
+                    "runs"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "status",
+                      "value": "pending,starting,running,crashed,errored,exited,cancelled,retrying"
+                    },
+                    {
+                      "key": "start_at",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "end_at",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "timezone",
+                      "value": "UTC"
+                    },
+                    {
+                      "key": "environment",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"settings\": {\n    \"interval\": \"daily\",\n    \"timezone\": \"string\",\n    \"start_at\": \"2001-10-20T21:32:28.121Z\",\n    \"end_at\": \"2000-05-19T06:52:06.399Z\",\n    \"environment\": \"string\"\n  },\n  \"stats\": {\n    \"running_runs\": 8937,\n    \"exited_runs\": 2888,\n    \"errored_runs\": 5262,\n    \"crashed_runs\": 7439,\n    \"cancelled_runs\": 4297,\n    \"total_runs\": 6599\n  },\n  \"series\": [\n    {\n      \"period\": \"1966-02-04T13:52:45.704Z\",\n      \"scheduled\": 9821,\n      \"retrying\": 2070,\n      \"pending\": 4534,\n      \"starting\": 3129,\n      \"running\": 8758,\n      \"exited\": 7602,\n      \"errored\": 7184,\n      \"crashed\": 2547,\n      \"cancelled\": 8597\n    },\n    {\n      \"period\": \"1959-10-11T21:44:32.271Z\",\n      \"scheduled\": 6523,\n      \"retrying\": 9947,\n      \"pending\": 4613,\n      \"starting\": 1666,\n      \"running\": 451,\n      \"exited\": 9269,\n      \"errored\": 6880,\n      \"crashed\": 2893,\n      \"cancelled\": 1192\n    }\n  ],\n  \"$schema\": \"https://api.tower.dev/v1/schemas/GenerateRunStatisticsResponse.json\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "58581079-f712-4c26-8766-800deb2c2540",
+              "name": "Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "stats",
+                    "runs"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "status",
+                      "value": "pending,starting,running,crashed,errored,exited,cancelled,retrying"
+                    },
+                    {
+                      "key": "start_at",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "end_at",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "timezone",
+                      "value": "UTC"
+                    },
+                    {
+                      "key": "environment",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"$schema\": \"https://api.tower.dev/v1/schemas/ErrorModel.json\",\n  \"detail\": \"Property foo is required but is missing.\",\n  \"errors\": [\n    {\n      \"location\": \"string\",\n      \"message\": \"string\",\n      \"value\": {}\n    },\n    {\n      \"location\": \"string\",\n      \"message\": \"string\",\n      \"value\": {}\n    }\n  ],\n  \"instance\": \"https://example.com/error-log/abc123\",\n  \"status\": 400,\n  \"title\": \"Bad Request\",\n  \"type\": \"https://example.com/errors/example\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.tower.dev/v1",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "00a3b116-cf18-4884-9246-2cd7f35ec6fa",
+    "name": "Tower Accounts Stats API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "REST API to interact with Tower Services.\n\nContact Support:\n Name: Tower Computing GmbH\n Email: hello@tower.dev",
+      "type": "text/plain"
+    }
+  }
+}

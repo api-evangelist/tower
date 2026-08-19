@@ -1,0 +1,40 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Tower Accounts Usage API",
+    "version": "v0.11.16"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Usage",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Describe organization usage",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tower.dev/v1/usage"
+          },
+          "docs": "Describe usage statistics for the user's organization for the current billing cycle."
+        },
+        {
+          "info": {
+            "name": "Generate organization usage",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tower.dev/v1/usage/time-series"
+          },
+          "docs": "Get the previous 30 days of usage as a time series."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

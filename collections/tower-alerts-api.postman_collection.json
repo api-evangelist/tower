@@ -1,0 +1,837 @@
+{
+  "item": [
+    {
+      "id": "915c1464-0826-42c7-9901-876c4bf09f07",
+      "name": "Alerts",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "8d598d1a-f279-4ab8-a953-0c8b8eac2c6b",
+          "name": "List alerts",
+          "request": {
+            "name": "List alerts",
+            "description": {
+              "content": "List alerts for the current account with optional filtering",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "alerts"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "1",
+                  "description": "The page number to fetch."
+                },
+                {
+                  "disabled": false,
+                  "key": "page_size",
+                  "value": "20",
+                  "description": "The number of records to fetch on each page."
+                },
+                {
+                  "disabled": false,
+                  "key": "alert_type",
+                  "value": "<string>",
+                  "description": "Filter alerts by alert type"
+                },
+                {
+                  "disabled": false,
+                  "key": "start_at",
+                  "value": "<dateTime>",
+                  "description": "Filter alerts created after or at this datetime (inclusive)"
+                },
+                {
+                  "disabled": false,
+                  "key": "end_at",
+                  "value": "<dateTime>",
+                  "description": "Filter alerts created before or at this datetime (inclusive)"
+                },
+                {
+                  "disabled": false,
+                  "key": "acked",
+                  "value": "<string>",
+                  "description": "Filter alerts by acknowledged status."
+                },
+                {
+                  "disabled": false,
+                  "key": "environment",
+                  "value": "<string>",
+                  "description": "Filter alerts by environment (e.g., production, staging)"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "dcf52234-4645-44ed-a930-037185587306",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "alerts"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "page_size",
+                      "value": "20"
+                    },
+                    {
+                      "key": "alert_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "start_at",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "end_at",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "acked",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "environment",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"alerts\": [\n    {\n      \"alert_type\": \"string\",\n      \"seq\": 5094,\n      \"detail\": {\n        \"run\": {\n          \"run_id\": \"string\",\n          \"number\": 5924,\n          \"app_name\": \"string\",\n          \"status\": \"scheduled\",\n          \"status_group\": \"failed\",\n          \"is_scheduled\": true,\n          \"parameters\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ],\n          \"environment\": \"string\",\n          \"exit_code\": 4241,\n          \"created_at\": \"1983-12-06T22:39:39.763Z\",\n          \"scheduled_at\": \"1965-06-18T23:45:22.905Z\",\n          \"cancelled_at\": \"1979-12-04T00:37:44.795Z\",\n          \"starting_at\": \"1975-01-21T16:25:44.298Z\",\n          \"started_at\": \"1988-05-17T18:07:50.670Z\",\n          \"ended_at\": \"1962-01-12T03:02:42.928Z\",\n          \"app_version\": \"string\",\n          \"initiator\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"num_attempts\": 7584,\n          \"$link\": \"string\",\n          \"app_slug\": \"string\",\n          \"attempts\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ],\n          \"created_by\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"hostname\": \"string\",\n          \"retry_policy\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"subdomain\": \"string\"\n        },\n        \"app\": {\n          \"name\": \"string\",\n          \"owner\": \"string\",\n          \"short_description\": \"string\",\n          \"version\": \"string\",\n          \"schedule\": \"string\",\n          \"created_at\": \"2013-04-30T05:57:04.791Z\",\n          \"next_run_at\": \"1984-01-15T23:09:57.457Z\",\n          \"health_status\": \"warning\",\n          \"is_externally_accessible\": true,\n          \"pending_timeout\": 600,\n          \"running_timeout\": 0,\n          \"last_run\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"retry_policy\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"run_results\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"slug\": \"string\",\n          \"status\": \"disabled\",\n          \"subdomain\": \"string\",\n          \"tags\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ]\n        },\n        \"environment\": \"string\"\n      },\n      \"created_at\": \"1985-03-11T00:57:57.164Z\",\n      \"status\": \"string\",\n      \"acked\": false\n    },\n    {\n      \"alert_type\": \"string\",\n      \"seq\": 6583,\n      \"detail\": {\n        \"run\": {\n          \"run_id\": \"string\",\n          \"number\": 8860,\n          \"app_name\": \"string\",\n          \"status\": \"errored\",\n          \"status_group\": \"successful\",\n          \"is_scheduled\": true,\n          \"parameters\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ],\n          \"environment\": \"string\",\n          \"exit_code\": 372,\n          \"created_at\": \"1995-04-14T18:23:55.005Z\",\n          \"scheduled_at\": \"1991-10-24T04:37:36.924Z\",\n          \"cancelled_at\": \"1973-06-09T06:51:45.732Z\",\n          \"starting_at\": \"1999-05-27T14:49:56.780Z\",\n          \"started_at\": \"2012-12-03T17:50:59.309Z\",\n          \"ended_at\": \"2004-06-19T06:36:19.960Z\",\n          \"app_version\": \"string\",\n          \"initiator\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"num_attempts\": 9669,\n          \"$link\": \"string\",\n          \"app_slug\": \"string\",\n          \"attempts\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ],\n          \"created_by\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"hostname\": \"string\",\n          \"retry_policy\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"subdomain\": \"string\"\n        },\n        \"app\": {\n          \"name\": \"string\",\n          \"owner\": \"string\",\n          \"short_description\": \"string\",\n          \"version\": \"string\",\n          \"schedule\": \"string\",\n          \"created_at\": \"2007-06-22T02:48:11.652Z\",\n          \"next_run_at\": \"1964-08-05T17:06:33.377Z\",\n          \"health_status\": \"warning\",\n          \"is_externally_accessible\": false,\n          \"pending_timeout\": 600,\n          \"running_timeout\": 0,\n          \"last_run\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"retry_policy\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"run_results\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"slug\": \"string\",\n          \"status\": \"disabled\",\n          \"subdomain\": \"string\",\n          \"tags\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ]\n        },\n        \"environment\": \"string\"\n      },\n      \"created_at\": \"1965-06-23T15:09:25.558Z\",\n      \"status\": \"string\",\n      \"acked\": true\n    }\n  ],\n  \"pages\": {\n    \"page\": 3492,\n    \"total\": 3186,\n    \"num_pages\": 8981,\n    \"page_size\": 2216\n  },\n  \"$schema\": \"https://api.tower.dev/v1/schemas/ListAlertsResponse.json\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "aa3ac150-f37d-49a5-9aac-e47fe5292096",
+              "name": "Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "alerts"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "page_size",
+                      "value": "20"
+                    },
+                    {
+                      "key": "alert_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "start_at",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "end_at",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "acked",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "environment",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"$schema\": \"https://api.tower.dev/v1/schemas/ErrorModel.json\",\n  \"detail\": \"Property foo is required but is missing.\",\n  \"errors\": [\n    {\n      \"location\": \"string\",\n      \"message\": \"string\",\n      \"value\": {}\n    },\n    {\n      \"location\": \"string\",\n      \"message\": \"string\",\n      \"value\": {}\n    }\n  ],\n  \"instance\": \"https://example.com/error-log/abc123\",\n  \"status\": 400,\n  \"title\": \"Bad Request\",\n  \"type\": \"https://example.com/errors/example\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "ffed9412-a60b-45ba-ae98-0e38b4ef164d",
+          "name": "Acknowledge all alerts",
+          "request": {
+            "name": "Acknowledge all alerts",
+            "description": {
+              "content": "Mark all unacknowledged alerts as acknowledged for the current user in the current account",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "alerts",
+                "acknowledge-all"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "1d52de65-778d-46e5-acbd-8abb9c1e31d5",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "alerts",
+                    "acknowledge-all"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"string\",\n  \"count\": 9997,\n  \"$schema\": \"https://api.tower.dev/v1/schemas/AcknowledgeAllAlertsResponse.json\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3e362645-763b-4706-944f-0d8782f5f71e",
+              "name": "Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "alerts",
+                    "acknowledge-all"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"$schema\": \"https://api.tower.dev/v1/schemas/ErrorModel.json\",\n  \"detail\": \"Property foo is required but is missing.\",\n  \"errors\": [\n    {\n      \"location\": \"string\",\n      \"message\": \"string\",\n      \"value\": {}\n    },\n    {\n      \"location\": \"string\",\n      \"message\": \"string\",\n      \"value\": {}\n    }\n  ],\n  \"instance\": \"https://example.com/error-log/abc123\",\n  \"status\": 400,\n  \"title\": \"Bad Request\",\n  \"type\": \"https://example.com/errors/example\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "fb719fcf-9914-42b5-b7b6-eb55c042e056",
+          "name": "Stream alert notifications",
+          "request": {
+            "name": "Stream alert notifications",
+            "description": {
+              "content": "Streams alert notifications in real-time",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "alerts",
+                "stream"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "text/event-stream"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "6f211dab-8770-4fc5-89bc-5c50eadcedca",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "alerts",
+                    "stream"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "text/event-stream"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/event-stream"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "f9cac8de-c3e0-4b11-913c-cf2e93e7e021",
+              "name": "Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "alerts",
+                    "stream"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"$schema\": \"https://api.tower.dev/v1/schemas/ErrorModel.json\",\n  \"detail\": \"Property foo is required but is missing.\",\n  \"errors\": [\n    {\n      \"location\": \"string\",\n      \"message\": \"string\",\n      \"value\": {}\n    },\n    {\n      \"location\": \"string\",\n      \"message\": \"string\",\n      \"value\": {}\n    }\n  ],\n  \"instance\": \"https://example.com/error-log/abc123\",\n  \"status\": 400,\n  \"title\": \"Bad Request\",\n  \"type\": \"https://example.com/errors/example\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "aa7669dc-8608-4453-9a67-d788e33bbd8e",
+          "name": "Delete alert",
+          "request": {
+            "name": "Delete alert",
+            "description": {
+              "content": "Permanently delete an alert",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "alerts",
+                ":alert_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "alert_id",
+                  "description": "(Required) ID of the alert to delete"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/problem+json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "693a5f4b-9069-46f7-8572-159b2167b681",
+              "name": "No Content",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "alerts",
+                    ":alert_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "alert_id",
+                      "description": "(Required) ID of the alert to delete"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "3fbde792-9b35-4807-bfa4-2ac4dd81d567",
+              "name": "Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "alerts",
+                    ":alert_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "alert_id",
+                      "description": "(Required) ID of the alert to delete"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"$schema\": \"https://api.tower.dev/v1/schemas/ErrorModel.json\",\n  \"detail\": \"Property foo is required but is missing.\",\n  \"errors\": [\n    {\n      \"location\": \"string\",\n      \"message\": \"string\",\n      \"value\": {}\n    },\n    {\n      \"location\": \"string\",\n      \"message\": \"string\",\n      \"value\": {}\n    }\n  ],\n  \"instance\": \"https://example.com/error-log/abc123\",\n  \"status\": 400,\n  \"title\": \"Bad Request\",\n  \"type\": \"https://example.com/errors/example\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "84b1d04a-fd42-432b-88bd-ead94c8dbff6",
+          "name": "Acknowledge alert",
+          "request": {
+            "name": "Acknowledge alert",
+            "description": {
+              "content": "Mark an alert as acknowledged",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "alerts",
+                ":alert_seq",
+                "acknowledge"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<long>",
+                  "key": "alert_seq",
+                  "description": "(Required) Seq of the alert to acknowledge"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "992dee4d-a704-43ba-99ec-1d75a9f7d6c1",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "alerts",
+                    ":alert_seq",
+                    "acknowledge"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<long>",
+                      "key": "alert_seq",
+                      "description": "(Required) Seq of the alert to acknowledge"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"status\": \"string\",\n  \"$schema\": \"https://api.tower.dev/v1/schemas/AcknowledgeAlertResponse.json\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "857dadef-a75b-4320-91a3-768ac4d4f02d",
+              "name": "Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "alerts",
+                    ":alert_seq",
+                    "acknowledge"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<long>",
+                      "key": "alert_seq",
+                      "description": "(Required) Seq of the alert to acknowledge"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"$schema\": \"https://api.tower.dev/v1/schemas/ErrorModel.json\",\n  \"detail\": \"Property foo is required but is missing.\",\n  \"errors\": [\n    {\n      \"location\": \"string\",\n      \"message\": \"string\",\n      \"value\": {}\n    },\n    {\n      \"location\": \"string\",\n      \"message\": \"string\",\n      \"value\": {}\n    }\n  ],\n  \"instance\": \"https://example.com/error-log/abc123\",\n  \"status\": 400,\n  \"title\": \"Bad Request\",\n  \"type\": \"https://example.com/errors/example\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.tower.dev/v1",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "52558201-b15a-4d39-b2f5-ffca7870ab3c",
+    "name": "Tower Accounts Alerts API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "REST API to interact with Tower Services.\n\nContact Support:\n Name: Tower Computing GmbH\n Email: hello@tower.dev",
+      "type": "text/plain"
+    }
+  }
+}

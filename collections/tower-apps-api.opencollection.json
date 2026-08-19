@@ -1,0 +1,547 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Tower Accounts Apps API",
+    "version": "v0.11.16"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Apps",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List apps",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tower.dev/v1/apps",
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "The page number to fetch."
+              },
+              {
+                "name": "page_size",
+                "value": "",
+                "type": "query",
+                "description": "The number of records to fetch on each page."
+              },
+              {
+                "name": "tag_filter",
+                "value": "tag_filter={\"op\":\"eq\",\"name\":\"foo\",\"value\":\"bar\"}",
+                "type": "query",
+                "description": "The tag query to filter apps by. Provide a serialized TagFilter as the value for the parameter."
+              },
+              {
+                "name": "query",
+                "value": "",
+                "type": "query",
+                "description": "The search query to filter apps by."
+              },
+              {
+                "name": "num_runs",
+                "value": "",
+                "type": "query",
+                "description": "Number of recent runs to fetch (-1 for all runs, defaults to 20)"
+              },
+              {
+                "name": "sort",
+                "value": "",
+                "type": "query",
+                "description": "Sort order for the results."
+              },
+              {
+                "name": "filter",
+                "value": "",
+                "type": "query",
+                "description": "Filter to see apps with certain statuses."
+              },
+              {
+                "name": "environment",
+                "value": "",
+                "type": "query",
+                "description": "The environment to filter the apps by. If not provided, apps for all environments will be returned."
+              }
+            ]
+          },
+          "docs": "Get all the apps for the current account."
+        },
+        {
+          "info": {
+            "name": "Create app",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.tower.dev/v1/apps",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a new app in the current account."
+        },
+        {
+          "info": {
+            "name": "Describe app",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tower.dev/v1/apps/:name",
+            "params": [
+              {
+                "name": "name",
+                "value": "",
+                "type": "path",
+                "description": "The name of the app to fetch."
+              },
+              {
+                "name": "runs",
+                "value": "",
+                "type": "query",
+                "description": "The number of recent runs to fetch for the app."
+              },
+              {
+                "name": "start_at",
+                "value": "",
+                "type": "query",
+                "description": "Filter runs scheduled after this datetime (inclusive). Provide timestamps in ISO-8601 format."
+              },
+              {
+                "name": "end_at",
+                "value": "",
+                "type": "query",
+                "description": "Filter runs scheduled before or at this datetime (inclusive). Provide timestamps in ISO-8601 format."
+              },
+              {
+                "name": "timezone",
+                "value": "",
+                "type": "query",
+                "description": "Timezone for the statistics (e.g., 'Europe/Berlin'). Defaults to UTC."
+              },
+              {
+                "name": "environment",
+                "value": "",
+                "type": "query",
+                "description": "The environment to resolve the app version against. Defaults to 'default'."
+              }
+            ]
+          },
+          "docs": "Get all the runs for the current account."
+        },
+        {
+          "info": {
+            "name": "Update app",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.tower.dev/v1/apps/:name",
+            "params": [
+              {
+                "name": "name",
+                "value": "",
+                "type": "path",
+                "description": "The name of the App to update."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update an app in the currently authenticated account."
+        },
+        {
+          "info": {
+            "name": "Delete app",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.tower.dev/v1/apps/:name",
+            "params": [
+              {
+                "name": "name",
+                "value": "",
+                "type": "path",
+                "description": "The name of the app to delete."
+              }
+            ]
+          },
+          "docs": "Delete one of your apps, the associated code, and all the runs as well."
+        },
+        {
+          "info": {
+            "name": "Deploy app",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.tower.dev/v1/apps/:name/deploy",
+            "headers": [
+              {
+                "name": "X-Tower-Checksum-SHA256",
+                "value": ""
+              },
+              {
+                "name": "X-Tower-Idempotency-Key",
+                "value": ""
+              },
+              {
+                "name": "Content-Length",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "name",
+                "value": "",
+                "type": "path",
+                "description": "The name of the app to deploy."
+              },
+              {
+                "name": "environment",
+                "value": "",
+                "type": "query",
+                "description": "The environment to deploy to."
+              },
+              {
+                "name": "all_environments",
+                "value": "",
+                "type": "query",
+                "description": "Whether to deploy to all environments for this app. If true, the 'environment' query parameter is ignored."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Deploy a new version of an app. Accepts either a TAR file upload (application/tar) or a JSON body with source_uri (application/json) for deploying from a GitHub repository."
+        },
+        {
+          "info": {
+            "name": "List app environments",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tower.dev/v1/apps/:name/environments",
+            "params": [
+              {
+                "name": "name",
+                "value": "",
+                "type": "path",
+                "description": "The name of the app to get the version for."
+              }
+            ]
+          },
+          "docs": "Generates a list of all the known environments for a given app in the current account."
+        },
+        {
+          "info": {
+            "name": "Update app environment",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.tower.dev/v1/apps/:name/environments/:environment",
+            "params": [
+              {
+                "name": "name",
+                "value": "",
+                "type": "path",
+                "description": "The name of the app."
+              },
+              {
+                "name": "environment",
+                "value": "",
+                "type": "path",
+                "description": "The name of the environment."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update the configuration of an app in a specific environment, such as which version is deployed."
+        },
+        {
+          "info": {
+            "name": "List runs",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tower.dev/v1/apps/:name/runs",
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "The page number to fetch."
+              },
+              {
+                "name": "page_size",
+                "value": "",
+                "type": "query",
+                "description": "The number of records to fetch on each page."
+              },
+              {
+                "name": "name",
+                "value": "",
+                "type": "path",
+                "description": "The name of the app to fetch runs for."
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Filter runs by status(es). Define multiple with a comma-separated list. Supplying none will return all statuses."
+              },
+              {
+                "name": "start_at",
+                "value": "",
+                "type": "query",
+                "description": "Filter runs scheduled after or at this datetime (inclusive)"
+              },
+              {
+                "name": "end_at",
+                "value": "",
+                "type": "query",
+                "description": "Filter runs scheduled before or at this datetime (inclusive)"
+              },
+              {
+                "name": "environment",
+                "value": "",
+                "type": "query",
+                "description": "Filter runs by environment. If not provided, all environments will be included."
+              }
+            ]
+          },
+          "docs": "Generates a list of all the runs for a given app. The list is paginated based on the query string parameters passed in."
+        },
+        {
+          "info": {
+            "name": "Run app",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.tower.dev/v1/apps/:name/runs",
+            "params": [
+              {
+                "name": "name",
+                "value": "",
+                "type": "path",
+                "description": "The name of the app to fetch runs for."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Runs an app with the supplied parameters."
+        },
+        {
+          "info": {
+            "name": "Describe run",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tower.dev/v1/apps/:name/runs/:seq",
+            "params": [
+              {
+                "name": "name",
+                "value": "",
+                "type": "path",
+                "description": "The name of the app to fetch runs for."
+              },
+              {
+                "name": "seq",
+                "value": "",
+                "type": "path",
+                "description": "The number of the run to fetch."
+              }
+            ]
+          },
+          "docs": "Describe a run of an app."
+        },
+        {
+          "info": {
+            "name": "Cancel run",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.tower.dev/v1/apps/:name/runs/:seq",
+            "params": [
+              {
+                "name": "name",
+                "value": "",
+                "type": "path",
+                "description": "The name of the app to fetch runs for."
+              },
+              {
+                "name": "seq",
+                "value": "",
+                "type": "path",
+                "description": "The number of the run to fetch."
+              }
+            ]
+          },
+          "docs": "Cancel a run"
+        },
+        {
+          "info": {
+            "name": "Describe run graph",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tower.dev/v1/apps/:name/runs/:seq/graph",
+            "params": [
+              {
+                "name": "name",
+                "value": "",
+                "type": "path",
+                "description": "The name of the app."
+              },
+              {
+                "name": "seq",
+                "value": "",
+                "type": "path",
+                "description": "The number of the run to fetch."
+              }
+            ]
+          },
+          "docs": "Describe the graph that a run belongs to."
+        },
+        {
+          "info": {
+            "name": "Describe run logs",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tower.dev/v1/apps/:name/runs/:seq/logs",
+            "params": [
+              {
+                "name": "name",
+                "value": "",
+                "type": "path",
+                "description": "The name of the app to get logs for."
+              },
+              {
+                "name": "seq",
+                "value": "",
+                "type": "path",
+                "description": "The sequence number of the run to get logs for."
+              },
+              {
+                "name": "start_at",
+                "value": "",
+                "type": "query",
+                "description": "Fetch logs from this timestamp onwards (inclusive)."
+              },
+              {
+                "name": "head",
+                "value": "",
+                "type": "query",
+                "description": "Return only the first N log lines. Cannot be combined with tail."
+              },
+              {
+                "name": "tail",
+                "value": "",
+                "type": "query",
+                "description": "Return only the last N log lines. Cannot be combined with head."
+              }
+            ]
+          },
+          "docs": "Retrieves the logs associated with a particular run of an app."
+        },
+        {
+          "info": {
+            "name": "Stream run logs",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tower.dev/v1/apps/:name/runs/:seq/logs/stream",
+            "params": [
+              {
+                "name": "name",
+                "value": "",
+                "type": "path",
+                "description": "The name of the app to get logs for."
+              },
+              {
+                "name": "seq",
+                "value": "",
+                "type": "path",
+                "description": "The sequence number of the run to get logs for."
+              }
+            ]
+          },
+          "docs": "Streams the logs associated with a particular run of an app in real-time."
+        },
+        {
+          "info": {
+            "name": "List app versions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tower.dev/v1/apps/:name/versions",
+            "params": [
+              {
+                "name": "name",
+                "value": "",
+                "type": "path",
+                "description": "The name of the app to list versions for."
+              }
+            ]
+          },
+          "docs": "List all versions of an app in the current account, sorted with the most recent first."
+        },
+        {
+          "info": {
+            "name": "Describe app version",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tower.dev/v1/apps/:name/versions/:num",
+            "params": [
+              {
+                "name": "name",
+                "value": "",
+                "type": "path",
+                "description": "The name of the app to get the version for."
+              },
+              {
+                "name": "num",
+                "value": "",
+                "type": "path",
+                "description": "The version string to get the version for."
+              }
+            ]
+          },
+          "docs": "Describe an app version for an app in the current account."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

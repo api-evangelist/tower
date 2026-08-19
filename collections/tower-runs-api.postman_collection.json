@@ -1,0 +1,248 @@
+{
+  "item": [
+    {
+      "id": "7d958c1b-ec89-430c-af01-4c9cfdd65152",
+      "name": "Runs",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "dfa3f390-e1a2-44b4-aa4a-d6e880dc32a8",
+          "name": "Search runs",
+          "request": {
+            "name": "Search runs",
+            "description": {
+              "content": "Search, filter, and list runs across all of the apps in your account.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "runs"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "1",
+                  "description": "The page number to fetch."
+                },
+                {
+                  "disabled": false,
+                  "key": "page_size",
+                  "value": "20",
+                  "description": "The number of records to fetch on each page."
+                },
+                {
+                  "disabled": false,
+                  "key": "status",
+                  "value": "pending,starting,running,crashed,errored,exited,cancelled,retrying",
+                  "description": "Filter runs by status(es). Define multiple with a comma-separated list. Supplying none will return all statuses."
+                },
+                {
+                  "disabled": false,
+                  "key": "start_at",
+                  "value": "<dateTime>",
+                  "description": "Filter runs scheduled after this datetime (inclusive). Provide timestamps in ISO-8601 format."
+                },
+                {
+                  "disabled": false,
+                  "key": "end_at",
+                  "value": "<dateTime>",
+                  "description": "Filter runs scheduled before or at this datetime (inclusive). Provide timestamps in ISO-8601 format."
+                },
+                {
+                  "disabled": false,
+                  "key": "environment",
+                  "value": "<string>",
+                  "description": "Filter runs by environment. If not provided, all environments will be included."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "c0b35890-12ca-438b-b4cb-7d799b7f05f5",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "runs"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "page_size",
+                      "value": "20"
+                    },
+                    {
+                      "key": "status",
+                      "value": "pending,starting,running,crashed,errored,exited,cancelled,retrying"
+                    },
+                    {
+                      "key": "start_at",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "end_at",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "environment",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"pages\": {\n    \"page\": 9147,\n    \"total\": 927,\n    \"num_pages\": 1869,\n    \"page_size\": 7130\n  },\n  \"runs\": [\n    {\n      \"run_id\": \"string\",\n      \"number\": 5115,\n      \"app_name\": \"string\",\n      \"status\": \"scheduled\",\n      \"status_group\": \"\",\n      \"is_scheduled\": false,\n      \"parameters\": [\n        {\n          \"name\": \"string\",\n          \"value\": \"string\",\n          \"hidden\": false,\n          \"is_override\": true\n        },\n        {\n          \"name\": \"string\",\n          \"value\": \"string\",\n          \"hidden\": false,\n          \"is_override\": true\n        }\n      ],\n      \"environment\": \"string\",\n      \"exit_code\": 3640,\n      \"created_at\": \"1994-11-17T04:46:55.967Z\",\n      \"scheduled_at\": \"1974-05-14T11:15:27.093Z\",\n      \"cancelled_at\": \"2023-11-22T07:02:03.597Z\",\n      \"starting_at\": \"1992-11-22T16:55:48.923Z\",\n      \"started_at\": \"1992-02-20T20:41:37.337Z\",\n      \"ended_at\": \"1951-05-19T22:35:49.197Z\",\n      \"app_version\": \"string\",\n      \"initiator\": {\n        \"type\": \"string\",\n        \"details\": {\n          \"schedule_name\": \"string\"\n        }\n      },\n      \"num_attempts\": 6374,\n      \"$link\": \"string\",\n      \"app_slug\": \"string\",\n      \"attempts\": [\n        {\n          \"seq\": 7694,\n          \"status\": \"string\",\n          \"starting_at\": \"1956-04-28T18:29:01.143Z\",\n          \"started_at\": \"1985-01-23T05:07:30.178Z\",\n          \"ended_at\": \"1967-04-16T09:07:40.986Z\",\n          \"exit_code\": 3065\n        },\n        {\n          \"seq\": 6399,\n          \"status\": \"string\",\n          \"starting_at\": \"1996-10-10T08:14:03.088Z\",\n          \"started_at\": \"1968-05-12T01:30:07.798Z\",\n          \"ended_at\": \"1967-03-03T00:34:19.298Z\",\n          \"exit_code\": 1637\n        }\n      ],\n      \"created_by\": {\n        \"type\": \"user\",\n        \"name\": \"string\"\n      },\n      \"hostname\": \"string\",\n      \"retry_policy\": {\n        \"max_retries\": 7954,\n        \"retry_delay_seconds\": 4907,\n        \"use_exponential_backoff\": true\n      },\n      \"subdomain\": \"string\"\n    },\n    {\n      \"run_id\": \"string\",\n      \"number\": 1519,\n      \"app_name\": \"string\",\n      \"status\": \"errored\",\n      \"status_group\": \"successful\",\n      \"is_scheduled\": false,\n      \"parameters\": [\n        {\n          \"name\": \"string\",\n          \"value\": \"string\",\n          \"hidden\": false,\n          \"is_override\": false\n        },\n        {\n          \"name\": \"string\",\n          \"value\": \"string\",\n          \"hidden\": false,\n          \"is_override\": false\n        }\n      ],\n      \"environment\": \"string\",\n      \"exit_code\": 4270,\n      \"created_at\": \"1976-03-28T17:46:26.641Z\",\n      \"scheduled_at\": \"2020-12-24T04:17:45.251Z\",\n      \"cancelled_at\": \"2017-05-10T09:10:57.654Z\",\n      \"starting_at\": \"1962-07-13T14:17:20.258Z\",\n      \"started_at\": \"1976-10-26T09:33:08.601Z\",\n      \"ended_at\": \"1973-03-19T03:56:49.685Z\",\n      \"app_version\": \"string\",\n      \"initiator\": {\n        \"type\": \"string\",\n        \"details\": {\n          \"schedule_name\": \"string\"\n        }\n      },\n      \"num_attempts\": 8023,\n      \"$link\": \"string\",\n      \"app_slug\": \"string\",\n      \"attempts\": [\n        {\n          \"seq\": 2370,\n          \"status\": \"string\",\n          \"starting_at\": \"1991-01-02T13:42:28.527Z\",\n          \"started_at\": \"1975-01-03T19:24:45.011Z\",\n          \"ended_at\": \"1999-07-22T10:05:02.218Z\",\n          \"exit_code\": 9328\n        },\n        {\n          \"seq\": 4059,\n          \"status\": \"string\",\n          \"starting_at\": \"2007-06-14T22:39:38.075Z\",\n          \"started_at\": \"2015-06-28T02:53:33.957Z\",\n          \"ended_at\": \"2008-11-02T12:24:33.219Z\",\n          \"exit_code\": 1744\n        }\n      ],\n      \"created_by\": {\n        \"type\": \"user\",\n        \"name\": \"string\"\n      },\n      \"hostname\": \"string\",\n      \"retry_policy\": {\n        \"max_retries\": 2303,\n        \"retry_delay_seconds\": 2355,\n        \"use_exponential_backoff\": false\n      },\n      \"subdomain\": \"string\"\n    }\n  ],\n  \"$schema\": \"https://api.tower.dev/v1/schemas/SearchRunsResponse.json\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "02a37982-5386-42f4-b0bb-931be457c97c",
+              "name": "Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "runs"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "page_size",
+                      "value": "20"
+                    },
+                    {
+                      "key": "status",
+                      "value": "pending,starting,running,crashed,errored,exited,cancelled,retrying"
+                    },
+                    {
+                      "key": "start_at",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "end_at",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "environment",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"$schema\": \"https://api.tower.dev/v1/schemas/ErrorModel.json\",\n  \"detail\": \"Property foo is required but is missing.\",\n  \"errors\": [\n    {\n      \"location\": \"string\",\n      \"message\": \"string\",\n      \"value\": {}\n    },\n    {\n      \"location\": \"string\",\n      \"message\": \"string\",\n      \"value\": {}\n    }\n  ],\n  \"instance\": \"https://example.com/error-log/abc123\",\n  \"status\": 400,\n  \"title\": \"Bad Request\",\n  \"type\": \"https://example.com/errors/example\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.tower.dev/v1",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "0ef5d8ce-64bb-4e6d-9b24-6068b7c1f3bd",
+    "name": "Tower Accounts Runs API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "REST API to interact with Tower Services.\n\nContact Support:\n Name: Tower Computing GmbH\n Email: hello@tower.dev",
+      "type": "text/plain"
+    }
+  }
+}

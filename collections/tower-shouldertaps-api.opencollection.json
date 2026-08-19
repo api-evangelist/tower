@@ -1,0 +1,29 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Tower Accounts Shouldertaps API",
+    "version": "v0.11.16"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Shouldertaps",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Stream shouldertaps",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tower.dev/v1/shouldertaps/stream"
+          },
+          "docs": "Stream events over SSE that notify you of potential data staleness"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
