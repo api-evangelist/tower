@@ -38,6 +38,17 @@ tags:
 - Apache Iceberg
 - Lakehouse
 - Orchestration
+- Data Pipeline
+- AI Agents
+- MCP
+- ETL
+tags_raw:
+- Data Infrastructure
+- Data Engineering
+- Python
+- Apache Iceberg
+- Lakehouse
+- Orchestration
 - Data Pipelines
 - AI Agents
 - MCP
@@ -49,6 +60,8 @@ apis:
   humanURL: https://docs.tower.dev/docs/reference/api/tower-api
   baseURL: https://api.tower.dev/v1
   tags:
+  - Account
+  tags_raw:
   - Accounts
   properties:
   - type: OpenAPI
@@ -85,6 +98,8 @@ apis:
   humanURL: https://docs.tower.dev/docs/reference/api/tower-api
   baseURL: https://api.tower.dev/v1
   tags:
+  - APIKeys
+  tags_raw:
   - Api Keys
   properties:
   - type: OpenAPI
@@ -103,6 +118,8 @@ apis:
   humanURL: https://docs.tower.dev/docs/reference/api/tower-api
   baseURL: https://api.tower.dev/v1
   tags:
+  - Application
+  tags_raw:
   - Apps
   properties:
   - type: OpenAPI
@@ -211,6 +228,8 @@ apis:
   humanURL: https://docs.tower.dev/docs/reference/api/tower-api
   baseURL: https://api.tower.dev/v1
   tags:
+  - Organization
+  tags_raw:
   - Organizations
   properties:
   - type: OpenAPI
@@ -445,6 +464,8 @@ apis:
   humanURL: https://docs.tower.dev/docs/reference/api/tower-api
   baseURL: https://api.tower.dev/v1
   tags:
+  - Team
+  tags_raw:
   - Teams
   properties:
   - type: OpenAPI
@@ -499,6 +520,8 @@ apis:
   humanURL: https://docs.tower.dev/docs/reference/api/tower-api
   baseURL: https://api.tower.dev/v1
   tags:
+  - Webhook
+  tags_raw:
   - Webhooks
   properties:
   - type: OpenAPI
