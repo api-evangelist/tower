@@ -25,15 +25,18 @@ deliveryModel:
   method: derived
 accessModel:
   pricing: unknown
-  onboarding: self-serve
+  onboarding: unknown
   trial: false
   try_now: false
   public: false
-  label: Self-serve signup
-  confidence: medium
+  label: Unknown
+  confidence: low
   source:
   - authentication
-  generated: '2026-07-22'
+  - scopes
+  - security
+  - sandbox
+  generated: '2026-09-03'
   method: derived
 image: https://github.com/tower.png
 x-type: company
@@ -565,6 +568,9 @@ apis:
   - type: Webhooks
     url: asyncapi/tower-webhooks.yml
 common:
+- type: CapabilityMap
+  url: capabilities/tower-capability-edges.yml
+  name: Tower Business Capability Map
 - type: Overlay
   url: overlays/tower-overlay.yaml
 - type: DomainSecurity
