@@ -153,6 +153,8 @@ apis:
   humanURL: https://docs.tower.dev/docs/reference/api/tower-api
   baseURL: https://api.tower.dev/v1
   tags:
+  - Catalog
+  tags_raw:
   - Catalogs
   properties:
   - type: OpenAPI
@@ -171,6 +173,8 @@ apis:
   humanURL: https://docs.tower.dev/docs/reference/api/tower-api
   baseURL: https://api.tower.dev/v1
   tags:
+  - Environment
+  tags_raw:
   - Environments
   properties:
   - type: OpenAPI
@@ -335,6 +339,8 @@ apis:
   humanURL: https://docs.tower.dev/docs/reference/api/tower-api
   baseURL: https://api.tower.dev/v1
   tags:
+  - Schedule
+  tags_raw:
   - Schedules
   properties:
   - type: OpenAPI
@@ -389,6 +395,8 @@ apis:
   humanURL: https://docs.tower.dev/docs/reference/api/tower-api
   baseURL: https://api.tower.dev/v1
   tags:
+  - Sessions
+  tags_raw:
   - Session
   properties:
   - type: OpenAPI
