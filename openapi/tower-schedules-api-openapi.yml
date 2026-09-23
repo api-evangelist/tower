@@ -1,4 +1,4 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
   contact:
     email: hello@tower.dev
@@ -6,7 +6,7 @@ info:
     url: https://tower.dev
   description: REST API to interact with Tower Services.
   termsOfService: https://tower.dev/terms
-  title: Tower Accounts Schedules API
+  title: Tower Schedules API
   version: v0.11.16
 servers:
 - url: https://api.tower.dev/v1
@@ -234,55 +234,6 @@ paths:
       - Schedules
 components:
   schemas:
-    BatchScheduleParams:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/BatchScheduleParams.json
-          format: uri
-          readOnly: true
-          type: string
-        ids:
-          description: The IDs of the schedules to modify
-          items:
-            type: string
-          minItems: 1
-          type: array
-      required:
-      - ids
-      type: object
-    ErrorDetail:
-      additionalProperties: false
-      properties:
-        location:
-          description: Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id'
-          type: string
-        message:
-          description: Error message text
-          type: string
-        value:
-          description: The value at the given location
-      type: object
-    DeleteScheduleResponse:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/DeleteScheduleResponse.json
-          format: uri
-          readOnly: true
-          type: string
-        schedules:
-          description: the schedules successfully deleted
-          items:
-            $ref: '#/components/schemas/Schedule'
-          type: array
-      required:
-      - schedules
-      type: object
     UpdateScheduleResponse:
       additionalProperties: false
       properties:
@@ -297,302 +248,6 @@ components:
           $ref: '#/components/schemas/Schedule'
       required:
       - schedule
-      type: object
-    ScheduleOwner:
-      additionalProperties: false
-      properties:
-        name:
-          description: 'The owner''s name: a user''s full name (first + last) or a service account''s name. Must identify exactly one member of the account.'
-          minLength: 1
-          type: string
-        type:
-          description: 'The kind of owner: ''user'' or ''service_account'''
-          enum:
-          - user
-          - service_account
-          type: string
-      required:
-      - type
-      - name
-      type: object
-    ErrorModel:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/ErrorModel.json
-          format: uri
-          readOnly: true
-          type: string
-        detail:
-          description: A human-readable explanation specific to this occurrence of the problem.
-          examples:
-          - Property foo is required but is missing.
-          type: string
-        errors:
-          description: Optional list of individual error details
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-          type: array
-        instance:
-          description: A URI reference that identifies the specific occurrence of the problem.
-          examples:
-          - https://example.com/error-log/abc123
-          format: uri
-          type: string
-        status:
-          description: HTTP status code
-          examples:
-          - 400
-          format: int64
-          type: integer
-        title:
-          description: A short, human-readable summary of the problem type. This value should not change between occurrences of the error.
-          examples:
-          - Bad Request
-          type: string
-        type:
-          default: about:blank
-          description: A URI reference to human-readable documentation for the error.
-          examples:
-          - https://example.com/errors/example
-          format: uri
-          type: string
-      type: object
-    UpdateScheduleParams:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/UpdateScheduleParams.json
-          format: uri
-          readOnly: true
-          type: string
-        app_version:
-          deprecated: true
-          description: This property is deprecated and ignored. Schedules inherit the version from their environment.
-          type:
-          - string
-          - 'null'
-        cron:
-          description: The cron expression defining when the app should run
-          type: string
-        environment:
-          default: default
-          description: The environment to run the app in
-          type: string
-        name:
-          description: The name for this schedule. Must be unique per environment.
-          type:
-          - string
-          - 'null'
-        overlap_policy:
-          description: The overlap policy for the schedule
-          enum:
-          - skip
-          - allow
-          type:
-          - string
-          - 'null'
-        owner:
-          $ref: '#/components/schemas/ScheduleOwner'
-          description: Reassign the schedule's runtime owner. Requires team admin scope. Setting this field does NOT change the schedule's status — disabled schedules must be re-activated separately.
-        parameters:
-          description: Parameters to pass when running the app
-          items:
-            $ref: '#/components/schemas/RunParameter'
-          type: array
-        status:
-          description: The status of the schedule
-          enum:
-          - active
-          - disabled
-          type:
-          - string
-          - 'null'
-        timezone:
-          description: The IANA timezone identifier that the cron expression should be evaluated in (e.g., 'America/New_York', 'Europe/London').
-          type:
-          - string
-          - 'null'
-      type: object
-    DeleteScheduleParams:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/DeleteScheduleParams.json
-          format: uri
-          readOnly: true
-          type: string
-        ids:
-          description: The IDs of the schedules to delete.
-          items:
-            type: string
-          type: array
-      required:
-      - ids
-      type: object
-    CreateScheduleParams:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/CreateScheduleParams.json
-          format: uri
-          readOnly: true
-          type: string
-        app_name:
-          description: The name of the app to create a schedule for
-          minLength: 1
-          type: string
-        app_version:
-          deprecated: true
-          description: This property is deprecated and ignored. Schedules inherit the version from their environment.
-          type:
-          - string
-          - 'null'
-        cron:
-          description: The cron expression defining when the app should run
-          minLength: 1
-          type: string
-        environment:
-          default: default
-          description: The environment to run the app in
-          type: string
-        name:
-          description: The name for this schedule. Must be unique per environment. If not set, one will be generated for you.
-          type:
-          - string
-          - 'null'
-        overlap_policy:
-          default: allow
-          description: The overlap policy for the schedule
-          enum:
-          - skip
-          - allow
-          type:
-          - string
-          - 'null'
-        parameters:
-          description: Parameters to pass when running the app
-          items:
-            $ref: '#/components/schemas/RunParameter'
-          type: array
-        status:
-          description: The status of the schedule (defaults to active)
-          enum:
-          - active
-          - disabled
-          type:
-          - string
-          - 'null'
-        timezone:
-          default: UTC
-          description: The IANA timezone identifier that the cron expression should be evaluated in (e.g., 'America/New_York', 'Europe/London'). Defaults to 'UTC'.
-          type:
-          - string
-          - 'null'
-      required:
-      - app_name
-      - cron
-      type: object
-    CreateScheduleResponse:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/CreateScheduleResponse.json
-          format: uri
-          readOnly: true
-          type: string
-        schedule:
-          $ref: '#/components/schemas/Schedule'
-      required:
-      - schedule
-      type: object
-    ListSchedulesResponse:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/ListSchedulesResponse.json
-          format: uri
-          readOnly: true
-          type: string
-        pages:
-          $ref: '#/components/schemas/Pagination'
-        schedules:
-          items:
-            $ref: '#/components/schemas/Schedule'
-          type: array
-      required:
-      - schedules
-      - pages
-      type: object
-    BatchScheduleResponse:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/BatchScheduleResponse.json
-          format: uri
-          readOnly: true
-          type: string
-        schedules:
-          items:
-            $ref: '#/components/schemas/Schedule'
-          type: array
-      required:
-      - schedules
-      type: object
-    RunParameter:
-      additionalProperties: false
-      properties:
-        hidden:
-          default: false
-          description: Whether this parameter is hidden/secret. Defaults to false.
-          type: boolean
-        is_override:
-          description: Whether this parameter's value was supplied as an override at run/schedule creation time (true) or comes from the app version's default (false).
-          type:
-          - boolean
-          - 'null'
-        name:
-          type: string
-        value:
-          type: string
-      required:
-      - name
-      - value
-      type: object
-    Pagination:
-      additionalProperties: false
-      properties:
-        num_pages:
-          format: int64
-          type: integer
-        page:
-          format: int64
-          type: integer
-        page_size:
-          format: int64
-          type: integer
-        total:
-          format: int64
-          type: integer
-      required:
-      - page
-      - total
-      - num_pages
-      - page_size
       type: object
     Schedule:
       additionalProperties: false
@@ -665,6 +320,351 @@ components:
       - overlap_policy
       - created_at
       - updated_at
+      type: object
+    DeleteScheduleParams:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/DeleteScheduleParams.json
+          format: uri
+          readOnly: true
+          type: string
+        ids:
+          description: The IDs of the schedules to delete.
+          items:
+            type: string
+          type: array
+      required:
+      - ids
+      type: object
+    RunParameter:
+      additionalProperties: false
+      properties:
+        hidden:
+          default: false
+          description: Whether this parameter is hidden/secret. Defaults to false.
+          type: boolean
+        is_override:
+          description: Whether this parameter's value was supplied as an override at run/schedule creation time (true) or comes from the app version's default (false).
+          type:
+          - boolean
+          - 'null'
+        name:
+          type: string
+        value:
+          type: string
+      required:
+      - name
+      - value
+      type: object
+    ScheduleOwner:
+      additionalProperties: false
+      properties:
+        name:
+          description: 'The owner''s name: a user''s full name (first + last) or a service account''s name. Must identify exactly one member of the account.'
+          minLength: 1
+          type: string
+        type:
+          description: 'The kind of owner: ''user'' or ''service_account'''
+          enum:
+          - user
+          - service_account
+          type: string
+      required:
+      - type
+      - name
+      type: object
+    ErrorModel:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/ErrorModel.json
+          format: uri
+          readOnly: true
+          type: string
+        detail:
+          description: A human-readable explanation specific to this occurrence of the problem.
+          examples:
+          - Property foo is required but is missing.
+          type: string
+        errors:
+          description: Optional list of individual error details
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+        instance:
+          description: A URI reference that identifies the specific occurrence of the problem.
+          examples:
+          - https://example.com/error-log/abc123
+          format: uri
+          type: string
+        status:
+          description: HTTP status code
+          examples:
+          - 400
+          format: int64
+          type: integer
+        title:
+          description: A short, human-readable summary of the problem type. This value should not change between occurrences of the error.
+          examples:
+          - Bad Request
+          type: string
+        type:
+          default: about:blank
+          description: A URI reference to human-readable documentation for the error.
+          examples:
+          - https://example.com/errors/example
+          format: uri
+          type: string
+      type: object
+    CreateScheduleParams:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/CreateScheduleParams.json
+          format: uri
+          readOnly: true
+          type: string
+        app_name:
+          description: The name of the app to create a schedule for
+          minLength: 1
+          type: string
+        app_version:
+          deprecated: true
+          description: This property is deprecated and ignored. Schedules inherit the version from their environment.
+          type:
+          - string
+          - 'null'
+        cron:
+          description: The cron expression defining when the app should run
+          minLength: 1
+          type: string
+        environment:
+          default: default
+          description: The environment to run the app in
+          type: string
+        name:
+          description: The name for this schedule. Must be unique per environment. If not set, one will be generated for you.
+          type:
+          - string
+          - 'null'
+        overlap_policy:
+          default: allow
+          description: The overlap policy for the schedule
+          enum:
+          - skip
+          - allow
+          type:
+          - string
+          - 'null'
+        parameters:
+          description: Parameters to pass when running the app
+          items:
+            $ref: '#/components/schemas/RunParameter'
+          type: array
+        status:
+          description: The status of the schedule (defaults to active)
+          enum:
+          - active
+          - disabled
+          type:
+          - string
+          - 'null'
+        timezone:
+          default: UTC
+          description: The IANA timezone identifier that the cron expression should be evaluated in (e.g., 'America/New_York', 'Europe/London'). Defaults to 'UTC'.
+          type:
+          - string
+          - 'null'
+      required:
+      - app_name
+      - cron
+      type: object
+    ListSchedulesResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/ListSchedulesResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        pages:
+          $ref: '#/components/schemas/Pagination'
+        schedules:
+          items:
+            $ref: '#/components/schemas/Schedule'
+          type: array
+      required:
+      - schedules
+      - pages
+      type: object
+    BatchScheduleParams:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/BatchScheduleParams.json
+          format: uri
+          readOnly: true
+          type: string
+        ids:
+          description: The IDs of the schedules to modify
+          items:
+            type: string
+          minItems: 1
+          type: array
+      required:
+      - ids
+      type: object
+    UpdateScheduleParams:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/UpdateScheduleParams.json
+          format: uri
+          readOnly: true
+          type: string
+        app_version:
+          deprecated: true
+          description: This property is deprecated and ignored. Schedules inherit the version from their environment.
+          type:
+          - string
+          - 'null'
+        cron:
+          description: The cron expression defining when the app should run
+          type: string
+        environment:
+          default: default
+          description: The environment to run the app in
+          type: string
+        name:
+          description: The name for this schedule. Must be unique per environment.
+          type:
+          - string
+          - 'null'
+        overlap_policy:
+          description: The overlap policy for the schedule
+          enum:
+          - skip
+          - allow
+          type:
+          - string
+          - 'null'
+        owner:
+          $ref: '#/components/schemas/ScheduleOwner'
+          description: Reassign the schedule's runtime owner. Requires team admin scope. Setting this field does NOT change the schedule's status — disabled schedules must be re-activated separately.
+        parameters:
+          description: Parameters to pass when running the app
+          items:
+            $ref: '#/components/schemas/RunParameter'
+          type: array
+        status:
+          description: The status of the schedule
+          enum:
+          - active
+          - disabled
+          type:
+          - string
+          - 'null'
+        timezone:
+          description: The IANA timezone identifier that the cron expression should be evaluated in (e.g., 'America/New_York', 'Europe/London').
+          type:
+          - string
+          - 'null'
+      type: object
+    BatchScheduleResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/BatchScheduleResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        schedules:
+          items:
+            $ref: '#/components/schemas/Schedule'
+          type: array
+      required:
+      - schedules
+      type: object
+    CreateScheduleResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/CreateScheduleResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        schedule:
+          $ref: '#/components/schemas/Schedule'
+      required:
+      - schedule
+      type: object
+    ErrorDetail:
+      additionalProperties: false
+      properties:
+        location:
+          description: Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id'
+          type: string
+        message:
+          description: Error message text
+          type: string
+        value:
+          description: The value at the given location
+      type: object
+    DeleteScheduleResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/DeleteScheduleResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        schedules:
+          description: the schedules successfully deleted
+          items:
+            $ref: '#/components/schemas/Schedule'
+          type: array
+      required:
+      - schedules
+      type: object
+    Pagination:
+      additionalProperties: false
+      properties:
+        num_pages:
+          format: int64
+          type: integer
+        page:
+          format: int64
+          type: integer
+        page_size:
+          format: int64
+          type: integer
+        total:
+          format: int64
+          type: integer
+      required:
+      - page
+      - total
+      - num_pages
+      - page_size
       type: object
   securitySchemes:
     APIKeyAuth:

@@ -1,4 +1,4 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
   contact:
     email: hello@tower.dev
@@ -6,7 +6,7 @@ info:
     url: https://tower.dev
   description: REST API to interact with Tower Services.
   termsOfService: https://tower.dev/terms
-  title: Tower Accounts Storage API
+  title: Tower Storage API
   version: v0.11.16
 servers:
 - url: https://api.tower.dev/v1
@@ -66,6 +66,20 @@ components:
       - properties
       - CreatedAt
       type: object
+    CatalogProperty:
+      additionalProperties: false
+      properties:
+        environment_variable:
+          description: The environment variable name this property is injected as at runtime.
+          type: string
+        name:
+          type: string
+        preview:
+          type: string
+      required:
+      - name
+      - preview
+      type: object
     DescribeCatalogResponse:
       additionalProperties: false
       properties:
@@ -80,20 +94,6 @@ components:
           $ref: '#/components/schemas/Catalog'
       required:
       - catalog
-      type: object
-    CatalogProperty:
-      additionalProperties: false
-      properties:
-        environment_variable:
-          description: The environment variable name this property is injected as at runtime.
-          type: string
-        name:
-          type: string
-        preview:
-          type: string
-      required:
-      - name
-      - preview
       type: object
   securitySchemes:
     APIKeyAuth:

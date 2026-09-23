@@ -1,4 +1,4 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
   contact:
     email: hello@tower.dev
@@ -6,7 +6,7 @@ info:
     url: https://tower.dev
   description: REST API to interact with Tower Services.
   termsOfService: https://tower.dev/terms
-  title: Tower Accounts Guests API
+  title: Tower Guests API
   version: v0.11.16
 servers:
 - url: https://api.tower.dev/v1
@@ -150,6 +150,17 @@ paths:
       - Guests
 components:
   schemas:
+    DeleteGuestOutputBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/DeleteGuestOutputBody.json
+          format: uri
+          readOnly: true
+          type: string
+      type: object
     RegenerateGuestLoginURLResponse:
       additionalProperties: false
       properties:
@@ -168,31 +179,6 @@ components:
           format: date-time
           type: string
       required:
-      - login_url
-      - login_url_expires_at
-      type: object
-    CreateGuestResponse:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/CreateGuestResponse.json
-          format: uri
-          readOnly: true
-          type: string
-        guest:
-          $ref: '#/components/schemas/Guest'
-          description: The created guest.
-        login_url:
-          description: The URL to share with the guest for logging in.
-          type: string
-        login_url_expires_at:
-          description: When the login URL expires.
-          format: date-time
-          type: string
-      required:
-      - guest
       - login_url
       - login_url_expires_at
       type: object
@@ -241,24 +227,30 @@ components:
           format: uri
           type: string
       type: object
-    RegenerateGuestLoginURLParams:
+    CreateGuestResponse:
       additionalProperties: false
       properties:
         $schema:
           description: A URL to the JSON Schema for this object.
           examples:
-          - https://api.tower.dev/v1/schemas/RegenerateGuestLoginURLParams.json
+          - https://api.tower.dev/v1/schemas/CreateGuestResponse.json
           format: uri
           readOnly: true
           type: string
-        expires_in:
-          default: 259200
-          description: The number of seconds the guest session should last. Defaults to 72 hours.
-          format: int64
-          type: integer
-        redirect_url:
-          description: Where to redirect the guest after they log in.
+        guest:
+          $ref: '#/components/schemas/Guest'
+          description: The created guest.
+        login_url:
+          description: The URL to share with the guest for logging in.
           type: string
+        login_url_expires_at:
+          description: When the login URL expires.
+          format: date-time
+          type: string
+      required:
+      - guest
+      - login_url
+      - login_url_expires_at
       type: object
     ListGuestsResponse:
       additionalProperties: false
@@ -305,15 +297,23 @@ components:
       required:
       - app
       type: object
-    DeleteGuestOutputBody:
+    RegenerateGuestLoginURLParams:
       additionalProperties: false
       properties:
         $schema:
           description: A URL to the JSON Schema for this object.
           examples:
-          - https://api.tower.dev/v1/schemas/DeleteGuestOutputBody.json
+          - https://api.tower.dev/v1/schemas/RegenerateGuestLoginURLParams.json
           format: uri
           readOnly: true
+          type: string
+        expires_in:
+          default: 259200
+          description: The number of seconds the guest session should last. Defaults to 72 hours.
+          format: int64
+          type: integer
+        redirect_url:
+          description: Where to redirect the guest after they log in.
           type: string
       type: object
     ErrorDetail:

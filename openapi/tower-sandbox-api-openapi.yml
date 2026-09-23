@@ -1,4 +1,4 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
   contact:
     email: hello@tower.dev
@@ -6,7 +6,7 @@ info:
     url: https://tower.dev
   description: REST API to interact with Tower Services.
   termsOfService: https://tower.dev/terms
-  title: Tower Accounts Sandbox API
+  title: Tower Sandbox API
   version: v0.11.16
 servers:
 - url: https://api.tower.dev/v1
@@ -46,36 +46,6 @@ paths:
       - Sandbox
 components:
   schemas:
-    ErrorDetail:
-      additionalProperties: false
-      properties:
-        location:
-          description: Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id'
-          type: string
-        message:
-          description: Error message text
-          type: string
-        value:
-          description: The value at the given location
-      type: object
-    CreateSandboxSecretsResponse:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/CreateSandboxSecretsResponse.json
-          format: uri
-          readOnly: true
-          type: string
-        created:
-          description: List of secret keys that were created
-          items:
-            type: string
-          type: array
-      required:
-      - created
-      type: object
     ErrorModel:
       additionalProperties: false
       properties:
@@ -142,6 +112,36 @@ components:
       required:
       - environment
       - secret_keys
+      type: object
+    ErrorDetail:
+      additionalProperties: false
+      properties:
+        location:
+          description: Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id'
+          type: string
+        message:
+          description: Error message text
+          type: string
+        value:
+          description: The value at the given location
+      type: object
+    CreateSandboxSecretsResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/CreateSandboxSecretsResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        created:
+          description: List of secret keys that were created
+          items:
+            type: string
+          type: array
+      required:
+      - created
       type: object
   securitySchemes:
     APIKeyAuth:

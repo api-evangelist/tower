@@ -1,4 +1,4 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
   contact:
     email: hello@tower.dev
@@ -6,7 +6,7 @@ info:
     url: https://tower.dev
   description: REST API to interact with Tower Services.
   termsOfService: https://tower.dev/terms
-  title: Tower Accounts Environments API
+  title: Tower Environments API
   version: v0.11.16
 servers:
 - url: https://api.tower.dev/v1
@@ -192,51 +192,6 @@ paths:
       - Environments
 components:
   schemas:
-    CreateEnvironmentResponse:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/CreateEnvironmentResponse.json
-          format: uri
-          readOnly: true
-          type: string
-        environment:
-          $ref: '#/components/schemas/Environment'
-      required:
-      - environment
-      type: object
-    ErrorDetail:
-      additionalProperties: false
-      properties:
-        location:
-          description: Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id'
-          type: string
-        message:
-          description: Error message text
-          type: string
-        value:
-          description: The value at the given location
-      type: object
-    CreateEnvironmentParams:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/CreateEnvironmentParams.json
-          format: uri
-          readOnly: true
-          type: string
-        name:
-          description: The name of the environment
-          maxLength: 100
-          minLength: 1
-          type: string
-      required:
-      - name
-      type: object
     ListEnvironmentsResponse:
       additionalProperties: false
       properties:
@@ -257,6 +212,27 @@ components:
       - environments
       - pages
       type: object
+    Pagination:
+      additionalProperties: false
+      properties:
+        num_pages:
+          format: int64
+          type: integer
+        page:
+          format: int64
+          type: integer
+        page_size:
+          format: int64
+          type: integer
+        total:
+          format: int64
+          type: integer
+      required:
+      - page
+      - total
+      - num_pages
+      - page_size
+      type: object
     Environment:
       additionalProperties: false
       properties:
@@ -270,13 +246,29 @@ components:
       - name
       - is_deletable
       type: object
-    DeleteEnvironmentResponse:
+    UpdateEnvironmentParams:
       additionalProperties: false
       properties:
         $schema:
           description: A URL to the JSON Schema for this object.
           examples:
-          - https://api.tower.dev/v1/schemas/DeleteEnvironmentResponse.json
+          - https://api.tower.dev/v1/schemas/UpdateEnvironmentParams.json
+          format: uri
+          readOnly: true
+          type: string
+        new_name:
+          description: The desired new name of the environment
+          type: string
+      required:
+      - new_name
+      type: object
+    UpdateEnvironmentResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/UpdateEnvironmentResponse.json
           format: uri
           readOnly: true
           type: string
@@ -330,6 +322,66 @@ components:
           format: uri
           type: string
       type: object
+    DeleteEnvironmentResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/DeleteEnvironmentResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        environment:
+          $ref: '#/components/schemas/Environment'
+      required:
+      - environment
+      type: object
+    CreateEnvironmentResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/CreateEnvironmentResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        environment:
+          $ref: '#/components/schemas/Environment'
+      required:
+      - environment
+      type: object
+    CreateEnvironmentParams:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/CreateEnvironmentParams.json
+          format: uri
+          readOnly: true
+          type: string
+        name:
+          description: The name of the environment
+          maxLength: 100
+          minLength: 1
+          type: string
+      required:
+      - name
+      type: object
+    ErrorDetail:
+      additionalProperties: false
+      properties:
+        location:
+          description: Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id'
+          type: string
+        message:
+          description: Error message text
+          type: string
+        value:
+          description: The value at the given location
+      type: object
     DescribeEnvironmentResponse:
       additionalProperties: false
       properties:
@@ -356,58 +408,6 @@ components:
       - number_secrets
       - number_schedules
       - number_catalogs
-      type: object
-    UpdateEnvironmentResponse:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/UpdateEnvironmentResponse.json
-          format: uri
-          readOnly: true
-          type: string
-        environment:
-          $ref: '#/components/schemas/Environment'
-      required:
-      - environment
-      type: object
-    Pagination:
-      additionalProperties: false
-      properties:
-        num_pages:
-          format: int64
-          type: integer
-        page:
-          format: int64
-          type: integer
-        page_size:
-          format: int64
-          type: integer
-        total:
-          format: int64
-          type: integer
-      required:
-      - page
-      - total
-      - num_pages
-      - page_size
-      type: object
-    UpdateEnvironmentParams:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/UpdateEnvironmentParams.json
-          format: uri
-          readOnly: true
-          type: string
-        new_name:
-          description: The desired new name of the environment
-          type: string
-      required:
-      - new_name
       type: object
   securitySchemes:
     APIKeyAuth:
