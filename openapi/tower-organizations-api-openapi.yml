@@ -92,6 +92,18 @@ components:
           description: The name of the organization to update. This is optional, if you supply null it will not update the organization name.
           type: string
       type: object
+    ErrorDetail:
+      additionalProperties: false
+      properties:
+        location:
+          description: Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id'
+          type: string
+        message:
+          description: Error message text
+          type: string
+        value:
+          description: The value at the given location
+      type: object
     User:
       additionalProperties: false
       properties:
@@ -180,31 +192,6 @@ components:
           format: uri
           type: string
       type: object
-    Organization:
-      additionalProperties: false
-      properties:
-        name:
-          description: The name of the organization
-          type: string
-        owner:
-          $ref: '#/components/schemas/User'
-          description: The user of the organization owner
-      required:
-      - name
-      - owner
-      type: object
-    ErrorDetail:
-      additionalProperties: false
-      properties:
-        location:
-          description: Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id'
-          type: string
-        message:
-          description: Error message text
-          type: string
-        value:
-          description: The value at the given location
-      type: object
     UpdateOrganizationResponse:
       additionalProperties: false
       properties:
@@ -220,6 +207,19 @@ components:
           description: The organization that was just updated
       required:
       - organization
+      type: object
+    Organization:
+      additionalProperties: false
+      properties:
+        name:
+          description: The name of the organization
+          type: string
+        owner:
+          $ref: '#/components/schemas/User'
+          description: The user of the organization owner
+      required:
+      - name
+      - owner
       type: object
   securitySchemes:
     APIKeyAuth:

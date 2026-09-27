@@ -150,37 +150,81 @@ paths:
       - Guests
 components:
   schemas:
-    DeleteGuestOutputBody:
+    Guest:
       additionalProperties: false
       properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/DeleteGuestOutputBody.json
-          format: uri
-          readOnly: true
+        app:
+          description: The name of the app this guest can access.
           type: string
+        created_at:
+          description: When the guest was created.
+          format: date-time
+          type: string
+        id:
+          description: The unique identifier for the guest.
+          type: string
+        name:
+          description: Optional display name for the guest.
+          type: string
+      required:
+      - id
+      - app
+      - created_at
       type: object
-    RegenerateGuestLoginURLResponse:
+    CreateGuestResponse:
       additionalProperties: false
       properties:
         $schema:
           description: A URL to the JSON Schema for this object.
           examples:
-          - https://api.tower.dev/v1/schemas/RegenerateGuestLoginURLResponse.json
+          - https://api.tower.dev/v1/schemas/CreateGuestResponse.json
           format: uri
           readOnly: true
           type: string
+        guest:
+          $ref: '#/components/schemas/Guest'
+          description: The created guest.
         login_url:
-          description: The new login URL to share with the guest.
+          description: The URL to share with the guest for logging in.
           type: string
         login_url_expires_at:
           description: When the login URL expires.
           format: date-time
           type: string
       required:
+      - guest
       - login_url
       - login_url_expires_at
+      type: object
+    ErrorDetail:
+      additionalProperties: false
+      properties:
+        location:
+          description: Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id'
+          type: string
+        message:
+          description: Error message text
+          type: string
+        value:
+          description: The value at the given location
+      type: object
+    ListGuestsResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/ListGuestsResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        guests:
+          description: List of guests.
+          items:
+            $ref: '#/components/schemas/Guest'
+          type: array
+      required:
+      - guests
       type: object
     ErrorModel:
       additionalProperties: false
@@ -227,48 +271,56 @@ components:
           format: uri
           type: string
       type: object
-    CreateGuestResponse:
+    RegenerateGuestLoginURLResponse:
       additionalProperties: false
       properties:
         $schema:
           description: A URL to the JSON Schema for this object.
           examples:
-          - https://api.tower.dev/v1/schemas/CreateGuestResponse.json
+          - https://api.tower.dev/v1/schemas/RegenerateGuestLoginURLResponse.json
           format: uri
           readOnly: true
           type: string
-        guest:
-          $ref: '#/components/schemas/Guest'
-          description: The created guest.
         login_url:
-          description: The URL to share with the guest for logging in.
+          description: The new login URL to share with the guest.
           type: string
         login_url_expires_at:
           description: When the login URL expires.
           format: date-time
           type: string
       required:
-      - guest
       - login_url
       - login_url_expires_at
       type: object
-    ListGuestsResponse:
+    RegenerateGuestLoginURLParams:
       additionalProperties: false
       properties:
         $schema:
           description: A URL to the JSON Schema for this object.
           examples:
-          - https://api.tower.dev/v1/schemas/ListGuestsResponse.json
+          - https://api.tower.dev/v1/schemas/RegenerateGuestLoginURLParams.json
           format: uri
           readOnly: true
           type: string
-        guests:
-          description: List of guests.
-          items:
-            $ref: '#/components/schemas/Guest'
-          type: array
-      required:
-      - guests
+        expires_in:
+          default: 259200
+          description: The number of seconds the guest session should last. Defaults to 72 hours.
+          format: int64
+          type: integer
+        redirect_url:
+          description: Where to redirect the guest after they log in.
+          type: string
+      type: object
+    DeleteGuestOutputBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/DeleteGuestOutputBody.json
+          format: uri
+          readOnly: true
+          type: string
       type: object
     CreateGuestParams:
       additionalProperties: false
@@ -296,58 +348,6 @@ components:
           type: string
       required:
       - app
-      type: object
-    RegenerateGuestLoginURLParams:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/RegenerateGuestLoginURLParams.json
-          format: uri
-          readOnly: true
-          type: string
-        expires_in:
-          default: 259200
-          description: The number of seconds the guest session should last. Defaults to 72 hours.
-          format: int64
-          type: integer
-        redirect_url:
-          description: Where to redirect the guest after they log in.
-          type: string
-      type: object
-    ErrorDetail:
-      additionalProperties: false
-      properties:
-        location:
-          description: Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id'
-          type: string
-        message:
-          description: Error message text
-          type: string
-        value:
-          description: The value at the given location
-      type: object
-    Guest:
-      additionalProperties: false
-      properties:
-        app:
-          description: The name of the app this guest can access.
-          type: string
-        created_at:
-          description: When the guest was created.
-          format: date-time
-          type: string
-        id:
-          description: The unique identifier for the guest.
-          type: string
-        name:
-          description: Optional display name for the guest.
-          type: string
-      required:
-      - id
-      - app
-      - created_at
       type: object
   securitySchemes:
     APIKeyAuth:

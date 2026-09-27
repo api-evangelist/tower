@@ -331,6 +331,66 @@ paths:
       - Catalogs
 components:
   schemas:
+    UpdateCatalogParams:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/UpdateCatalogParams.json
+          format: uri
+          readOnly: true
+          type: string
+        environment:
+          description: New environment for the catalog
+          type: string
+        properties:
+          items:
+            $ref: '#/components/schemas/EncryptedCatalogProperty'
+          type: array
+      required:
+      - environment
+      - properties
+      type: object
+    ExportedCatalog:
+      additionalProperties: false
+      properties:
+        CreatedAt:
+          format: date-time
+          type: string
+        environment:
+          type: string
+        name:
+          type: string
+        properties:
+          items:
+            $ref: '#/components/schemas/ExportedCatalogProperty'
+          type: array
+        slug:
+          deprecated: true
+          description: This property is deprecated. Use name instead.
+          type: string
+        type:
+          type: string
+      required:
+      - type
+      - name
+      - environment
+      - properties
+      - CreatedAt
+      type: object
+    ErrorDetail:
+      additionalProperties: false
+      properties:
+        location:
+          description: Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id'
+          type: string
+        message:
+          description: Error message text
+          type: string
+        value:
+          description: The value at the given location
+      type: object
     EncryptedCatalogProperty:
       additionalProperties: false
       properties:
@@ -344,21 +404,6 @@ components:
       - name
       - encrypted_value
       - preview
-      type: object
-    DeleteCatalogResponse:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/DeleteCatalogResponse.json
-          format: uri
-          readOnly: true
-          type: string
-        catalog:
-          $ref: '#/components/schemas/Catalog'
-      required:
-      - catalog
       type: object
     CreateCatalogParams:
       additionalProperties: false
@@ -393,13 +438,13 @@ components:
       - environment
       - properties
       type: object
-    UpdateCatalogResponse:
+    CreateCatalogResponse:
       additionalProperties: false
       properties:
         $schema:
           description: A URL to the JSON Schema for this object.
           examples:
-          - https://api.tower.dev/v1/schemas/UpdateCatalogResponse.json
+          - https://api.tower.dev/v1/schemas/CreateCatalogResponse.json
           format: uri
           readOnly: true
           type: string
@@ -407,6 +452,39 @@ components:
           $ref: '#/components/schemas/Catalog'
       required:
       - catalog
+      type: object
+    DeleteCatalogResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/DeleteCatalogResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        catalog:
+          $ref: '#/components/schemas/Catalog'
+      required:
+      - catalog
+      type: object
+    VendCatalogCredentialsBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/VendCatalogCredentialsBody.json
+          format: uri
+          readOnly: true
+          type: string
+        mode:
+          default: read
+          description: Access level for the vended token. "read" (default) binds the token to the catalog's read-only principal; "read-write" requires the catalogs:data:write scope and binds it to the read-write principal.
+          enum:
+          - read
+          - read-write
+          type: string
       type: object
     CatalogProperty:
       additionalProperties: false
@@ -421,6 +499,27 @@ components:
       required:
       - name
       - preview
+      type: object
+    Pagination:
+      additionalProperties: false
+      properties:
+        num_pages:
+          format: int64
+          type: integer
+        page:
+          format: int64
+          type: integer
+        page_size:
+          format: int64
+          type: integer
+        total:
+          format: int64
+          type: integer
+      required:
+      - page
+      - total
+      - num_pages
+      - page_size
       type: object
     ErrorModel:
       additionalProperties: false
@@ -467,51 +566,6 @@ components:
           format: uri
           type: string
       type: object
-    VendCatalogCredentialsBody:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/VendCatalogCredentialsBody.json
-          format: uri
-          readOnly: true
-          type: string
-        mode:
-          default: read
-          description: Access level for the vended token. "read" (default) binds the token to the catalog's read-only principal; "read-write" requires the catalogs:data:write scope and binds it to the read-write principal.
-          enum:
-          - read
-          - read-write
-          type: string
-      type: object
-    Catalog:
-      additionalProperties: false
-      properties:
-        CreatedAt:
-          format: date-time
-          type: string
-        environment:
-          type: string
-        name:
-          type: string
-        properties:
-          items:
-            $ref: '#/components/schemas/CatalogProperty'
-          type: array
-        slug:
-          deprecated: true
-          description: This property is deprecated. Use name instead.
-          type: string
-        type:
-          type: string
-      required:
-      - type
-      - name
-      - environment
-      - properties
-      - CreatedAt
-      type: object
     ExportCatalogsParams:
       additionalProperties: false
       properties:
@@ -550,34 +604,48 @@ components:
       - page
       - page_size
       type: object
-    Pagination:
-      additionalProperties: false
-      properties:
-        num_pages:
-          format: int64
-          type: integer
-        page:
-          format: int64
-          type: integer
-        page_size:
-          format: int64
-          type: integer
-        total:
-          format: int64
-          type: integer
-      required:
-      - page
-      - total
-      - num_pages
-      - page_size
-      type: object
-    CreateCatalogResponse:
+    ListCatalogsResponse:
       additionalProperties: false
       properties:
         $schema:
           description: A URL to the JSON Schema for this object.
           examples:
-          - https://api.tower.dev/v1/schemas/CreateCatalogResponse.json
+          - https://api.tower.dev/v1/schemas/ListCatalogsResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        catalogs:
+          items:
+            $ref: '#/components/schemas/Catalog'
+          type: array
+        pages:
+          $ref: '#/components/schemas/Pagination'
+      required:
+      - pages
+      - catalogs
+      type: object
+    VendCatalogCredentialsResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/VendCatalogCredentialsResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        credentials:
+          $ref: '#/components/schemas/CatalogCredentials'
+      required:
+      - credentials
+      type: object
+    UpdateCatalogResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/UpdateCatalogResponse.json
           format: uri
           readOnly: true
           type: string
@@ -603,7 +671,27 @@ components:
       - encrypted_value
       - preview
       type: object
-    ExportedCatalog:
+    ExportCatalogsResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/ExportCatalogsResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        catalogs:
+          items:
+            $ref: '#/components/schemas/ExportedCatalog'
+          type: array
+        pages:
+          $ref: '#/components/schemas/Pagination'
+      required:
+      - pages
+      - catalogs
+      type: object
+    Catalog:
       additionalProperties: false
       properties:
         CreatedAt:
@@ -615,7 +703,7 @@ components:
           type: string
         properties:
           items:
-            $ref: '#/components/schemas/ExportedCatalogProperty'
+            $ref: '#/components/schemas/CatalogProperty'
           type: array
         slug:
           deprecated: true
@@ -629,33 +717,6 @@ components:
       - environment
       - properties
       - CreatedAt
-      type: object
-    ErrorDetail:
-      additionalProperties: false
-      properties:
-        location:
-          description: Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id'
-          type: string
-        message:
-          description: Error message text
-          type: string
-        value:
-          description: The value at the given location
-      type: object
-    VendCatalogCredentialsResponse:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/VendCatalogCredentialsResponse.json
-          format: uri
-          readOnly: true
-          type: string
-        credentials:
-          $ref: '#/components/schemas/CatalogCredentials'
-      required:
-      - credentials
       type: object
     CatalogCredentials:
       additionalProperties: false
@@ -683,26 +744,6 @@ components:
       - expires_at
       - mode
       type: object
-    ExportCatalogsResponse:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/ExportCatalogsResponse.json
-          format: uri
-          readOnly: true
-          type: string
-        catalogs:
-          items:
-            $ref: '#/components/schemas/ExportedCatalog'
-          type: array
-        pages:
-          $ref: '#/components/schemas/Pagination'
-      required:
-      - pages
-      - catalogs
-      type: object
     DescribeCatalogResponse:
       additionalProperties: false
       properties:
@@ -717,47 +758,6 @@ components:
           $ref: '#/components/schemas/Catalog'
       required:
       - catalog
-      type: object
-    UpdateCatalogParams:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/UpdateCatalogParams.json
-          format: uri
-          readOnly: true
-          type: string
-        environment:
-          description: New environment for the catalog
-          type: string
-        properties:
-          items:
-            $ref: '#/components/schemas/EncryptedCatalogProperty'
-          type: array
-      required:
-      - environment
-      - properties
-      type: object
-    ListCatalogsResponse:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/ListCatalogsResponse.json
-          format: uri
-          readOnly: true
-          type: string
-        catalogs:
-          items:
-            $ref: '#/components/schemas/Catalog'
-          type: array
-        pages:
-          $ref: '#/components/schemas/Pagination'
-      required:
-      - pages
-      - catalogs
       type: object
   securitySchemes:
     APIKeyAuth:
