@@ -82,6 +82,69 @@ paths:
       - Team Invites
 components:
   schemas:
+    Team:
+      additionalProperties: false
+      properties:
+        execution_region:
+          type: string
+        name:
+          type: string
+        organization:
+          description: The name of the organization this team belongs to.
+          type: string
+        slug:
+          deprecated: true
+          description: This property is deprecated. Use name instead.
+          type: string
+        token:
+          $ref: '#/components/schemas/Token'
+        type:
+          description: The type of team, either 'personal' or 'team'.
+          type: string
+      required:
+      - name
+      - type
+      - organization
+      - execution_region
+      type: object
+    ListMyTeamInvitationsResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/ListMyTeamInvitationsResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        team_invitations:
+          description: All of team invitations
+          items:
+            $ref: '#/components/schemas/TeamInvitation'
+          type: array
+      required:
+      - team_invitations
+      type: object
+    UpdateMyTeamInvitationParams:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/UpdateMyTeamInvitationParams.json
+          format: uri
+          readOnly: true
+          type: string
+        accepted:
+          description: Whether or not the invitation was accepted. If false, it's considered rejected.
+          type: boolean
+        name:
+          description: The name of the team invitation to update
+          type: string
+      required:
+      - name
+      - accepted
+      type: object
     TeamInvitation:
       additionalProperties: false
       properties:
@@ -112,61 +175,20 @@ components:
         value:
           description: The value at the given location
       type: object
-    UpdateMyTeamInvitationParams:
+    Token:
       additionalProperties: false
       properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/UpdateMyTeamInvitationParams.json
-          format: uri
-          readOnly: true
+        access_token:
+          description: The access token to use when authenticating API requests with Tower.
           type: string
-        accepted:
-          description: Whether or not the invitation was accepted. If false, it's considered rejected.
-          type: boolean
-        name:
-          description: The name of the team invitation to update
+        jwt:
+          type: string
+        refresh_token:
+          description: The refresh token to use when refreshing an expired access token. For security reasons, refresh tokens should only be transmitted over secure channels and never logged or stored in plaintext. It will only be returned upon initial authentication or when explicitly refreshing the access token.
           type: string
       required:
-      - name
-      - accepted
-      type: object
-    Team:
-      additionalProperties: false
-      properties:
-        execution_region:
-          type: string
-        name:
-          type: string
-        organization:
-          description: The name of the organization this team belongs to.
-          type: string
-        slug:
-          deprecated: true
-          description: This property is deprecated. Use name instead.
-          type: string
-        token:
-          $ref: '#/components/schemas/Token'
-        type:
-          description: The type of team, either 'personal' or 'team'.
-          type: string
-      required:
-      - name
-      - type
-      - organization
-      - execution_region
-      type: object
-    UpdateMyTeamInvitationResponse:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/UpdateMyTeamInvitationResponse.json
-          format: uri
-          readOnly: true
-          type: string
+      - access_token
+      - jwt
       type: object
     ErrorModel:
       additionalProperties: false
@@ -213,38 +235,16 @@ components:
           format: uri
           type: string
       type: object
-    ListMyTeamInvitationsResponse:
+    UpdateMyTeamInvitationResponse:
       additionalProperties: false
       properties:
         $schema:
           description: A URL to the JSON Schema for this object.
           examples:
-          - https://api.tower.dev/v1/schemas/ListMyTeamInvitationsResponse.json
+          - https://api.tower.dev/v1/schemas/UpdateMyTeamInvitationResponse.json
           format: uri
           readOnly: true
           type: string
-        team_invitations:
-          description: All of team invitations
-          items:
-            $ref: '#/components/schemas/TeamInvitation'
-          type: array
-      required:
-      - team_invitations
-      type: object
-    Token:
-      additionalProperties: false
-      properties:
-        access_token:
-          description: The access token to use when authenticating API requests with Tower.
-          type: string
-        jwt:
-          type: string
-        refresh_token:
-          description: The refresh token to use when refreshing an expired access token. For security reasons, refresh tokens should only be transmitted over secure channels and never logged or stored in plaintext. It will only be returned upon initial authentication or when explicitly refreshing the access token.
-          type: string
-      required:
-      - access_token
-      - jwt
       type: object
   securitySchemes:
     APIKeyAuth:

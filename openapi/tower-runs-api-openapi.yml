@@ -122,97 +122,6 @@ components:
           format: int64
           type: integer
       type: object
-    SearchRunsResponse:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/SearchRunsResponse.json
-          format: uri
-          readOnly: true
-          type: string
-        pages:
-          $ref: '#/components/schemas/Pagination'
-        runs:
-          items:
-            $ref: '#/components/schemas/Run'
-          type: array
-      required:
-      - pages
-      - runs
-      type: object
-    RunCreator:
-      additionalProperties: false
-      properties:
-        name:
-          description: 'The creator''s name: a user''s full name (or email) or a service account''s name.'
-          readOnly: true
-          type: string
-        type:
-          description: The kind of principal that created the run.
-          enum:
-          - user
-          - service_account
-          type: string
-      required:
-      - type
-      - name
-      type: object
-    RunAttempt:
-      additionalProperties: false
-      properties:
-        ended_at:
-          description: When this attempt ended.
-          format: date-time
-          type:
-          - string
-          - 'null'
-        exit_code:
-          description: Exit code for this attempt.
-          format: int64
-          type:
-          - integer
-          - 'null'
-        seq:
-          description: 1-based attempt number.
-          format: int64
-          type: integer
-        started_at:
-          description: When the run started executing your code.
-          format: date-time
-          type:
-          - string
-          - 'null'
-        starting_at:
-          description: When the runner environment started to get setup.
-          format: date-time
-          type:
-          - string
-          - 'null'
-        status:
-          description: Terminal status of this attempt.
-          type: string
-      required:
-      - seq
-      - status
-      - starting_at
-      - started_at
-      - ended_at
-      - exit_code
-      type: object
-    ErrorDetail:
-      additionalProperties: false
-      properties:
-        location:
-          description: Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id'
-          type: string
-        message:
-          description: Error message text
-          type: string
-        value:
-          description: The value at the given location
-      type: object
     Run:
       additionalProperties: false
       properties:
@@ -343,6 +252,33 @@ components:
       - num_attempts
       - $link
       type: object
+    ScheduleRunInitiatorDetails:
+      additionalProperties: false
+      properties:
+        schedule_name:
+          description: The name of the schedule that initiated this run, if type is 'tower_schedule'
+          type: string
+      type: object
+    SearchRunsResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/SearchRunsResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        pages:
+          $ref: '#/components/schemas/Pagination'
+        runs:
+          items:
+            $ref: '#/components/schemas/Run'
+          type: array
+      required:
+      - pages
+      - runs
+      type: object
     Pagination:
       additionalProperties: false
       properties:
@@ -379,6 +315,97 @@ components:
       - max_retries
       - retry_delay_seconds
       - use_exponential_backoff
+      type: object
+    RunParameter:
+      additionalProperties: false
+      properties:
+        hidden:
+          default: false
+          description: Whether this parameter is hidden/secret. Defaults to false.
+          type: boolean
+        is_override:
+          description: Whether this parameter's value was supplied as an override at run/schedule creation time (true) or comes from the app version's default (false).
+          type:
+          - boolean
+          - 'null'
+        name:
+          type: string
+        value:
+          type: string
+      required:
+      - name
+      - value
+      type: object
+    ErrorDetail:
+      additionalProperties: false
+      properties:
+        location:
+          description: Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id'
+          type: string
+        message:
+          description: Error message text
+          type: string
+        value:
+          description: The value at the given location
+      type: object
+    RunCreator:
+      additionalProperties: false
+      properties:
+        name:
+          description: 'The creator''s name: a user''s full name (or email) or a service account''s name.'
+          readOnly: true
+          type: string
+        type:
+          description: The kind of principal that created the run.
+          enum:
+          - user
+          - service_account
+          type: string
+      required:
+      - type
+      - name
+      type: object
+    RunAttempt:
+      additionalProperties: false
+      properties:
+        ended_at:
+          description: When this attempt ended.
+          format: date-time
+          type:
+          - string
+          - 'null'
+        exit_code:
+          description: Exit code for this attempt.
+          format: int64
+          type:
+          - integer
+          - 'null'
+        seq:
+          description: 1-based attempt number.
+          format: int64
+          type: integer
+        started_at:
+          description: When the run started executing your code.
+          format: date-time
+          type:
+          - string
+          - 'null'
+        starting_at:
+          description: When the runner environment started to get setup.
+          format: date-time
+          type:
+          - string
+          - 'null'
+        status:
+          description: Terminal status of this attempt.
+          type: string
+      required:
+      - seq
+      - status
+      - starting_at
+      - started_at
+      - ended_at
+      - exit_code
       type: object
     ErrorModel:
       additionalProperties: false
@@ -442,33 +469,6 @@ components:
       required:
       - type
       - details
-      type: object
-    ScheduleRunInitiatorDetails:
-      additionalProperties: false
-      properties:
-        schedule_name:
-          description: The name of the schedule that initiated this run, if type is 'tower_schedule'
-          type: string
-      type: object
-    RunParameter:
-      additionalProperties: false
-      properties:
-        hidden:
-          default: false
-          description: Whether this parameter is hidden/secret. Defaults to false.
-          type: boolean
-        is_override:
-          description: Whether this parameter's value was supplied as an override at run/schedule creation time (true) or comes from the app version's default (false).
-          type:
-          - boolean
-          - 'null'
-        name:
-          type: string
-        value:
-          type: string
-      required:
-      - name
-      - value
       type: object
   securitySchemes:
     APIKeyAuth:

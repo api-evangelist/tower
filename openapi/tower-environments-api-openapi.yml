@@ -192,37 +192,6 @@ paths:
       - Environments
 components:
   schemas:
-    DeleteEnvironmentResponse:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/DeleteEnvironmentResponse.json
-          format: uri
-          readOnly: true
-          type: string
-        environment:
-          $ref: '#/components/schemas/Environment'
-      required:
-      - environment
-      type: object
-    UpdateEnvironmentParams:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/UpdateEnvironmentParams.json
-          format: uri
-          readOnly: true
-          type: string
-        new_name:
-          description: The desired new name of the environment
-          type: string
-      required:
-      - new_name
-      type: object
     CreateEnvironmentResponse:
       additionalProperties: false
       properties:
@@ -238,13 +207,52 @@ components:
       required:
       - environment
       type: object
-    UpdateEnvironmentResponse:
+    Pagination:
+      additionalProperties: false
+      properties:
+        num_pages:
+          format: int64
+          type: integer
+        page:
+          format: int64
+          type: integer
+        page_size:
+          format: int64
+          type: integer
+        total:
+          format: int64
+          type: integer
+      required:
+      - page
+      - total
+      - num_pages
+      - page_size
+      type: object
+    CreateEnvironmentParams:
       additionalProperties: false
       properties:
         $schema:
           description: A URL to the JSON Schema for this object.
           examples:
-          - https://api.tower.dev/v1/schemas/UpdateEnvironmentResponse.json
+          - https://api.tower.dev/v1/schemas/CreateEnvironmentParams.json
+          format: uri
+          readOnly: true
+          type: string
+        name:
+          description: The name of the environment
+          maxLength: 100
+          minLength: 1
+          type: string
+      required:
+      - name
+      type: object
+    DeleteEnvironmentResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/DeleteEnvironmentResponse.json
           format: uri
           readOnly: true
           type: string
@@ -280,6 +288,22 @@ components:
       - number_schedules
       - number_catalogs
       type: object
+    UpdateEnvironmentParams:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/UpdateEnvironmentParams.json
+          format: uri
+          readOnly: true
+          type: string
+        new_name:
+          description: The desired new name of the environment
+          type: string
+      required:
+      - new_name
+      type: object
     ErrorDetail:
       additionalProperties: false
       properties:
@@ -292,26 +316,40 @@ components:
         value:
           description: The value at the given location
       type: object
-    Pagination:
+    UpdateEnvironmentResponse:
       additionalProperties: false
       properties:
-        num_pages:
-          format: int64
-          type: integer
-        page:
-          format: int64
-          type: integer
-        page_size:
-          format: int64
-          type: integer
-        total:
-          format: int64
-          type: integer
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/UpdateEnvironmentResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        environment:
+          $ref: '#/components/schemas/Environment'
       required:
-      - page
-      - total
-      - num_pages
-      - page_size
+      - environment
+      type: object
+    ListEnvironmentsResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/ListEnvironmentsResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        environments:
+          items:
+            $ref: '#/components/schemas/Environment'
+          type: array
+        pages:
+          $ref: '#/components/schemas/Pagination'
+      required:
+      - environments
+      - pages
       type: object
     ErrorModel:
       additionalProperties: false
@@ -357,44 +395,6 @@ components:
           - https://example.com/errors/example
           format: uri
           type: string
-      type: object
-    ListEnvironmentsResponse:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/ListEnvironmentsResponse.json
-          format: uri
-          readOnly: true
-          type: string
-        environments:
-          items:
-            $ref: '#/components/schemas/Environment'
-          type: array
-        pages:
-          $ref: '#/components/schemas/Pagination'
-      required:
-      - environments
-      - pages
-      type: object
-    CreateEnvironmentParams:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/CreateEnvironmentParams.json
-          format: uri
-          readOnly: true
-          type: string
-        name:
-          description: The name of the environment
-          maxLength: 100
-          minLength: 1
-          type: string
-      required:
-      - name
       type: object
     Environment:
       additionalProperties: false

@@ -249,53 +249,176 @@ paths:
       - Alerts
 components:
   schemas:
-    RunRunInitiatorDetails:
+    RunAttempt:
       additionalProperties: false
       properties:
-        run_app_name:
-          description: The name of the app that initiated this run, if type is 'tower_run'
-          type: string
-        run_number:
-          description: The number of the run that initaited this run, if type is 'tower_run'
+        ended_at:
+          description: When this attempt ended.
+          format: date-time
+          type:
+          - string
+          - 'null'
+        exit_code:
+          description: Exit code for this attempt.
+          format: int64
+          type:
+          - integer
+          - 'null'
+        seq:
+          description: 1-based attempt number.
           format: int64
           type: integer
-      type: object
-    ListAlertsResponse:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/ListAlertsResponse.json
-          format: uri
-          readOnly: true
+        started_at:
+          description: When the run started executing your code.
+          format: date-time
+          type:
+          - string
+          - 'null'
+        starting_at:
+          description: When the runner environment started to get setup.
+          format: date-time
+          type:
+          - string
+          - 'null'
+        status:
+          description: Terminal status of this attempt.
           type: string
-        alerts:
-          description: List of alerts
-          items:
-            $ref: '#/components/schemas/Alert'
-          type: array
-        pages:
-          $ref: '#/components/schemas/Pagination'
-          description: Pagination information
       required:
-      - alerts
-      - pages
+      - seq
+      - status
+      - starting_at
+      - started_at
+      - ended_at
+      - exit_code
       type: object
-    AcknowledgeAlertResponse:
+    ErrorModel:
       additionalProperties: false
       properties:
         $schema:
           description: A URL to the JSON Schema for this object.
           examples:
-          - https://api.tower.dev/v1/schemas/AcknowledgeAlertResponse.json
+          - https://api.tower.dev/v1/schemas/ErrorModel.json
           format: uri
           readOnly: true
           type: string
+        detail:
+          description: A human-readable explanation specific to this occurrence of the problem.
+          examples:
+          - Property foo is required but is missing.
+          type: string
+        errors:
+          description: Optional list of individual error details
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+        instance:
+          description: A URI reference that identifies the specific occurrence of the problem.
+          examples:
+          - https://example.com/error-log/abc123
+          format: uri
+          type: string
+        status:
+          description: HTTP status code
+          examples:
+          - 400
+          format: int64
+          type: integer
+        title:
+          description: A short, human-readable summary of the problem type. This value should not change between occurrences of the error.
+          examples:
+          - Bad Request
+          type: string
+        type:
+          default: about:blank
+          description: A URI reference to human-readable documentation for the error.
+          examples:
+          - https://example.com/errors/example
+          format: uri
+          type: string
+      type: object
+    ScheduleRunInitiatorDetails:
+      additionalProperties: false
+      properties:
+        schedule_name:
+          description: The name of the schedule that initiated this run, if type is 'tower_schedule'
+          type: string
+      type: object
+    Pagination:
+      additionalProperties: false
+      properties:
+        num_pages:
+          format: int64
+          type: integer
+        page:
+          format: int64
+          type: integer
+        page_size:
+          format: int64
+          type: integer
+        total:
+          format: int64
+          type: integer
+      required:
+      - page
+      - total
+      - num_pages
+      - page_size
+      type: object
+    SSEWarning:
+      additionalProperties: false
+      properties:
+        content:
+          description: Contents of the warning.
+          type: string
+        end_of_stream:
+          description: When true, the server has delivered every log line and is closing the stream; clients should stop and not reconnect.
+          type: boolean
+        reported_at:
+          description: Timestamp of the event.
+          format: date-time
+          type: string
+      required:
+      - reported_at
+      - content
+      type: object
+    ErrorDetail:
+      additionalProperties: false
+      properties:
+        location:
+          description: Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id'
+          type: string
+        message:
+          description: Error message text
+          type: string
+        value:
+          description: The value at the given location
+      type: object
+    Alert:
+      additionalProperties: false
+      properties:
+        acked:
+          type: boolean
+        alert_type:
+          type: string
+        created_at:
+          format: date-time
+          type: string
+        detail:
+          oneOf:
+          - $ref: '#/components/schemas/RunFailureAlert'
+          type: object
+        seq:
+          format: int64
+          type: integer
         status:
           type: string
       required:
+      - alert_type
+      - seq
+      - detail
+      - created_at
       - status
+      - acked
       type: object
     Run:
       additionalProperties: false
@@ -427,28 +550,25 @@ components:
       - num_attempts
       - $link
       type: object
-    ErrorDetail:
+    AcknowledgeAllAlertsResponse:
       additionalProperties: false
       properties:
-        location:
-          description: Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id'
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/AcknowledgeAllAlertsResponse.json
+          format: uri
+          readOnly: true
           type: string
-        message:
-          description: Error message text
-          type: string
-        value:
-          description: The value at the given location
-      type: object
-    AppTag:
-      additionalProperties: false
-      properties:
-        name:
-          type: string
-        value:
+        count:
+          description: Number of alerts that were acknowledged
+          format: int64
+          type: integer
+        status:
           type: string
       required:
-      - name
-      - value
+      - status
+      - count
       type: object
     RunCreator:
       additionalProperties: false
@@ -466,48 +586,6 @@ components:
       required:
       - type
       - name
-      type: object
-    RunAttempt:
-      additionalProperties: false
-      properties:
-        ended_at:
-          description: When this attempt ended.
-          format: date-time
-          type:
-          - string
-          - 'null'
-        exit_code:
-          description: Exit code for this attempt.
-          format: int64
-          type:
-          - integer
-          - 'null'
-        seq:
-          description: 1-based attempt number.
-          format: int64
-          type: integer
-        started_at:
-          description: When the run started executing your code.
-          format: date-time
-          type:
-          - string
-          - 'null'
-        starting_at:
-          description: When the runner environment started to get setup.
-          format: date-time
-          type:
-          - string
-          - 'null'
-        status:
-          description: Terminal status of this attempt.
-          type: string
-      required:
-      - seq
-      - status
-      - starting_at
-      - started_at
-      - ended_at
-      - exit_code
       type: object
     App:
       additionalProperties: false
@@ -602,21 +680,27 @@ components:
       - pending_timeout
       - running_timeout
       type: object
-    RunRetryPolicy:
+    RunRunInitiatorDetails:
       additionalProperties: false
       properties:
-        max_retries:
+        run_app_name:
+          description: The name of the app that initiated this run, if type is 'tower_run'
+          type: string
+        run_number:
+          description: The number of the run that initaited this run, if type is 'tower_run'
           format: int64
           type: integer
-        retry_delay_seconds:
-          format: int64
-          type: integer
-        use_exponential_backoff:
-          type: boolean
+      type: object
+    AppTag:
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+        value:
+          type: string
       required:
-      - max_retries
-      - retry_delay_seconds
-      - use_exponential_backoff
+      - name
+      - value
       type: object
     RunInitiator:
       additionalProperties: false
@@ -636,42 +720,58 @@ components:
       - type
       - details
       type: object
-    RunParameter:
+    AcknowledgeAlertResponse:
       additionalProperties: false
       properties:
-        hidden:
-          default: false
-          description: Whether this parameter is hidden/secret. Defaults to false.
-          type: boolean
-        is_override:
-          description: Whether this parameter's value was supplied as an override at run/schedule creation time (true) or comes from the app version's default (false).
-          type:
-          - boolean
-          - 'null'
-        name:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/AcknowledgeAlertResponse.json
+          format: uri
+          readOnly: true
           type: string
-        value:
+        status:
           type: string
       required:
-      - name
-      - value
+      - status
       type: object
-    SSEWarning:
+    RunRetryPolicy:
       additionalProperties: false
       properties:
-        content:
-          description: Contents of the warning.
-          type: string
-        end_of_stream:
-          description: When true, the server has delivered every log line and is closing the stream; clients should stop and not reconnect.
+        max_retries:
+          format: int64
+          type: integer
+        retry_delay_seconds:
+          format: int64
+          type: integer
+        use_exponential_backoff:
           type: boolean
-        reported_at:
-          description: Timestamp of the event.
-          format: date-time
-          type: string
       required:
-      - reported_at
-      - content
+      - max_retries
+      - retry_delay_seconds
+      - use_exponential_backoff
+      type: object
+    ListAlertsResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/ListAlertsResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        alerts:
+          description: List of alerts
+          items:
+            $ref: '#/components/schemas/Alert'
+          type: array
+        pages:
+          $ref: '#/components/schemas/Pagination'
+          description: Pagination information
+      required:
+      - alerts
+      - pages
       type: object
     RunFailureAlert:
       additionalProperties: false
@@ -689,72 +789,6 @@ components:
       - run
       - app
       - environment
-      type: object
-    Pagination:
-      additionalProperties: false
-      properties:
-        num_pages:
-          format: int64
-          type: integer
-        page:
-          format: int64
-          type: integer
-        page_size:
-          format: int64
-          type: integer
-        total:
-          format: int64
-          type: integer
-      required:
-      - page
-      - total
-      - num_pages
-      - page_size
-      type: object
-    ErrorModel:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/ErrorModel.json
-          format: uri
-          readOnly: true
-          type: string
-        detail:
-          description: A human-readable explanation specific to this occurrence of the problem.
-          examples:
-          - Property foo is required but is missing.
-          type: string
-        errors:
-          description: Optional list of individual error details
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-          type: array
-        instance:
-          description: A URI reference that identifies the specific occurrence of the problem.
-          examples:
-          - https://example.com/error-log/abc123
-          format: uri
-          type: string
-        status:
-          description: HTTP status code
-          examples:
-          - 400
-          format: int64
-          type: integer
-        title:
-          description: A short, human-readable summary of the problem type. This value should not change between occurrences of the error.
-          examples:
-          - Bad Request
-          type: string
-        type:
-          default: about:blank
-          description: A URI reference to human-readable documentation for the error.
-          examples:
-          - https://example.com/errors/example
-          format: uri
-          type: string
       type: object
     RunResults:
       additionalProperties: false
@@ -793,59 +827,25 @@ components:
       - cancelled
       - retrying
       type: object
-    ScheduleRunInitiatorDetails:
+    RunParameter:
       additionalProperties: false
       properties:
-        schedule_name:
-          description: The name of the schedule that initiated this run, if type is 'tower_schedule'
-          type: string
-      type: object
-    AcknowledgeAllAlertsResponse:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/AcknowledgeAllAlertsResponse.json
-          format: uri
-          readOnly: true
-          type: string
-        count:
-          description: Number of alerts that were acknowledged
-          format: int64
-          type: integer
-        status:
-          type: string
-      required:
-      - status
-      - count
-      type: object
-    Alert:
-      additionalProperties: false
-      properties:
-        acked:
+        hidden:
+          default: false
+          description: Whether this parameter is hidden/secret. Defaults to false.
           type: boolean
-        alert_type:
+        is_override:
+          description: Whether this parameter's value was supplied as an override at run/schedule creation time (true) or comes from the app version's default (false).
+          type:
+          - boolean
+          - 'null'
+        name:
           type: string
-        created_at:
-          format: date-time
-          type: string
-        detail:
-          oneOf:
-          - $ref: '#/components/schemas/RunFailureAlert'
-          type: object
-        seq:
-          format: int64
-          type: integer
-        status:
+        value:
           type: string
       required:
-      - alert_type
-      - seq
-      - detail
-      - created_at
-      - status
-      - acked
+      - name
+      - value
       type: object
   securitySchemes:
     APIKeyAuth:

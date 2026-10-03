@@ -220,13 +220,13 @@ paths:
       - Webhooks
 components:
   schemas:
-    TestWebhookResponse:
+    DeleteWebhookResponse:
       additionalProperties: false
       properties:
         $schema:
           description: A URL to the JSON Schema for this object.
           examples:
-          - https://api.tower.dev/v1/schemas/TestWebhookResponse.json
+          - https://api.tower.dev/v1/schemas/DeleteWebhookResponse.json
           format: uri
           readOnly: true
           type: string
@@ -251,13 +251,13 @@ components:
       required:
       - name
       type: object
-    DescribeWebhookResponse:
+    UpdateWebhookResponse:
       additionalProperties: false
       properties:
         $schema:
           description: A URL to the JSON Schema for this object.
           examples:
-          - https://api.tower.dev/v1/schemas/DescribeWebhookResponse.json
+          - https://api.tower.dev/v1/schemas/UpdateWebhookResponse.json
           format: uri
           readOnly: true
           type: string
@@ -265,26 +265,6 @@ components:
           $ref: '#/components/schemas/Webhook'
       required:
       - webhook
-      type: object
-    ListWebhooksResponse:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/ListWebhooksResponse.json
-          format: uri
-          readOnly: true
-          type: string
-        pages:
-          $ref: '#/components/schemas/Pagination'
-        webhooks:
-          items:
-            $ref: '#/components/schemas/Webhook'
-          type: array
-      required:
-      - webhooks
-      - pages
       type: object
     CreateWebhookParams:
       additionalProperties: false
@@ -306,35 +286,25 @@ components:
       - name
       - url
       type: object
-    ErrorDetail:
-      additionalProperties: false
-      properties:
-        location:
-          description: Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id'
-          type: string
-        message:
-          description: Error message text
-          type: string
-        value:
-          description: The value at the given location
-      type: object
-    CreateWebhookResponse:
+    ListWebhooksResponse:
       additionalProperties: false
       properties:
         $schema:
           description: A URL to the JSON Schema for this object.
           examples:
-          - https://api.tower.dev/v1/schemas/CreateWebhookResponse.json
+          - https://api.tower.dev/v1/schemas/ListWebhooksResponse.json
           format: uri
           readOnly: true
           type: string
-        signing_key:
-          type: string
-        webhook:
-          $ref: '#/components/schemas/Webhook'
+        pages:
+          $ref: '#/components/schemas/Pagination'
+        webhooks:
+          items:
+            $ref: '#/components/schemas/Webhook'
+          type: array
       required:
-      - webhook
-      - signing_key
+      - webhooks
+      - pages
       type: object
     Pagination:
       additionalProperties: false
@@ -357,44 +327,65 @@ components:
       - num_pages
       - page_size
       type: object
-    Webhook:
+    DescribeWebhookResponse:
       additionalProperties: false
       properties:
-        account_id:
-          contentEncoding: base64
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/DescribeWebhookResponse.json
+          format: uri
+          readOnly: true
           type: string
-        created_at:
-          format: date-time
-          type: string
-        created_by_id:
-          contentEncoding: base64
-          type: string
-        deleted_at:
-          format: date-time
-          type: string
-        last_checked_at:
-          format: date-time
-          type:
-          - string
-          - 'null'
-        name:
-          type: string
-        state:
-          enum:
-          - healthy
-          - unhealthy
-          - unknown
-          type: string
-        url:
-          type: string
+        webhook:
+          $ref: '#/components/schemas/Webhook'
       required:
-      - name
-      - url
-      - created_at
-      - created_by_id
-      - account_id
-      - state
-      - last_checked_at
+      - webhook
+      type: object
+    CreateWebhookResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/CreateWebhookResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        signing_key:
+          type: string
+        webhook:
+          $ref: '#/components/schemas/Webhook'
+      required:
+      - webhook
+      - signing_key
+      type: object
+    ErrorDetail:
+      additionalProperties: false
+      properties:
+        location:
+          description: Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id'
+          type: string
+        message:
+          description: Error message text
+          type: string
+        value:
+          description: The value at the given location
+      type: object
+    TestWebhookResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/TestWebhookResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        webhook:
+          $ref: '#/components/schemas/Webhook'
+      required:
+      - webhook
       type: object
     ErrorModel:
       additionalProperties: false
@@ -441,35 +432,44 @@ components:
           format: uri
           type: string
       type: object
-    UpdateWebhookResponse:
+    Webhook:
       additionalProperties: false
       properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/UpdateWebhookResponse.json
-          format: uri
-          readOnly: true
+        account_id:
+          contentEncoding: base64
           type: string
-        webhook:
-          $ref: '#/components/schemas/Webhook'
-      required:
-      - webhook
-      type: object
-    DeleteWebhookResponse:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/DeleteWebhookResponse.json
-          format: uri
-          readOnly: true
+        created_at:
+          format: date-time
           type: string
-        webhook:
-          $ref: '#/components/schemas/Webhook'
+        created_by_id:
+          contentEncoding: base64
+          type: string
+        deleted_at:
+          format: date-time
+          type: string
+        last_checked_at:
+          format: date-time
+          type:
+          - string
+          - 'null'
+        name:
+          type: string
+        state:
+          enum:
+          - healthy
+          - unhealthy
+          - unknown
+          type: string
+        url:
+          type: string
       required:
-      - webhook
+      - name
+      - url
+      - created_at
+      - created_by_id
+      - account_id
+      - state
+      - last_checked_at
       type: object
   securitySchemes:
     APIKeyAuth:

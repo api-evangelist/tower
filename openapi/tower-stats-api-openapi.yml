@@ -137,41 +137,6 @@ paths:
       - Stats
 components:
   schemas:
-    GenerateRunStatisticsResponse:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/GenerateRunStatisticsResponse.json
-          format: uri
-          readOnly: true
-          type: string
-        series:
-          items:
-            $ref: '#/components/schemas/RunTimeseriesPoint'
-          type: array
-        settings:
-          $ref: '#/components/schemas/StatisticsSettings'
-        stats:
-          $ref: '#/components/schemas/RunStatistics'
-      required:
-      - settings
-      - stats
-      - series
-      type: object
-    ErrorDetail:
-      additionalProperties: false
-      properties:
-        location:
-          description: Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id'
-          type: string
-        message:
-          description: Error message text
-          type: string
-        value:
-          description: The value at the given location
-      type: object
     StatisticsSettings:
       additionalProperties: false
       properties:
@@ -201,6 +166,106 @@ components:
       - start_at
       - end_at
       - environment
+      type: object
+    AppStatistics:
+      additionalProperties: false
+      properties:
+        all_apps:
+          format: int64
+          type: integer
+        disabled_apps:
+          format: int64
+          type: integer
+        healthy_apps:
+          format: int64
+          type: integer
+        running_apps:
+          format: int64
+          type: integer
+      required:
+      - all_apps
+      - healthy_apps
+      - running_apps
+      - disabled_apps
+      type: object
+    GenerateRunStatisticsResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/GenerateRunStatisticsResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        series:
+          items:
+            $ref: '#/components/schemas/RunTimeseriesPoint'
+          type: array
+        settings:
+          $ref: '#/components/schemas/StatisticsSettings'
+        stats:
+          $ref: '#/components/schemas/RunStatistics'
+      required:
+      - settings
+      - stats
+      - series
+      type: object
+    GenerateAppStatisticsResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/GenerateAppStatisticsResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        statistics:
+          $ref: '#/components/schemas/AppStatistics'
+      required:
+      - statistics
+      type: object
+    RunStatistics:
+      additionalProperties: false
+      properties:
+        cancelled_runs:
+          format: int64
+          type: integer
+        crashed_runs:
+          format: int64
+          type: integer
+        errored_runs:
+          format: int64
+          type: integer
+        exited_runs:
+          format: int64
+          type: integer
+        running_runs:
+          format: int64
+          type: integer
+        total_runs:
+          format: int64
+          type: integer
+      required:
+      - running_runs
+      - exited_runs
+      - errored_runs
+      - crashed_runs
+      - cancelled_runs
+      - total_runs
+      type: object
+    ErrorDetail:
+      additionalProperties: false
+      properties:
+        location:
+          description: Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id'
+          type: string
+        message:
+          description: Error message text
+          type: string
+        value:
+          description: The value at the given location
       type: object
     ErrorModel:
       additionalProperties: false
@@ -246,71 +311,6 @@ components:
           - https://example.com/errors/example
           format: uri
           type: string
-      type: object
-    GenerateAppStatisticsResponse:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/GenerateAppStatisticsResponse.json
-          format: uri
-          readOnly: true
-          type: string
-        statistics:
-          $ref: '#/components/schemas/AppStatistics'
-      required:
-      - statistics
-      type: object
-    AppStatistics:
-      additionalProperties: false
-      properties:
-        all_apps:
-          format: int64
-          type: integer
-        disabled_apps:
-          format: int64
-          type: integer
-        healthy_apps:
-          format: int64
-          type: integer
-        running_apps:
-          format: int64
-          type: integer
-      required:
-      - all_apps
-      - healthy_apps
-      - running_apps
-      - disabled_apps
-      type: object
-    RunStatistics:
-      additionalProperties: false
-      properties:
-        cancelled_runs:
-          format: int64
-          type: integer
-        crashed_runs:
-          format: int64
-          type: integer
-        errored_runs:
-          format: int64
-          type: integer
-        exited_runs:
-          format: int64
-          type: integer
-        running_runs:
-          format: int64
-          type: integer
-        total_runs:
-          format: int64
-          type: integer
-      required:
-      - running_runs
-      - exited_runs
-      - errored_runs
-      - crashed_runs
-      - cancelled_runs
-      - total_runs
       type: object
     RunTimeseriesPoint:
       additionalProperties: false

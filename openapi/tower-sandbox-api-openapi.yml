@@ -46,36 +46,6 @@ paths:
       - Sandbox
 components:
   schemas:
-    CreateSandboxSecretsResponse:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/CreateSandboxSecretsResponse.json
-          format: uri
-          readOnly: true
-          type: string
-        created:
-          description: List of secret keys that were created
-          items:
-            type: string
-          type: array
-      required:
-      - created
-      type: object
-    ErrorDetail:
-      additionalProperties: false
-      properties:
-        location:
-          description: Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id'
-          type: string
-        message:
-          description: Error message text
-          type: string
-        value:
-          description: The value at the given location
-      type: object
     CreateSandboxSecretsParams:
       additionalProperties: false
       properties:
@@ -97,6 +67,18 @@ components:
       required:
       - environment
       - secret_keys
+      type: object
+    ErrorDetail:
+      additionalProperties: false
+      properties:
+        location:
+          description: Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id'
+          type: string
+        message:
+          description: Error message text
+          type: string
+        value:
+          description: The value at the given location
       type: object
     ErrorModel:
       additionalProperties: false
@@ -142,6 +124,24 @@ components:
           - https://example.com/errors/example
           format: uri
           type: string
+      type: object
+    CreateSandboxSecretsResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/CreateSandboxSecretsResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        created:
+          description: List of secret keys that were created
+          items:
+            type: string
+          type: array
+      required:
+      - created
       type: object
   securitySchemes:
     APIKeyAuth:
