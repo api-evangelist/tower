@@ -117,22 +117,6 @@ paths:
       - API Keys
 components:
   schemas:
-    CreateAPIKeyResponse:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/CreateAPIKeyResponse.json
-          format: uri
-          readOnly: true
-          type: string
-        api_key:
-          $ref: '#/components/schemas/APIKey'
-          description: Created API key
-      required:
-      - api_key
-      type: object
     DeleteAPIKeyResponse:
       additionalProperties: false
       properties:
@@ -149,20 +133,36 @@ components:
       required:
       - api_key
       type: object
-    DeleteAPIKeyParams:
+    CreateAPIKeyParams:
       additionalProperties: false
       properties:
         $schema:
           description: A URL to the JSON Schema for this object.
           examples:
-          - https://api.tower.dev/v1/schemas/DeleteAPIKeyParams.json
+          - https://api.tower.dev/v1/schemas/CreateAPIKeyParams.json
           format: uri
           readOnly: true
           type: string
-        identifier:
+        expires_at:
+          description: When this API key expires.
+          format: date-time
+          type:
+          - string
+          - 'null'
+        name:
           type: string
+        scopes:
+          description: Space separated scopes that this API key is valid for.
+          type:
+          - string
+          - 'null'
+        team:
+          description: The team this API key is associated with. This field is optional. You must be a member of the team that you're creating the API key for, and if you're using an API key to create a new API key, the API key you use to authenticate this request must be a personal API key.
+          type:
+          - string
+          - 'null'
       required:
-      - identifier
+      - name
       type: object
     Pagination:
       additionalProperties: false
@@ -214,6 +214,38 @@ components:
       - last_used_at
       - created_at
       type: object
+    DeleteAPIKeyParams:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/DeleteAPIKeyParams.json
+          format: uri
+          readOnly: true
+          type: string
+        identifier:
+          type: string
+      required:
+      - identifier
+      type: object
+    APIKeyOwner:
+      additionalProperties: false
+      properties:
+        name:
+          description: 'The owner''s name: a user''s full name (or email) or a service account''s name.'
+          readOnly: true
+          type: string
+        type:
+          description: The kind of principal this API key authenticates as.
+          enum:
+          - user
+          - service_account
+          type: string
+      required:
+      - type
+      - name
+      type: object
     ListAPIKeysResponse:
       additionalProperties: false
       properties:
@@ -236,36 +268,21 @@ components:
       - api_keys
       - pages
       type: object
-    CreateAPIKeyParams:
+    CreateAPIKeyResponse:
       additionalProperties: false
       properties:
         $schema:
           description: A URL to the JSON Schema for this object.
           examples:
-          - https://api.tower.dev/v1/schemas/CreateAPIKeyParams.json
+          - https://api.tower.dev/v1/schemas/CreateAPIKeyResponse.json
           format: uri
           readOnly: true
           type: string
-        expires_at:
-          description: When this API key expires.
-          format: date-time
-          type:
-          - string
-          - 'null'
-        name:
-          type: string
-        scopes:
-          description: Space separated scopes that this API key is valid for.
-          type:
-          - string
-          - 'null'
-        team:
-          description: The team this API key is associated with. This field is optional. You must be a member of the team that you're creating the API key for, and if you're using an API key to create a new API key, the API key you use to authenticate this request must be a personal API key.
-          type:
-          - string
-          - 'null'
+        api_key:
+          $ref: '#/components/schemas/APIKey'
+          description: Created API key
       required:
-      - name
+      - api_key
       type: object
     ErrorDetail:
       additionalProperties: false
@@ -278,23 +295,6 @@ components:
           type: string
         value:
           description: The value at the given location
-      type: object
-    APIKeyOwner:
-      additionalProperties: false
-      properties:
-        name:
-          description: 'The owner''s name: a user''s full name (or email) or a service account''s name.'
-          readOnly: true
-          type: string
-        type:
-          description: The kind of principal this API key authenticates as.
-          enum:
-          - user
-          - service_account
-          type: string
-      required:
-      - type
-      - name
       type: object
     ErrorModel:
       additionalProperties: false

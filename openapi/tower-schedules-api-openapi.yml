@@ -234,13 +234,13 @@ paths:
       - Schedules
 components:
   schemas:
-    UpdateScheduleResponse:
+    CreateScheduleResponse:
       additionalProperties: false
       properties:
         $schema:
           description: A URL to the JSON Schema for this object.
           examples:
-          - https://api.tower.dev/v1/schemas/UpdateScheduleResponse.json
+          - https://api.tower.dev/v1/schemas/CreateScheduleResponse.json
           format: uri
           readOnly: true
           type: string
@@ -248,23 +248,6 @@ components:
           $ref: '#/components/schemas/Schedule'
       required:
       - schedule
-      type: object
-    BatchScheduleResponse:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/BatchScheduleResponse.json
-          format: uri
-          readOnly: true
-          type: string
-        schedules:
-          items:
-            $ref: '#/components/schemas/Schedule'
-          type: array
-      required:
-      - schedules
       type: object
     ScheduleOwner:
       additionalProperties: false
@@ -283,47 +266,49 @@ components:
       - type
       - name
       type: object
-    UpdateScheduleParams:
+    Schedule:
       additionalProperties: false
       properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/UpdateScheduleParams.json
-          format: uri
-          readOnly: true
+        app_name:
+          description: The name of the app that will be executed
+          type: string
+        app_status:
+          description: The status of the app
+          enum:
+          - active
+          - disabled
           type: string
         app_version:
           deprecated: true
-          description: This property is deprecated and ignored. Schedules inherit the version from their environment.
-          type:
-          - string
-          - 'null'
+          description: This property is deprecated. Schedules inherit the version from their environment. This field returns the environment's current version.
+          type: string
+        created_at:
+          description: The timestamp when the schedule was created
+          format: date-time
+          type: string
         cron:
           description: The cron expression defining when the app should run
           type: string
         environment:
-          default: default
           description: The environment to run the app in
           type: string
+        id:
+          description: The unique identifier for the schedule
+          type: string
         name:
-          description: The name for this schedule. Must be unique per environment.
-          type:
-          - string
-          - 'null'
+          description: The name of this schedule
+          type: string
         overlap_policy:
-          description: The overlap policy for the schedule
+          description: The policy for handling overlapping runs
           enum:
-          - skip
           - allow
-          type:
-          - string
-          - 'null'
+          - skip
+          type: string
         owner:
           $ref: '#/components/schemas/ScheduleOwner'
-          description: Reassign the schedule's runtime owner. Requires team admin scope. Setting this field does NOT change the schedule's status — disabled schedules must be re-activated separately.
+          description: The schedule's runtime owner — the user or service account whose identity its scheduled runs execute under.
         parameters:
-          description: Parameters to pass when running the app
+          description: The parameters to pass when running the app
           items:
             $ref: '#/components/schemas/RunParameter'
           type: array
@@ -332,29 +317,26 @@ components:
           enum:
           - active
           - disabled
-          type:
-          - string
-          - 'null'
-        timezone:
-          description: The IANA timezone identifier that the cron expression should be evaluated in (e.g., 'America/New_York', 'Europe/London').
-          type:
-          - string
-          - 'null'
-      type: object
-    CreateScheduleResponse:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/CreateScheduleResponse.json
-          format: uri
-          readOnly: true
           type: string
-        schedule:
-          $ref: '#/components/schemas/Schedule'
+        timezone:
+          description: The IANA timezone identifier that the cron expression is evaluated in (e.g., 'America/New_York', 'Europe/London'). Defaults to 'UTC'.
+          type: string
+        updated_at:
+          description: The timestamp when the schedule was last updated
+          format: date-time
+          type: string
       required:
-      - schedule
+      - id
+      - name
+      - cron
+      - timezone
+      - environment
+      - app_name
+      - app_status
+      - status
+      - overlap_policy
+      - created_at
+      - updated_at
       type: object
     Pagination:
       additionalProperties: false
@@ -461,6 +443,24 @@ components:
       - app_name
       - cron
       type: object
+    DeleteScheduleResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/DeleteScheduleResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        schedules:
+          description: the schedules successfully deleted
+          items:
+            $ref: '#/components/schemas/Schedule'
+          type: array
+      required:
+      - schedules
+      type: object
     ListSchedulesResponse:
       additionalProperties: false
       properties:
@@ -481,49 +481,47 @@ components:
       - schedules
       - pages
       type: object
-    Schedule:
+    UpdateScheduleParams:
       additionalProperties: false
       properties:
-        app_name:
-          description: The name of the app that will be executed
-          type: string
-        app_status:
-          description: The status of the app
-          enum:
-          - active
-          - disabled
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/UpdateScheduleParams.json
+          format: uri
+          readOnly: true
           type: string
         app_version:
           deprecated: true
-          description: This property is deprecated. Schedules inherit the version from their environment. This field returns the environment's current version.
-          type: string
-        created_at:
-          description: The timestamp when the schedule was created
-          format: date-time
-          type: string
+          description: This property is deprecated and ignored. Schedules inherit the version from their environment.
+          type:
+          - string
+          - 'null'
         cron:
           description: The cron expression defining when the app should run
           type: string
         environment:
+          default: default
           description: The environment to run the app in
           type: string
-        id:
-          description: The unique identifier for the schedule
-          type: string
         name:
-          description: The name of this schedule
-          type: string
+          description: The name for this schedule. Must be unique per environment.
+          type:
+          - string
+          - 'null'
         overlap_policy:
-          description: The policy for handling overlapping runs
+          description: The overlap policy for the schedule
           enum:
-          - allow
           - skip
-          type: string
+          - allow
+          type:
+          - string
+          - 'null'
         owner:
           $ref: '#/components/schemas/ScheduleOwner'
-          description: The schedule's runtime owner — the user or service account whose identity its scheduled runs execute under.
+          description: Reassign the schedule's runtime owner. Requires team admin scope. Setting this field does NOT change the schedule's status — disabled schedules must be re-activated separately.
         parameters:
-          description: The parameters to pass when running the app
+          description: Parameters to pass when running the app
           items:
             $ref: '#/components/schemas/RunParameter'
           type: array
@@ -532,71 +530,26 @@ components:
           enum:
           - active
           - disabled
-          type: string
-        timezone:
-          description: The IANA timezone identifier that the cron expression is evaluated in (e.g., 'America/New_York', 'Europe/London'). Defaults to 'UTC'.
-          type: string
-        updated_at:
-          description: The timestamp when the schedule was last updated
-          format: date-time
-          type: string
-      required:
-      - id
-      - name
-      - cron
-      - timezone
-      - environment
-      - app_name
-      - app_status
-      - status
-      - overlap_policy
-      - created_at
-      - updated_at
-      type: object
-    RunParameter:
-      additionalProperties: false
-      properties:
-        hidden:
-          default: false
-          description: Whether this parameter is hidden/secret. Defaults to false.
-          type: boolean
-        is_override:
-          description: Whether this parameter's value was supplied as an override at run/schedule creation time (true) or comes from the app version's default (false).
           type:
-          - boolean
+          - string
           - 'null'
-        name:
-          type: string
-        value:
-          type: string
-      required:
-      - name
-      - value
+        timezone:
+          description: The IANA timezone identifier that the cron expression should be evaluated in (e.g., 'America/New_York', 'Europe/London').
+          type:
+          - string
+          - 'null'
       type: object
-    ErrorDetail:
-      additionalProperties: false
-      properties:
-        location:
-          description: Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id'
-          type: string
-        message:
-          description: Error message text
-          type: string
-        value:
-          description: The value at the given location
-      type: object
-    DeleteScheduleResponse:
+    BatchScheduleResponse:
       additionalProperties: false
       properties:
         $schema:
           description: A URL to the JSON Schema for this object.
           examples:
-          - https://api.tower.dev/v1/schemas/DeleteScheduleResponse.json
+          - https://api.tower.dev/v1/schemas/BatchScheduleResponse.json
           format: uri
           readOnly: true
           type: string
         schedules:
-          description: the schedules successfully deleted
           items:
             $ref: '#/components/schemas/Schedule'
           type: array
@@ -620,6 +573,53 @@ components:
           type: array
       required:
       - ids
+      type: object
+    ErrorDetail:
+      additionalProperties: false
+      properties:
+        location:
+          description: Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id'
+          type: string
+        message:
+          description: Error message text
+          type: string
+        value:
+          description: The value at the given location
+      type: object
+    UpdateScheduleResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/UpdateScheduleResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        schedule:
+          $ref: '#/components/schemas/Schedule'
+      required:
+      - schedule
+      type: object
+    RunParameter:
+      additionalProperties: false
+      properties:
+        hidden:
+          default: false
+          description: Whether this parameter is hidden/secret. Defaults to false.
+          type: boolean
+        is_override:
+          description: Whether this parameter's value was supplied as an override at run/schedule creation time (true) or comes from the app version's default (false).
+          type:
+          - boolean
+          - 'null'
+        name:
+          type: string
+        value:
+          type: string
+      required:
+      - name
+      - value
       type: object
     ErrorModel:
       additionalProperties: false

@@ -78,22 +78,6 @@ paths:
       - Organizations
 components:
   schemas:
-    UpdateOrganizationResponse:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/UpdateOrganizationResponse.json
-          format: uri
-          readOnly: true
-          type: string
-        organization:
-          $ref: '#/components/schemas/Organization'
-          description: The organization that was just updated
-      required:
-      - organization
-      type: object
     User:
       additionalProperties: false
       properties:
@@ -137,18 +121,6 @@ components:
       - is_confirmed
       - is_subscribed_to_changelog
       type: object
-    ErrorDetail:
-      additionalProperties: false
-      properties:
-        location:
-          description: Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id'
-          type: string
-        message:
-          description: Error message text
-          type: string
-        value:
-          description: The value at the given location
-      type: object
     Organization:
       additionalProperties: false
       properties:
@@ -161,6 +133,34 @@ components:
       required:
       - name
       - owner
+      type: object
+    UpdateOrganizationResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/UpdateOrganizationResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        organization:
+          $ref: '#/components/schemas/Organization'
+          description: The organization that was just updated
+      required:
+      - organization
+      type: object
+    ErrorDetail:
+      additionalProperties: false
+      properties:
+        location:
+          description: Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id'
+          type: string
+        message:
+          description: Error message text
+          type: string
+        value:
+          description: The value at the given location
       type: object
     UpdateOrganizationParams:
       additionalProperties: false

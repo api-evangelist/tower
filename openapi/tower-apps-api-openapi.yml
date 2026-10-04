@@ -993,36 +993,151 @@ paths:
       - Apps
 components:
   schemas:
-    ListRunsResponse:
+    RunCreator:
+      additionalProperties: false
+      properties:
+        name:
+          description: 'The creator''s name: a user''s full name (or email) or a service account''s name.'
+          readOnly: true
+          type: string
+        type:
+          description: The kind of principal that created the run.
+          enum:
+          - user
+          - service_account
+          type: string
+      required:
+      - type
+      - name
+      type: object
+    RunAppInitiatorData:
+      additionalProperties: false
+      properties:
+        type:
+          description: The type of the initiator for this run.
+          enum:
+          - tower_run
+          - tower_cli
+          - tower_ui
+          type: string
+      required:
+      - type
+      type: object
+    RunInitiator:
+      additionalProperties: false
+      properties:
+        details:
+          description: Additional information about the initiator of a run.
+          oneOf:
+          - $ref: '#/components/schemas/ScheduleRunInitiatorDetails'
+          - $ref: '#/components/schemas/RunRunInitiatorDetails'
+          type: object
+        type:
+          description: The type of initiator for this run. Null if none or unknown.
+          type:
+          - string
+          - 'null'
+      required:
+      - type
+      - details
+      type: object
+    DescribeAppVersionResponse:
       additionalProperties: false
       properties:
         $schema:
           description: A URL to the JSON Schema for this object.
           examples:
-          - https://api.tower.dev/v1/schemas/ListRunsResponse.json
+          - https://api.tower.dev/v1/schemas/DescribeAppVersionResponse.json
           format: uri
           readOnly: true
           type: string
-        pages:
-          $ref: '#/components/schemas/Pagination'
+        version:
+          $ref: '#/components/schemas/AppVersion'
+      required:
+      - version
+      type: object
+    RunParameter:
+      additionalProperties: false
+      properties:
+        hidden:
+          default: false
+          description: Whether this parameter is hidden/secret. Defaults to false.
+          type: boolean
+        is_override:
+          description: Whether this parameter's value was supplied as an override at run/schedule creation time (true) or comes from the app version's default (false).
+          type:
+          - boolean
+          - 'null'
+        name:
+          type: string
+        value:
+          type: string
+      required:
+      - name
+      - value
+      type: object
+    RunRunInitiatorDetails:
+      additionalProperties: false
+      properties:
+        run_app_name:
+          description: The name of the app that initiated this run, if type is 'tower_run'
+          type: string
+        run_number:
+          description: The number of the run that initaited this run, if type is 'tower_run'
+          format: int64
+          type: integer
+      type: object
+    UpdateAppEnvironmentParams:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/UpdateAppEnvironmentParams.json
+          format: uri
+          readOnly: true
+          type: string
+        version:
+          description: The version to deploy to this environment, e.g. 'v1', 'v2'.
+          minLength: 2
+          type: string
+      required:
+      - version
+      type: object
+    DescribeAppResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/DescribeAppResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        app:
+          $ref: '#/components/schemas/App'
         runs:
           items:
             $ref: '#/components/schemas/Run'
           type: array
       required:
-      - pages
+      - app
       - runs
       type: object
-    RunGraphNode:
+    DeployAppResponse:
       additionalProperties: false
       properties:
-        id:
-          $ref: '#/components/schemas/RunGraphRunID'
-        parent_id:
-          $ref: '#/components/schemas/RunGraphRunID'
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/DeployAppResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        version:
+          $ref: '#/components/schemas/AppVersion'
       required:
-      - id
-      - parent_id
+      - version
       type: object
     UpdateAppParams:
       additionalProperties: false
@@ -1081,33 +1196,68 @@ components:
             $ref: '#/components/schemas/AppTag'
           type: array
       type: object
-    RunAppInitiatorData:
+    AppVersion:
       additionalProperties: false
       properties:
-        type:
-          description: The type of the initiator for this run.
-          enum:
-          - tower_run
-          - tower_cli
-          - tower_ui
+        content_checksum:
+          description: Server-computed SHA256 of the bundle contents for this version.
+          type: string
+        created_at:
+          format: date-time
+          type: string
+        idempotency_key:
+          description: Client-supplied key (e.g. git SHA) that produced this version, or empty if none was supplied at deploy time.
+          type: string
+        parameters:
+          items:
+            $ref: '#/components/schemas/Parameter'
+          type: array
+        towerfile:
+          description: The Towerfile that this version was created from.
+          type: string
+        version:
           type: string
       required:
-      - type
+      - version
+      - parameters
+      - created_at
+      - towerfile
       type: object
-    DeleteAppResponse:
+    ListAppsResponse:
       additionalProperties: false
       properties:
         $schema:
           description: A URL to the JSON Schema for this object.
           examples:
-          - https://api.tower.dev/v1/schemas/DeleteAppResponse.json
+          - https://api.tower.dev/v1/schemas/ListAppsResponse.json
           format: uri
           readOnly: true
           type: string
-        app:
-          $ref: '#/components/schemas/App'
+        apps:
+          items:
+            $ref: '#/components/schemas/AppSummary'
+          type: array
+        pages:
+          $ref: '#/components/schemas/Pagination'
       required:
-      - app
+      - apps
+      - pages
+      type: object
+    RunRetryPolicy:
+      additionalProperties: false
+      properties:
+        max_retries:
+          format: int64
+          type: integer
+        retry_delay_seconds:
+          format: int64
+          type: integer
+        use_exponential_backoff:
+          type: boolean
+      required:
+      - max_retries
+      - retry_delay_seconds
+      - use_exponential_backoff
       type: object
     RunAppResponse:
       additionalProperties: false
@@ -1124,47 +1274,111 @@ components:
       required:
       - run
       type: object
-    RunAttempt:
+    ListAppEnvironmentsResponse:
       additionalProperties: false
       properties:
-        ended_at:
-          description: When this attempt ended.
-          format: date-time
-          type:
-          - string
-          - 'null'
-        exit_code:
-          description: Exit code for this attempt.
-          format: int64
-          type:
-          - integer
-          - 'null'
-        seq:
-          description: 1-based attempt number.
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/ListAppEnvironmentsResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        environments:
+          items:
+            type: string
+          type: array
+      required:
+      - environments
+      type: object
+    ErrorDetail:
+      additionalProperties: false
+      properties:
+        location:
+          description: Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id'
+          type: string
+        message:
+          description: Error message text
+          type: string
+        value:
+          description: The value at the given location
+      type: object
+    RunLogLine:
+      additionalProperties: false
+      properties:
+        attempt_seq:
+          description: The attempt number this log line belongs to (1-based). Attempt 1 is the original execution; 2+ are retries.
           format: int64
           type: integer
-        started_at:
-          description: When the run started executing your code.
+        channel:
+          description: The channel this log line belongs to.
+          enum:
+          - program
+          - setup
+          type: string
+        content:
+          description: Contents of the log message.
+          type: string
+        line_num:
+          description: Line number.
+          format: int64
+          type: integer
+        message:
+          deprecated: true
+          description: This property is deprecated. Use content instead.
+          type: string
+        reported_at:
+          description: Timestamp of the log line.
           format: date-time
-          type:
-          - string
-          - 'null'
-        starting_at:
-          description: When the runner environment started to get setup.
+          type: string
+        run_id:
+          description: The uuid of the Run.
+          type: string
+        timestamp:
+          deprecated: true
+          description: This property is deprecated. Use reported_at instead.
           format: date-time
-          type:
-          - string
-          - 'null'
-        status:
-          description: Terminal status of this attempt.
           type: string
       required:
-      - seq
-      - status
-      - starting_at
-      - started_at
-      - ended_at
-      - exit_code
+      - run_id
+      - channel
+      - reported_at
+      - line_num
+      - content
+      - attempt_seq
+      type: object
+    Parameter:
+      additionalProperties: false
+      properties:
+        default:
+          type: string
+        description:
+          type: string
+        hidden:
+          default: false
+          description: Whether this parameter is hidden/secret. Defaults to false.
+          type: boolean
+        name:
+          type: string
+      required:
+      - name
+      - default
+      - description
+      type: object
+    CreateAppResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/CreateAppResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        app:
+          $ref: '#/components/schemas/App'
+      required:
+      - app
       type: object
     DescribeRunResponse:
       additionalProperties: false
@@ -1183,6 +1397,234 @@ components:
       required:
       - run
       - $links
+      type: object
+    DescribeRunLogsResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/DescribeRunLogsResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        log_lines:
+          items:
+            $ref: '#/components/schemas/RunLogLine'
+          type: array
+      required:
+      - log_lines
+      type: object
+    ListRunsResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/ListRunsResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        pages:
+          $ref: '#/components/schemas/Pagination'
+        runs:
+          items:
+            $ref: '#/components/schemas/Run'
+          type: array
+      required:
+      - pages
+      - runs
+      type: object
+    AppSummary:
+      additionalProperties: false
+      properties:
+        app:
+          $ref: '#/components/schemas/App'
+        runs:
+          items:
+            $ref: '#/components/schemas/Run'
+          type: array
+      required:
+      - app
+      - runs
+      type: object
+    RunResults:
+      additionalProperties: false
+      properties:
+        cancelled:
+          format: int64
+          type: integer
+        crashed:
+          format: int64
+          type: integer
+        errored:
+          format: int64
+          type: integer
+        exited:
+          format: int64
+          type: integer
+        pending:
+          format: int64
+          type: integer
+        retrying:
+          format: int64
+          type: integer
+        running:
+          format: int64
+          type: integer
+        starting:
+          format: int64
+          type: integer
+      required:
+      - pending
+      - starting
+      - running
+      - exited
+      - errored
+      - crashed
+      - cancelled
+      - retrying
+      type: object
+    DescribeRunGraphResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/DescribeRunGraphResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        runs:
+          items:
+            $ref: '#/components/schemas/RunGraphNode'
+          type: array
+      required:
+      - runs
+      type: object
+    CancelRunResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/CancelRunResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        cancelled_child_runs:
+          description: Number of descendant runs that were also cancelled as part of this cascade.
+          format: int64
+          type: integer
+        run:
+          $ref: '#/components/schemas/Run'
+      required:
+      - run
+      - cancelled_child_runs
+      type: object
+    App:
+      additionalProperties: false
+      properties:
+        created_at:
+          description: The date and time this app was created.
+          format: date-time
+          type: string
+        health_status:
+          deprecated: true
+          description: This property is deprecated. It will always be 'healthy'.
+          enum:
+          - healthy
+          - warning
+          type: string
+        is_externally_accessible:
+          type: boolean
+        last_run:
+          $ref: '#/components/schemas/Run'
+          deprecated: true
+          description: 'Deprecated: always null, previously latest run of this app. Use "runs" in app summary instead.'
+        name:
+          description: The name of the app.
+          type: string
+        next_run_at:
+          description: The next time this app will run as part of it's schedule, null if none.
+          format: date-time
+          type:
+          - string
+          - 'null'
+        owner:
+          description: The account slug that owns this app.
+          type: string
+        pending_timeout:
+          default: 600
+          description: The maximum time in seconds that a run can stay in the pending state before being marked as cancelled.
+          format: int64
+          type: integer
+        retry_policy:
+          $ref: '#/components/schemas/RunRetryPolicy'
+          description: The retry policy for failed runs of this app.
+        run_results:
+          $ref: '#/components/schemas/RunResults'
+          description: The stats of all the runs of this app.
+        running_timeout:
+          default: 0
+          description: The number of seconds that a run can stay running before it gets cancelled. Value of 0 (default) means no timeout.
+          format: int64
+          type: integer
+        schedule:
+          deprecated: true
+          description: The schedule associated with this app, null if none.
+          type:
+          - string
+          - 'null'
+        short_description:
+          description: A short description of the app. Can be empty.
+          type: string
+        slug:
+          deprecated: true
+          description: This property is deprecated. Use name instead.
+          type: string
+        status:
+          description: The status of the app.
+          enum:
+          - active
+          - disabled
+          type: string
+        subdomain:
+          description: The subdomain that this app is accessible via. Must be externally accessible first.
+          type: string
+        tags:
+          description: The tags applied to the app.
+          items:
+            $ref: '#/components/schemas/AppTag'
+          type: array
+        version:
+          description: The current version of this app, null if none.
+          type:
+          - string
+          - 'null'
+      required:
+      - name
+      - owner
+      - short_description
+      - version
+      - schedule
+      - created_at
+      - next_run_at
+      - health_status
+      - is_externally_accessible
+      - pending_timeout
+      - running_timeout
+      type: object
+    AppTag:
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+        value:
+          type: string
+      required:
+      - name
+      - value
       type: object
     UpdateAppResponse:
       additionalProperties: false
@@ -1204,43 +1646,12 @@ components:
       - app
       - App
       type: object
-    DescribeRunLinks:
+    ScheduleRunInitiatorDetails:
       additionalProperties: false
       properties:
-        next:
-          deprecated: true
-          description: The URL of the next run, if any.
-          type:
-          - string
-          - 'null'
-        next_number:
-          description: The number of the next run, if any.
-          format: int64
-          type:
-          - integer
-          - 'null'
-        prev:
-          deprecated: true
-          description: The URL of the previous run, if any.
-          type:
-          - string
-          - 'null'
-        prev_number:
-          description: The number of the previous run, if any.
-          format: int64
-          type:
-          - integer
-          - 'null'
-        self:
-          deprecated: true
-          description: The URL of this run.
+        schedule_name:
+          description: The name of the schedule that initiated this run, if type is 'tower_schedule'
           type: string
-      required:
-      - self
-      - next
-      - prev
-      - next_number
-      - prev_number
       type: object
     ListAppVersionsResponse:
       additionalProperties: false
@@ -1258,206 +1669,6 @@ components:
           type: array
       required:
       - versions
-      type: object
-    DescribeAppVersionResponse:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/DescribeAppVersionResponse.json
-          format: uri
-          readOnly: true
-          type: string
-        version:
-          $ref: '#/components/schemas/AppVersion'
-      required:
-      - version
-      type: object
-    ErrorModel:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/ErrorModel.json
-          format: uri
-          readOnly: true
-          type: string
-        detail:
-          description: A human-readable explanation specific to this occurrence of the problem.
-          examples:
-          - Property foo is required but is missing.
-          type: string
-        errors:
-          description: Optional list of individual error details
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-          type: array
-        instance:
-          description: A URI reference that identifies the specific occurrence of the problem.
-          examples:
-          - https://example.com/error-log/abc123
-          format: uri
-          type: string
-        status:
-          description: HTTP status code
-          examples:
-          - 400
-          format: int64
-          type: integer
-        title:
-          description: A short, human-readable summary of the problem type. This value should not change between occurrences of the error.
-          examples:
-          - Bad Request
-          type: string
-        type:
-          default: about:blank
-          description: A URI reference to human-readable documentation for the error.
-          examples:
-          - https://example.com/errors/example
-          format: uri
-          type: string
-      type: object
-    DescribeRunGraphResponse:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/DescribeRunGraphResponse.json
-          format: uri
-          readOnly: true
-          type: string
-        runs:
-          items:
-            $ref: '#/components/schemas/RunGraphNode'
-          type: array
-      required:
-      - runs
-      type: object
-    ScheduleRunInitiatorDetails:
-      additionalProperties: false
-      properties:
-        schedule_name:
-          description: The name of the schedule that initiated this run, if type is 'tower_schedule'
-          type: string
-      type: object
-    ListAppEnvironmentsResponse:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/ListAppEnvironmentsResponse.json
-          format: uri
-          readOnly: true
-          type: string
-        environments:
-          items:
-            type: string
-          type: array
-      required:
-      - environments
-      type: object
-    Pagination:
-      additionalProperties: false
-      properties:
-        num_pages:
-          format: int64
-          type: integer
-        page:
-          format: int64
-          type: integer
-        page_size:
-          format: int64
-          type: integer
-        total:
-          format: int64
-          type: integer
-      required:
-      - page
-      - total
-      - num_pages
-      - page_size
-      type: object
-    DescribeAppResponse:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/DescribeAppResponse.json
-          format: uri
-          readOnly: true
-          type: string
-        app:
-          $ref: '#/components/schemas/App'
-        runs:
-          items:
-            $ref: '#/components/schemas/Run'
-          type: array
-      required:
-      - app
-      - runs
-      type: object
-    UpdateAppEnvironmentParams:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/UpdateAppEnvironmentParams.json
-          format: uri
-          readOnly: true
-          type: string
-        version:
-          description: The version to deploy to this environment, e.g. 'v1', 'v2'.
-          minLength: 2
-          type: string
-      required:
-      - version
-      type: object
-    SSEWarning:
-      additionalProperties: false
-      properties:
-        content:
-          description: Contents of the warning.
-          type: string
-        end_of_stream:
-          description: When true, the server has delivered every log line and is closing the stream; clients should stop and not reconnect.
-          type: boolean
-        reported_at:
-          description: Timestamp of the event.
-          format: date-time
-          type: string
-      required:
-      - reported_at
-      - content
-      type: object
-    RunGraphRunID:
-      additionalProperties: false
-      properties:
-        app_name:
-          type: string
-        number:
-          format: int64
-          type: integer
-      required:
-      - app_name
-      - number
-      type: object
-    ErrorDetail:
-      additionalProperties: false
-      properties:
-        location:
-          description: Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id'
-          type: string
-        message:
-          description: Error message text
-          type: string
-        value:
-          description: The value at the given location
       type: object
     CreateAppParams:
       additionalProperties: false
@@ -1512,6 +1723,213 @@ components:
           type: array
       required:
       - name
+      type: object
+    SSEWarning:
+      additionalProperties: false
+      properties:
+        content:
+          description: Contents of the warning.
+          type: string
+        end_of_stream:
+          description: When true, the server has delivered every log line and is closing the stream; clients should stop and not reconnect.
+          type: boolean
+        reported_at:
+          description: Timestamp of the event.
+          format: date-time
+          type: string
+      required:
+      - reported_at
+      - content
+      type: object
+    RunAppParams:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/RunAppParams.json
+          format: uri
+          readOnly: true
+          type: string
+        environment:
+          description: The environment to run this app in.
+          type: string
+        initiator:
+          $ref: '#/components/schemas/RunAppInitiatorData'
+          description: Initiator information for this run
+        parameters:
+          additionalProperties:
+            type: string
+          description: The parameters to pass into this app.
+          type: object
+        parent_run_id:
+          description: The ID of the run that invoked this run, if relevant. Should be null, if none.
+          type:
+          - string
+          - 'null'
+        retry_policy:
+          $ref: '#/components/schemas/RunRetryPolicy'
+          description: Override the retry policy for this specific run. If not provided, inherits from the app's retry policy.
+      required:
+      - environment
+      - parameters
+      type: object
+    Pagination:
+      additionalProperties: false
+      properties:
+        num_pages:
+          format: int64
+          type: integer
+        page:
+          format: int64
+          type: integer
+        page_size:
+          format: int64
+          type: integer
+        total:
+          format: int64
+          type: integer
+      required:
+      - page
+      - total
+      - num_pages
+      - page_size
+      type: object
+    RunGraphRunID:
+      additionalProperties: false
+      properties:
+        app_name:
+          type: string
+        number:
+          format: int64
+          type: integer
+      required:
+      - app_name
+      - number
+      type: object
+    DescribeRunLinks:
+      additionalProperties: false
+      properties:
+        next:
+          deprecated: true
+          description: The URL of the next run, if any.
+          type:
+          - string
+          - 'null'
+        next_number:
+          description: The number of the next run, if any.
+          format: int64
+          type:
+          - integer
+          - 'null'
+        prev:
+          deprecated: true
+          description: The URL of the previous run, if any.
+          type:
+          - string
+          - 'null'
+        prev_number:
+          description: The number of the previous run, if any.
+          format: int64
+          type:
+          - integer
+          - 'null'
+        self:
+          deprecated: true
+          description: The URL of this run.
+          type: string
+      required:
+      - self
+      - next
+      - prev
+      - next_number
+      - prev_number
+      type: object
+    RunGraphNode:
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/RunGraphRunID'
+        parent_id:
+          $ref: '#/components/schemas/RunGraphRunID'
+      required:
+      - id
+      - parent_id
+      type: object
+    RunAttempt:
+      additionalProperties: false
+      properties:
+        ended_at:
+          description: When this attempt ended.
+          format: date-time
+          type:
+          - string
+          - 'null'
+        exit_code:
+          description: Exit code for this attempt.
+          format: int64
+          type:
+          - integer
+          - 'null'
+        seq:
+          description: 1-based attempt number.
+          format: int64
+          type: integer
+        started_at:
+          description: When the run started executing your code.
+          format: date-time
+          type:
+          - string
+          - 'null'
+        starting_at:
+          description: When the runner environment started to get setup.
+          format: date-time
+          type:
+          - string
+          - 'null'
+        status:
+          description: Terminal status of this attempt.
+          type: string
+      required:
+      - seq
+      - status
+      - starting_at
+      - started_at
+      - ended_at
+      - exit_code
+      type: object
+    UpdateAppEnvironmentResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/UpdateAppEnvironmentResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        environment:
+          type: string
+        version:
+          type: string
+      required:
+      - environment
+      - version
+      type: object
+    DeleteAppResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/DeleteAppResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        app:
+          $ref: '#/components/schemas/App'
+      required:
+      - app
       type: object
     Run:
       additionalProperties: false
@@ -1643,468 +2061,50 @@ components:
       - num_attempts
       - $link
       type: object
-    RunCreator:
+    ErrorModel:
       additionalProperties: false
       properties:
-        name:
-          description: 'The creator''s name: a user''s full name (or email) or a service account''s name.'
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/ErrorModel.json
+          format: uri
           readOnly: true
           type: string
-        type:
-          description: The kind of principal that created the run.
-          enum:
-          - user
-          - service_account
+        detail:
+          description: A human-readable explanation specific to this occurrence of the problem.
+          examples:
+          - Property foo is required but is missing.
           type: string
-      required:
-      - type
-      - name
-      type: object
-    AppSummary:
-      additionalProperties: false
-      properties:
-        app:
-          $ref: '#/components/schemas/App'
-        runs:
+        errors:
+          description: Optional list of individual error details
           items:
-            $ref: '#/components/schemas/Run'
+            $ref: '#/components/schemas/ErrorDetail'
           type: array
-      required:
-      - app
-      - runs
-      type: object
-    App:
-      additionalProperties: false
-      properties:
-        created_at:
-          description: The date and time this app was created.
-          format: date-time
-          type: string
-        health_status:
-          deprecated: true
-          description: This property is deprecated. It will always be 'healthy'.
-          enum:
-          - healthy
-          - warning
-          type: string
-        is_externally_accessible:
-          type: boolean
-        last_run:
-          $ref: '#/components/schemas/Run'
-          deprecated: true
-          description: 'Deprecated: always null, previously latest run of this app. Use "runs" in app summary instead.'
-        name:
-          description: The name of the app.
-          type: string
-        next_run_at:
-          description: The next time this app will run as part of it's schedule, null if none.
-          format: date-time
-          type:
-          - string
-          - 'null'
-        owner:
-          description: The account slug that owns this app.
-          type: string
-        pending_timeout:
-          default: 600
-          description: The maximum time in seconds that a run can stay in the pending state before being marked as cancelled.
-          format: int64
-          type: integer
-        retry_policy:
-          $ref: '#/components/schemas/RunRetryPolicy'
-          description: The retry policy for failed runs of this app.
-        run_results:
-          $ref: '#/components/schemas/RunResults'
-          description: The stats of all the runs of this app.
-        running_timeout:
-          default: 0
-          description: The number of seconds that a run can stay running before it gets cancelled. Value of 0 (default) means no timeout.
-          format: int64
-          type: integer
-        schedule:
-          deprecated: true
-          description: The schedule associated with this app, null if none.
-          type:
-          - string
-          - 'null'
-        short_description:
-          description: A short description of the app. Can be empty.
-          type: string
-        slug:
-          deprecated: true
-          description: This property is deprecated. Use name instead.
+        instance:
+          description: A URI reference that identifies the specific occurrence of the problem.
+          examples:
+          - https://example.com/error-log/abc123
+          format: uri
           type: string
         status:
-          description: The status of the app.
-          enum:
-          - active
-          - disabled
-          type: string
-        subdomain:
-          description: The subdomain that this app is accessible via. Must be externally accessible first.
-          type: string
-        tags:
-          description: The tags applied to the app.
-          items:
-            $ref: '#/components/schemas/AppTag'
-          type: array
-        version:
-          description: The current version of this app, null if none.
-          type:
-          - string
-          - 'null'
-      required:
-      - name
-      - owner
-      - short_description
-      - version
-      - schedule
-      - created_at
-      - next_run_at
-      - health_status
-      - is_externally_accessible
-      - pending_timeout
-      - running_timeout
-      type: object
-    RunRunInitiatorDetails:
-      additionalProperties: false
-      properties:
-        run_app_name:
-          description: The name of the app that initiated this run, if type is 'tower_run'
-          type: string
-        run_number:
-          description: The number of the run that initaited this run, if type is 'tower_run'
+          description: HTTP status code
+          examples:
+          - 400
           format: int64
           type: integer
-      type: object
-    AppTag:
-      additionalProperties: false
-      properties:
-        name:
+        title:
+          description: A short, human-readable summary of the problem type. This value should not change between occurrences of the error.
+          examples:
+          - Bad Request
           type: string
-        value:
-          type: string
-      required:
-      - name
-      - value
-      type: object
-    RunLogLine:
-      additionalProperties: false
-      properties:
-        attempt_seq:
-          description: The attempt number this log line belongs to (1-based). Attempt 1 is the original execution; 2+ are retries.
-          format: int64
-          type: integer
-        channel:
-          description: The channel this log line belongs to.
-          enum:
-          - program
-          - setup
-          type: string
-        content:
-          description: Contents of the log message.
-          type: string
-        line_num:
-          description: Line number.
-          format: int64
-          type: integer
-        message:
-          deprecated: true
-          description: This property is deprecated. Use content instead.
-          type: string
-        reported_at:
-          description: Timestamp of the log line.
-          format: date-time
-          type: string
-        run_id:
-          description: The uuid of the Run.
-          type: string
-        timestamp:
-          deprecated: true
-          description: This property is deprecated. Use reported_at instead.
-          format: date-time
-          type: string
-      required:
-      - run_id
-      - channel
-      - reported_at
-      - line_num
-      - content
-      - attempt_seq
-      type: object
-    RunInitiator:
-      additionalProperties: false
-      properties:
-        details:
-          description: Additional information about the initiator of a run.
-          oneOf:
-          - $ref: '#/components/schemas/ScheduleRunInitiatorDetails'
-          - $ref: '#/components/schemas/RunRunInitiatorDetails'
-          type: object
         type:
-          description: The type of initiator for this run. Null if none or unknown.
-          type:
-          - string
-          - 'null'
-      required:
-      - type
-      - details
-      type: object
-    Parameter:
-      additionalProperties: false
-      properties:
-        default:
-          type: string
-        description:
-          type: string
-        hidden:
-          default: false
-          description: Whether this parameter is hidden/secret. Defaults to false.
-          type: boolean
-        name:
-          type: string
-      required:
-      - name
-      - default
-      - description
-      type: object
-    CreateAppResponse:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
+          default: about:blank
+          description: A URI reference to human-readable documentation for the error.
           examples:
-          - https://api.tower.dev/v1/schemas/CreateAppResponse.json
+          - https://example.com/errors/example
           format: uri
-          readOnly: true
           type: string
-        app:
-          $ref: '#/components/schemas/App'
-      required:
-      - app
-      type: object
-    UpdateAppEnvironmentResponse:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/UpdateAppEnvironmentResponse.json
-          format: uri
-          readOnly: true
-          type: string
-        environment:
-          type: string
-        version:
-          type: string
-      required:
-      - environment
-      - version
-      type: object
-    RunAppParams:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/RunAppParams.json
-          format: uri
-          readOnly: true
-          type: string
-        environment:
-          description: The environment to run this app in.
-          type: string
-        initiator:
-          $ref: '#/components/schemas/RunAppInitiatorData'
-          description: Initiator information for this run
-        parameters:
-          additionalProperties:
-            type: string
-          description: The parameters to pass into this app.
-          type: object
-        parent_run_id:
-          description: The ID of the run that invoked this run, if relevant. Should be null, if none.
-          type:
-          - string
-          - 'null'
-        retry_policy:
-          $ref: '#/components/schemas/RunRetryPolicy'
-          description: Override the retry policy for this specific run. If not provided, inherits from the app's retry policy.
-      required:
-      - environment
-      - parameters
-      type: object
-    DeployAppResponse:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/DeployAppResponse.json
-          format: uri
-          readOnly: true
-          type: string
-        version:
-          $ref: '#/components/schemas/AppVersion'
-      required:
-      - version
-      type: object
-    RunRetryPolicy:
-      additionalProperties: false
-      properties:
-        max_retries:
-          format: int64
-          type: integer
-        retry_delay_seconds:
-          format: int64
-          type: integer
-        use_exponential_backoff:
-          type: boolean
-      required:
-      - max_retries
-      - retry_delay_seconds
-      - use_exponential_backoff
-      type: object
-    DescribeRunLogsResponse:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/DescribeRunLogsResponse.json
-          format: uri
-          readOnly: true
-          type: string
-        log_lines:
-          items:
-            $ref: '#/components/schemas/RunLogLine'
-          type: array
-      required:
-      - log_lines
-      type: object
-    RunResults:
-      additionalProperties: false
-      properties:
-        cancelled:
-          format: int64
-          type: integer
-        crashed:
-          format: int64
-          type: integer
-        errored:
-          format: int64
-          type: integer
-        exited:
-          format: int64
-          type: integer
-        pending:
-          format: int64
-          type: integer
-        retrying:
-          format: int64
-          type: integer
-        running:
-          format: int64
-          type: integer
-        starting:
-          format: int64
-          type: integer
-      required:
-      - pending
-      - starting
-      - running
-      - exited
-      - errored
-      - crashed
-      - cancelled
-      - retrying
-      type: object
-    RunParameter:
-      additionalProperties: false
-      properties:
-        hidden:
-          default: false
-          description: Whether this parameter is hidden/secret. Defaults to false.
-          type: boolean
-        is_override:
-          description: Whether this parameter's value was supplied as an override at run/schedule creation time (true) or comes from the app version's default (false).
-          type:
-          - boolean
-          - 'null'
-        name:
-          type: string
-        value:
-          type: string
-      required:
-      - name
-      - value
-      type: object
-    ListAppsResponse:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/ListAppsResponse.json
-          format: uri
-          readOnly: true
-          type: string
-        apps:
-          items:
-            $ref: '#/components/schemas/AppSummary'
-          type: array
-        pages:
-          $ref: '#/components/schemas/Pagination'
-      required:
-      - apps
-      - pages
-      type: object
-    AppVersion:
-      additionalProperties: false
-      properties:
-        content_checksum:
-          description: Server-computed SHA256 of the bundle contents for this version.
-          type: string
-        created_at:
-          format: date-time
-          type: string
-        idempotency_key:
-          description: Client-supplied key (e.g. git SHA) that produced this version, or empty if none was supplied at deploy time.
-          type: string
-        parameters:
-          items:
-            $ref: '#/components/schemas/Parameter'
-          type: array
-        towerfile:
-          description: The Towerfile that this version was created from.
-          type: string
-        version:
-          type: string
-      required:
-      - version
-      - parameters
-      - created_at
-      - towerfile
-      type: object
-    CancelRunResponse:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/CancelRunResponse.json
-          format: uri
-          readOnly: true
-          type: string
-        cancelled_child_runs:
-          description: Number of descendant runs that were also cancelled as part of this cascade.
-          format: int64
-          type: integer
-        run:
-          $ref: '#/components/schemas/Run'
-      required:
-      - run
-      - cancelled_child_runs
       type: object
   securitySchemes:
     APIKeyAuth:

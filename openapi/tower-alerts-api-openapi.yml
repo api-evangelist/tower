@@ -249,6 +249,387 @@ paths:
       - Alerts
 components:
   schemas:
+    RunCreator:
+      additionalProperties: false
+      properties:
+        name:
+          description: 'The creator''s name: a user''s full name (or email) or a service account''s name.'
+          readOnly: true
+          type: string
+        type:
+          description: The kind of principal that created the run.
+          enum:
+          - user
+          - service_account
+          type: string
+      required:
+      - type
+      - name
+      type: object
+    RunFailureAlert:
+      additionalProperties: false
+      properties:
+        app:
+          $ref: '#/components/schemas/App'
+          description: App that the failed Run belongs to
+        environment:
+          description: Environment this run was in
+          type: string
+        run:
+          $ref: '#/components/schemas/Run'
+          description: Run that failed
+      required:
+      - run
+      - app
+      - environment
+      type: object
+    RunInitiator:
+      additionalProperties: false
+      properties:
+        details:
+          description: Additional information about the initiator of a run.
+          oneOf:
+          - $ref: '#/components/schemas/ScheduleRunInitiatorDetails'
+          - $ref: '#/components/schemas/RunRunInitiatorDetails'
+          type: object
+        type:
+          description: The type of initiator for this run. Null if none or unknown.
+          type:
+          - string
+          - 'null'
+      required:
+      - type
+      - details
+      type: object
+    RunParameter:
+      additionalProperties: false
+      properties:
+        hidden:
+          default: false
+          description: Whether this parameter is hidden/secret. Defaults to false.
+          type: boolean
+        is_override:
+          description: Whether this parameter's value was supplied as an override at run/schedule creation time (true) or comes from the app version's default (false).
+          type:
+          - boolean
+          - 'null'
+        name:
+          type: string
+        value:
+          type: string
+      required:
+      - name
+      - value
+      type: object
+    RunRunInitiatorDetails:
+      additionalProperties: false
+      properties:
+        run_app_name:
+          description: The name of the app that initiated this run, if type is 'tower_run'
+          type: string
+        run_number:
+          description: The number of the run that initaited this run, if type is 'tower_run'
+          format: int64
+          type: integer
+      type: object
+    RunRetryPolicy:
+      additionalProperties: false
+      properties:
+        max_retries:
+          format: int64
+          type: integer
+        retry_delay_seconds:
+          format: int64
+          type: integer
+        use_exponential_backoff:
+          type: boolean
+      required:
+      - max_retries
+      - retry_delay_seconds
+      - use_exponential_backoff
+      type: object
+    ErrorDetail:
+      additionalProperties: false
+      properties:
+        location:
+          description: Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id'
+          type: string
+        message:
+          description: Error message text
+          type: string
+        value:
+          description: The value at the given location
+      type: object
+    RunResults:
+      additionalProperties: false
+      properties:
+        cancelled:
+          format: int64
+          type: integer
+        crashed:
+          format: int64
+          type: integer
+        errored:
+          format: int64
+          type: integer
+        exited:
+          format: int64
+          type: integer
+        pending:
+          format: int64
+          type: integer
+        retrying:
+          format: int64
+          type: integer
+        running:
+          format: int64
+          type: integer
+        starting:
+          format: int64
+          type: integer
+      required:
+      - pending
+      - starting
+      - running
+      - exited
+      - errored
+      - crashed
+      - cancelled
+      - retrying
+      type: object
+    AcknowledgeAlertResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/AcknowledgeAlertResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        status:
+          type: string
+      required:
+      - status
+      type: object
+    ListAlertsResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/ListAlertsResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        alerts:
+          description: List of alerts
+          items:
+            $ref: '#/components/schemas/Alert'
+          type: array
+        pages:
+          $ref: '#/components/schemas/Pagination'
+          description: Pagination information
+      required:
+      - alerts
+      - pages
+      type: object
+    App:
+      additionalProperties: false
+      properties:
+        created_at:
+          description: The date and time this app was created.
+          format: date-time
+          type: string
+        health_status:
+          deprecated: true
+          description: This property is deprecated. It will always be 'healthy'.
+          enum:
+          - healthy
+          - warning
+          type: string
+        is_externally_accessible:
+          type: boolean
+        last_run:
+          $ref: '#/components/schemas/Run'
+          deprecated: true
+          description: 'Deprecated: always null, previously latest run of this app. Use "runs" in app summary instead.'
+        name:
+          description: The name of the app.
+          type: string
+        next_run_at:
+          description: The next time this app will run as part of it's schedule, null if none.
+          format: date-time
+          type:
+          - string
+          - 'null'
+        owner:
+          description: The account slug that owns this app.
+          type: string
+        pending_timeout:
+          default: 600
+          description: The maximum time in seconds that a run can stay in the pending state before being marked as cancelled.
+          format: int64
+          type: integer
+        retry_policy:
+          $ref: '#/components/schemas/RunRetryPolicy'
+          description: The retry policy for failed runs of this app.
+        run_results:
+          $ref: '#/components/schemas/RunResults'
+          description: The stats of all the runs of this app.
+        running_timeout:
+          default: 0
+          description: The number of seconds that a run can stay running before it gets cancelled. Value of 0 (default) means no timeout.
+          format: int64
+          type: integer
+        schedule:
+          deprecated: true
+          description: The schedule associated with this app, null if none.
+          type:
+          - string
+          - 'null'
+        short_description:
+          description: A short description of the app. Can be empty.
+          type: string
+        slug:
+          deprecated: true
+          description: This property is deprecated. Use name instead.
+          type: string
+        status:
+          description: The status of the app.
+          enum:
+          - active
+          - disabled
+          type: string
+        subdomain:
+          description: The subdomain that this app is accessible via. Must be externally accessible first.
+          type: string
+        tags:
+          description: The tags applied to the app.
+          items:
+            $ref: '#/components/schemas/AppTag'
+          type: array
+        version:
+          description: The current version of this app, null if none.
+          type:
+          - string
+          - 'null'
+      required:
+      - name
+      - owner
+      - short_description
+      - version
+      - schedule
+      - created_at
+      - next_run_at
+      - health_status
+      - is_externally_accessible
+      - pending_timeout
+      - running_timeout
+      type: object
+    AppTag:
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+        value:
+          type: string
+      required:
+      - name
+      - value
+      type: object
+    ScheduleRunInitiatorDetails:
+      additionalProperties: false
+      properties:
+        schedule_name:
+          description: The name of the schedule that initiated this run, if type is 'tower_schedule'
+          type: string
+      type: object
+    Alert:
+      additionalProperties: false
+      properties:
+        acked:
+          type: boolean
+        alert_type:
+          type: string
+        created_at:
+          format: date-time
+          type: string
+        detail:
+          oneOf:
+          - $ref: '#/components/schemas/RunFailureAlert'
+          type: object
+        seq:
+          format: int64
+          type: integer
+        status:
+          type: string
+      required:
+      - alert_type
+      - seq
+      - detail
+      - created_at
+      - status
+      - acked
+      type: object
+    SSEWarning:
+      additionalProperties: false
+      properties:
+        content:
+          description: Contents of the warning.
+          type: string
+        end_of_stream:
+          description: When true, the server has delivered every log line and is closing the stream; clients should stop and not reconnect.
+          type: boolean
+        reported_at:
+          description: Timestamp of the event.
+          format: date-time
+          type: string
+      required:
+      - reported_at
+      - content
+      type: object
+    Pagination:
+      additionalProperties: false
+      properties:
+        num_pages:
+          format: int64
+          type: integer
+        page:
+          format: int64
+          type: integer
+        page_size:
+          format: int64
+          type: integer
+        total:
+          format: int64
+          type: integer
+      required:
+      - page
+      - total
+      - num_pages
+      - page_size
+      type: object
+    AcknowledgeAllAlertsResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/AcknowledgeAllAlertsResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        count:
+          description: Number of alerts that were acknowledged
+          format: int64
+          type: integer
+        status:
+          type: string
+      required:
+      - status
+      - count
+      type: object
     RunAttempt:
       additionalProperties: false
       properties:
@@ -290,135 +671,6 @@ components:
       - started_at
       - ended_at
       - exit_code
-      type: object
-    ErrorModel:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/ErrorModel.json
-          format: uri
-          readOnly: true
-          type: string
-        detail:
-          description: A human-readable explanation specific to this occurrence of the problem.
-          examples:
-          - Property foo is required but is missing.
-          type: string
-        errors:
-          description: Optional list of individual error details
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-          type: array
-        instance:
-          description: A URI reference that identifies the specific occurrence of the problem.
-          examples:
-          - https://example.com/error-log/abc123
-          format: uri
-          type: string
-        status:
-          description: HTTP status code
-          examples:
-          - 400
-          format: int64
-          type: integer
-        title:
-          description: A short, human-readable summary of the problem type. This value should not change between occurrences of the error.
-          examples:
-          - Bad Request
-          type: string
-        type:
-          default: about:blank
-          description: A URI reference to human-readable documentation for the error.
-          examples:
-          - https://example.com/errors/example
-          format: uri
-          type: string
-      type: object
-    ScheduleRunInitiatorDetails:
-      additionalProperties: false
-      properties:
-        schedule_name:
-          description: The name of the schedule that initiated this run, if type is 'tower_schedule'
-          type: string
-      type: object
-    Pagination:
-      additionalProperties: false
-      properties:
-        num_pages:
-          format: int64
-          type: integer
-        page:
-          format: int64
-          type: integer
-        page_size:
-          format: int64
-          type: integer
-        total:
-          format: int64
-          type: integer
-      required:
-      - page
-      - total
-      - num_pages
-      - page_size
-      type: object
-    SSEWarning:
-      additionalProperties: false
-      properties:
-        content:
-          description: Contents of the warning.
-          type: string
-        end_of_stream:
-          description: When true, the server has delivered every log line and is closing the stream; clients should stop and not reconnect.
-          type: boolean
-        reported_at:
-          description: Timestamp of the event.
-          format: date-time
-          type: string
-      required:
-      - reported_at
-      - content
-      type: object
-    ErrorDetail:
-      additionalProperties: false
-      properties:
-        location:
-          description: Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id'
-          type: string
-        message:
-          description: Error message text
-          type: string
-        value:
-          description: The value at the given location
-      type: object
-    Alert:
-      additionalProperties: false
-      properties:
-        acked:
-          type: boolean
-        alert_type:
-          type: string
-        created_at:
-          format: date-time
-          type: string
-        detail:
-          oneOf:
-          - $ref: '#/components/schemas/RunFailureAlert'
-          type: object
-        seq:
-          format: int64
-          type: integer
-        status:
-          type: string
-      required:
-      - alert_type
-      - seq
-      - detail
-      - created_at
-      - status
-      - acked
       type: object
     Run:
       additionalProperties: false
@@ -550,302 +802,50 @@ components:
       - num_attempts
       - $link
       type: object
-    AcknowledgeAllAlertsResponse:
+    ErrorModel:
       additionalProperties: false
       properties:
         $schema:
           description: A URL to the JSON Schema for this object.
           examples:
-          - https://api.tower.dev/v1/schemas/AcknowledgeAllAlertsResponse.json
+          - https://api.tower.dev/v1/schemas/ErrorModel.json
           format: uri
           readOnly: true
           type: string
-        count:
-          description: Number of alerts that were acknowledged
+        detail:
+          description: A human-readable explanation specific to this occurrence of the problem.
+          examples:
+          - Property foo is required but is missing.
+          type: string
+        errors:
+          description: Optional list of individual error details
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+        instance:
+          description: A URI reference that identifies the specific occurrence of the problem.
+          examples:
+          - https://example.com/error-log/abc123
+          format: uri
+          type: string
+        status:
+          description: HTTP status code
+          examples:
+          - 400
           format: int64
           type: integer
-        status:
-          type: string
-      required:
-      - status
-      - count
-      type: object
-    RunCreator:
-      additionalProperties: false
-      properties:
-        name:
-          description: 'The creator''s name: a user''s full name (or email) or a service account''s name.'
-          readOnly: true
+        title:
+          description: A short, human-readable summary of the problem type. This value should not change between occurrences of the error.
+          examples:
+          - Bad Request
           type: string
         type:
-          description: The kind of principal that created the run.
-          enum:
-          - user
-          - service_account
-          type: string
-      required:
-      - type
-      - name
-      type: object
-    App:
-      additionalProperties: false
-      properties:
-        created_at:
-          description: The date and time this app was created.
-          format: date-time
-          type: string
-        health_status:
-          deprecated: true
-          description: This property is deprecated. It will always be 'healthy'.
-          enum:
-          - healthy
-          - warning
-          type: string
-        is_externally_accessible:
-          type: boolean
-        last_run:
-          $ref: '#/components/schemas/Run'
-          deprecated: true
-          description: 'Deprecated: always null, previously latest run of this app. Use "runs" in app summary instead.'
-        name:
-          description: The name of the app.
-          type: string
-        next_run_at:
-          description: The next time this app will run as part of it's schedule, null if none.
-          format: date-time
-          type:
-          - string
-          - 'null'
-        owner:
-          description: The account slug that owns this app.
-          type: string
-        pending_timeout:
-          default: 600
-          description: The maximum time in seconds that a run can stay in the pending state before being marked as cancelled.
-          format: int64
-          type: integer
-        retry_policy:
-          $ref: '#/components/schemas/RunRetryPolicy'
-          description: The retry policy for failed runs of this app.
-        run_results:
-          $ref: '#/components/schemas/RunResults'
-          description: The stats of all the runs of this app.
-        running_timeout:
-          default: 0
-          description: The number of seconds that a run can stay running before it gets cancelled. Value of 0 (default) means no timeout.
-          format: int64
-          type: integer
-        schedule:
-          deprecated: true
-          description: The schedule associated with this app, null if none.
-          type:
-          - string
-          - 'null'
-        short_description:
-          description: A short description of the app. Can be empty.
-          type: string
-        slug:
-          deprecated: true
-          description: This property is deprecated. Use name instead.
-          type: string
-        status:
-          description: The status of the app.
-          enum:
-          - active
-          - disabled
-          type: string
-        subdomain:
-          description: The subdomain that this app is accessible via. Must be externally accessible first.
-          type: string
-        tags:
-          description: The tags applied to the app.
-          items:
-            $ref: '#/components/schemas/AppTag'
-          type: array
-        version:
-          description: The current version of this app, null if none.
-          type:
-          - string
-          - 'null'
-      required:
-      - name
-      - owner
-      - short_description
-      - version
-      - schedule
-      - created_at
-      - next_run_at
-      - health_status
-      - is_externally_accessible
-      - pending_timeout
-      - running_timeout
-      type: object
-    RunRunInitiatorDetails:
-      additionalProperties: false
-      properties:
-        run_app_name:
-          description: The name of the app that initiated this run, if type is 'tower_run'
-          type: string
-        run_number:
-          description: The number of the run that initaited this run, if type is 'tower_run'
-          format: int64
-          type: integer
-      type: object
-    AppTag:
-      additionalProperties: false
-      properties:
-        name:
-          type: string
-        value:
-          type: string
-      required:
-      - name
-      - value
-      type: object
-    RunInitiator:
-      additionalProperties: false
-      properties:
-        details:
-          description: Additional information about the initiator of a run.
-          oneOf:
-          - $ref: '#/components/schemas/ScheduleRunInitiatorDetails'
-          - $ref: '#/components/schemas/RunRunInitiatorDetails'
-          type: object
-        type:
-          description: The type of initiator for this run. Null if none or unknown.
-          type:
-          - string
-          - 'null'
-      required:
-      - type
-      - details
-      type: object
-    AcknowledgeAlertResponse:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
+          default: about:blank
+          description: A URI reference to human-readable documentation for the error.
           examples:
-          - https://api.tower.dev/v1/schemas/AcknowledgeAlertResponse.json
+          - https://example.com/errors/example
           format: uri
-          readOnly: true
           type: string
-        status:
-          type: string
-      required:
-      - status
-      type: object
-    RunRetryPolicy:
-      additionalProperties: false
-      properties:
-        max_retries:
-          format: int64
-          type: integer
-        retry_delay_seconds:
-          format: int64
-          type: integer
-        use_exponential_backoff:
-          type: boolean
-      required:
-      - max_retries
-      - retry_delay_seconds
-      - use_exponential_backoff
-      type: object
-    ListAlertsResponse:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/ListAlertsResponse.json
-          format: uri
-          readOnly: true
-          type: string
-        alerts:
-          description: List of alerts
-          items:
-            $ref: '#/components/schemas/Alert'
-          type: array
-        pages:
-          $ref: '#/components/schemas/Pagination'
-          description: Pagination information
-      required:
-      - alerts
-      - pages
-      type: object
-    RunFailureAlert:
-      additionalProperties: false
-      properties:
-        app:
-          $ref: '#/components/schemas/App'
-          description: App that the failed Run belongs to
-        environment:
-          description: Environment this run was in
-          type: string
-        run:
-          $ref: '#/components/schemas/Run'
-          description: Run that failed
-      required:
-      - run
-      - app
-      - environment
-      type: object
-    RunResults:
-      additionalProperties: false
-      properties:
-        cancelled:
-          format: int64
-          type: integer
-        crashed:
-          format: int64
-          type: integer
-        errored:
-          format: int64
-          type: integer
-        exited:
-          format: int64
-          type: integer
-        pending:
-          format: int64
-          type: integer
-        retrying:
-          format: int64
-          type: integer
-        running:
-          format: int64
-          type: integer
-        starting:
-          format: int64
-          type: integer
-      required:
-      - pending
-      - starting
-      - running
-      - exited
-      - errored
-      - crashed
-      - cancelled
-      - retrying
-      type: object
-    RunParameter:
-      additionalProperties: false
-      properties:
-        hidden:
-          default: false
-          description: Whether this parameter is hidden/secret. Defaults to false.
-          type: boolean
-        is_override:
-          description: Whether this parameter's value was supplied as an override at run/schedule creation time (true) or comes from the app version's default (false).
-          type:
-          - boolean
-          - 'null'
-        name:
-          type: string
-        value:
-          type: string
-      required:
-      - name
-      - value
       type: object
   securitySchemes:
     APIKeyAuth:

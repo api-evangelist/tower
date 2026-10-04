@@ -78,22 +78,17 @@ paths:
       - Shouldertaps
 components:
   schemas:
-    SSEWarning:
+    ErrorDetail:
       additionalProperties: false
       properties:
-        content:
-          description: Contents of the warning.
+        location:
+          description: Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id'
           type: string
-        end_of_stream:
-          description: When true, the server has delivered every log line and is closing the stream; clients should stop and not reconnect.
-          type: boolean
-        reported_at:
-          description: Timestamp of the event.
-          format: date-time
+        message:
+          description: Error message text
           type: string
-      required:
-      - reported_at
-      - content
+        value:
+          description: The value at the given location
       type: object
     ShoulderTap:
       additionalProperties: false
@@ -121,17 +116,22 @@ components:
       - timestamp
       - account_id
       type: object
-    ErrorDetail:
+    SSEWarning:
       additionalProperties: false
       properties:
-        location:
-          description: Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id'
+        content:
+          description: Contents of the warning.
           type: string
-        message:
-          description: Error message text
+        end_of_stream:
+          description: When true, the server has delivered every log line and is closing the stream; clients should stop and not reconnect.
+          type: boolean
+        reported_at:
+          description: Timestamp of the event.
+          format: date-time
           type: string
-        value:
-          description: The value at the given location
+      required:
+      - reported_at
+      - content
       type: object
     ErrorModel:
       additionalProperties: false

@@ -331,6 +331,79 @@ paths:
       - Catalogs
 components:
   schemas:
+    UpdateCatalogResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/UpdateCatalogResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        catalog:
+          $ref: '#/components/schemas/Catalog'
+      required:
+      - catalog
+      type: object
+    ExportCatalogsResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/ExportCatalogsResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        catalogs:
+          items:
+            $ref: '#/components/schemas/ExportedCatalog'
+          type: array
+        pages:
+          $ref: '#/components/schemas/Pagination'
+      required:
+      - pages
+      - catalogs
+      type: object
+    ExportCatalogsParams:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/ExportCatalogsParams.json
+          format: uri
+          readOnly: true
+          type: string
+        all:
+          default: false
+          description: Whether to fetch all catalogs or only the ones in the supplied environment.
+          type: boolean
+        environment:
+          default: default
+          description: The environment to filter by.
+          type: string
+        page:
+          default: 1
+          description: The page number to fetch.
+          format: int64
+          type: integer
+        page_size:
+          default: 20
+          description: The number of records to fetch on each page.
+          format: int64
+          type: integer
+        public_key:
+          description: The PEM-encoded public key you want to use to encrypt sensitive catalog properties.
+          type: string
+      required:
+      - public_key
+      - environment
+      - all
+      - page
+      - page_size
+      type: object
     VendCatalogCredentialsResponse:
       additionalProperties: false
       properties:
@@ -345,6 +418,56 @@ components:
           $ref: '#/components/schemas/CatalogCredentials'
       required:
       - credentials
+      type: object
+    UpdateCatalogParams:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/UpdateCatalogParams.json
+          format: uri
+          readOnly: true
+          type: string
+        environment:
+          description: New environment for the catalog
+          type: string
+        properties:
+          items:
+            $ref: '#/components/schemas/EncryptedCatalogProperty'
+          type: array
+      required:
+      - environment
+      - properties
+      type: object
+    EncryptedCatalogProperty:
+      additionalProperties: false
+      properties:
+        encrypted_value:
+          type: string
+        name:
+          type: string
+        preview:
+          type: string
+      required:
+      - name
+      - encrypted_value
+      - preview
+      type: object
+    DeleteCatalogResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/DeleteCatalogResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        catalog:
+          $ref: '#/components/schemas/Catalog'
+      required:
+      - catalog
       type: object
     CreateCatalogResponse:
       additionalProperties: false
@@ -361,13 +484,13 @@ components:
       required:
       - catalog
       type: object
-    DeleteCatalogResponse:
+    DescribeCatalogResponse:
       additionalProperties: false
       properties:
         $schema:
           description: A URL to the JSON Schema for this object.
           examples:
-          - https://api.tower.dev/v1/schemas/DeleteCatalogResponse.json
+          - https://api.tower.dev/v1/schemas/DescribeCatalogResponse.json
           format: uri
           readOnly: true
           type: string
@@ -375,6 +498,91 @@ components:
           $ref: '#/components/schemas/Catalog'
       required:
       - catalog
+      type: object
+    CreateCatalogParams:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/CreateCatalogParams.json
+          format: uri
+          readOnly: true
+          type: string
+        environment:
+          type: string
+        name:
+          type: string
+        properties:
+          items:
+            $ref: '#/components/schemas/EncryptedCatalogProperty'
+          type: array
+        type:
+          enum:
+          - snowflake-open-catalog
+          - apache-polaris
+          - cloudflare-r2-catalog
+          - lakekeeper
+          - tower-catalog
+          - s3-tables
+          type: string
+      required:
+      - name
+      - type
+      - environment
+      - properties
+      type: object
+    CatalogProperty:
+      additionalProperties: false
+      properties:
+        environment_variable:
+          description: The environment variable name this property is injected as at runtime.
+          type: string
+        name:
+          type: string
+        preview:
+          type: string
+      required:
+      - name
+      - preview
+      type: object
+    ErrorDetail:
+      additionalProperties: false
+      properties:
+        location:
+          description: Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id'
+          type: string
+        message:
+          description: Error message text
+          type: string
+        value:
+          description: The value at the given location
+      type: object
+    CatalogCredentials:
+      additionalProperties: false
+      properties:
+        catalog_uri:
+          description: The Iceberg REST catalog endpoint.
+          type: string
+        expires_at:
+          description: When the OAuth token expires.
+          format: date-time
+          type: string
+        mode:
+          description: Access level the token is bound to.
+          type: string
+        oauth_token:
+          description: Short-lived OAuth bearer token.
+          type: string
+        warehouse:
+          description: The Polaris catalog identifier (REST prefix).
+          type: string
+      required:
+      - catalog_uri
+      - warehouse
+      - oauth_token
+      - expires_at
+      - mode
       type: object
     VendCatalogCredentialsBody:
       additionalProperties: false
@@ -394,10 +602,108 @@ components:
           - read-write
           type: string
       type: object
-    EncryptedCatalogProperty:
+    Pagination:
+      additionalProperties: false
+      properties:
+        num_pages:
+          format: int64
+          type: integer
+        page:
+          format: int64
+          type: integer
+        page_size:
+          format: int64
+          type: integer
+        total:
+          format: int64
+          type: integer
+      required:
+      - page
+      - total
+      - num_pages
+      - page_size
+      type: object
+    Catalog:
+      additionalProperties: false
+      properties:
+        CreatedAt:
+          format: date-time
+          type: string
+        environment:
+          type: string
+        name:
+          type: string
+        properties:
+          items:
+            $ref: '#/components/schemas/CatalogProperty'
+          type: array
+        slug:
+          deprecated: true
+          description: This property is deprecated. Use name instead.
+          type: string
+        type:
+          type: string
+      required:
+      - type
+      - name
+      - environment
+      - properties
+      - CreatedAt
+      type: object
+    ListCatalogsResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/ListCatalogsResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        catalogs:
+          items:
+            $ref: '#/components/schemas/Catalog'
+          type: array
+        pages:
+          $ref: '#/components/schemas/Pagination'
+      required:
+      - pages
+      - catalogs
+      type: object
+    ExportedCatalog:
+      additionalProperties: false
+      properties:
+        CreatedAt:
+          format: date-time
+          type: string
+        environment:
+          type: string
+        name:
+          type: string
+        properties:
+          items:
+            $ref: '#/components/schemas/ExportedCatalogProperty'
+          type: array
+        slug:
+          deprecated: true
+          description: This property is deprecated. Use name instead.
+          type: string
+        type:
+          type: string
+      required:
+      - type
+      - name
+      - environment
+      - properties
+      - CreatedAt
+      type: object
+    ExportedCatalogProperty:
       additionalProperties: false
       properties:
         encrypted_value:
+          type: string
+        environment_variable:
+          description: The environment variable name this property is injected as at runtime.
           type: string
         name:
           type: string
@@ -452,312 +758,6 @@ components:
           - https://example.com/errors/example
           format: uri
           type: string
-      type: object
-    Pagination:
-      additionalProperties: false
-      properties:
-        num_pages:
-          format: int64
-          type: integer
-        page:
-          format: int64
-          type: integer
-        page_size:
-          format: int64
-          type: integer
-        total:
-          format: int64
-          type: integer
-      required:
-      - page
-      - total
-      - num_pages
-      - page_size
-      type: object
-    ExportCatalogsResponse:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/ExportCatalogsResponse.json
-          format: uri
-          readOnly: true
-          type: string
-        catalogs:
-          items:
-            $ref: '#/components/schemas/ExportedCatalog'
-          type: array
-        pages:
-          $ref: '#/components/schemas/Pagination'
-      required:
-      - pages
-      - catalogs
-      type: object
-    Catalog:
-      additionalProperties: false
-      properties:
-        CreatedAt:
-          format: date-time
-          type: string
-        environment:
-          type: string
-        name:
-          type: string
-        properties:
-          items:
-            $ref: '#/components/schemas/CatalogProperty'
-          type: array
-        slug:
-          deprecated: true
-          description: This property is deprecated. Use name instead.
-          type: string
-        type:
-          type: string
-      required:
-      - type
-      - name
-      - environment
-      - properties
-      - CreatedAt
-      type: object
-    ErrorDetail:
-      additionalProperties: false
-      properties:
-        location:
-          description: Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id'
-          type: string
-        message:
-          description: Error message text
-          type: string
-        value:
-          description: The value at the given location
-      type: object
-    ListCatalogsResponse:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/ListCatalogsResponse.json
-          format: uri
-          readOnly: true
-          type: string
-        catalogs:
-          items:
-            $ref: '#/components/schemas/Catalog'
-          type: array
-        pages:
-          $ref: '#/components/schemas/Pagination'
-      required:
-      - pages
-      - catalogs
-      type: object
-    UpdateCatalogResponse:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/UpdateCatalogResponse.json
-          format: uri
-          readOnly: true
-          type: string
-        catalog:
-          $ref: '#/components/schemas/Catalog'
-      required:
-      - catalog
-      type: object
-    CatalogCredentials:
-      additionalProperties: false
-      properties:
-        catalog_uri:
-          description: The Iceberg REST catalog endpoint.
-          type: string
-        expires_at:
-          description: When the OAuth token expires.
-          format: date-time
-          type: string
-        mode:
-          description: Access level the token is bound to.
-          type: string
-        oauth_token:
-          description: Short-lived OAuth bearer token.
-          type: string
-        warehouse:
-          description: The Polaris catalog identifier (REST prefix).
-          type: string
-      required:
-      - catalog_uri
-      - warehouse
-      - oauth_token
-      - expires_at
-      - mode
-      type: object
-    UpdateCatalogParams:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/UpdateCatalogParams.json
-          format: uri
-          readOnly: true
-          type: string
-        environment:
-          description: New environment for the catalog
-          type: string
-        properties:
-          items:
-            $ref: '#/components/schemas/EncryptedCatalogProperty'
-          type: array
-      required:
-      - environment
-      - properties
-      type: object
-    CreateCatalogParams:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/CreateCatalogParams.json
-          format: uri
-          readOnly: true
-          type: string
-        environment:
-          type: string
-        name:
-          type: string
-        properties:
-          items:
-            $ref: '#/components/schemas/EncryptedCatalogProperty'
-          type: array
-        type:
-          enum:
-          - snowflake-open-catalog
-          - apache-polaris
-          - cloudflare-r2-catalog
-          - lakekeeper
-          - tower-catalog
-          - s3-tables
-          type: string
-      required:
-      - name
-      - type
-      - environment
-      - properties
-      type: object
-    ExportCatalogsParams:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/ExportCatalogsParams.json
-          format: uri
-          readOnly: true
-          type: string
-        all:
-          default: false
-          description: Whether to fetch all catalogs or only the ones in the supplied environment.
-          type: boolean
-        environment:
-          default: default
-          description: The environment to filter by.
-          type: string
-        page:
-          default: 1
-          description: The page number to fetch.
-          format: int64
-          type: integer
-        page_size:
-          default: 20
-          description: The number of records to fetch on each page.
-          format: int64
-          type: integer
-        public_key:
-          description: The PEM-encoded public key you want to use to encrypt sensitive catalog properties.
-          type: string
-      required:
-      - public_key
-      - environment
-      - all
-      - page
-      - page_size
-      type: object
-    DescribeCatalogResponse:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/DescribeCatalogResponse.json
-          format: uri
-          readOnly: true
-          type: string
-        catalog:
-          $ref: '#/components/schemas/Catalog'
-      required:
-      - catalog
-      type: object
-    ExportedCatalogProperty:
-      additionalProperties: false
-      properties:
-        encrypted_value:
-          type: string
-        environment_variable:
-          description: The environment variable name this property is injected as at runtime.
-          type: string
-        name:
-          type: string
-        preview:
-          type: string
-      required:
-      - name
-      - encrypted_value
-      - preview
-      type: object
-    ExportedCatalog:
-      additionalProperties: false
-      properties:
-        CreatedAt:
-          format: date-time
-          type: string
-        environment:
-          type: string
-        name:
-          type: string
-        properties:
-          items:
-            $ref: '#/components/schemas/ExportedCatalogProperty'
-          type: array
-        slug:
-          deprecated: true
-          description: This property is deprecated. Use name instead.
-          type: string
-        type:
-          type: string
-      required:
-      - type
-      - name
-      - environment
-      - properties
-      - CreatedAt
-      type: object
-    CatalogProperty:
-      additionalProperties: false
-      properties:
-        environment_variable:
-          description: The environment variable name this property is injected as at runtime.
-          type: string
-        name:
-          type: string
-        preview:
-          type: string
-      required:
-      - name
-      - preview
       type: object
   securitySchemes:
     APIKeyAuth:

@@ -46,6 +46,50 @@ paths:
       - Feature Flags
 components:
   schemas:
+    ErrorDetail:
+      additionalProperties: false
+      properties:
+        location:
+          description: Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id'
+          type: string
+        message:
+          description: Error message text
+          type: string
+        value:
+          description: The value at the given location
+      type: object
+    GetFeatureFlagResponseBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/GetFeatureFlagResponseBody.json
+          format: uri
+          readOnly: true
+          type: string
+        enabled:
+          description: Whether the flag is enabled
+          type: boolean
+        key:
+          description: The feature flag key
+          type: string
+        value:
+          description: The flag value (type depends on value_type)
+        value_type:
+          description: The type of the value
+          enum:
+          - boolean
+          - string
+          - number
+          - object
+          type: string
+      required:
+      - key
+      - enabled
+      - value_type
+      - value
+      type: object
     ErrorModel:
       additionalProperties: false
       properties:
@@ -90,50 +134,6 @@ components:
           - https://example.com/errors/example
           format: uri
           type: string
-      type: object
-    ErrorDetail:
-      additionalProperties: false
-      properties:
-        location:
-          description: Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id'
-          type: string
-        message:
-          description: Error message text
-          type: string
-        value:
-          description: The value at the given location
-      type: object
-    GetFeatureFlagResponseBody:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/GetFeatureFlagResponseBody.json
-          format: uri
-          readOnly: true
-          type: string
-        enabled:
-          description: Whether the flag is enabled
-          type: boolean
-        key:
-          description: The feature flag key
-          type: string
-        value:
-          description: The flag value (type depends on value_type)
-        value_type:
-          description: The type of the value
-          enum:
-          - boolean
-          - string
-          - number
-          - object
-          type: string
-      required:
-      - key
-      - enabled
-      - value_type
-      - value
       type: object
   securitySchemes:
     APIKeyAuth:

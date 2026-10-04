@@ -94,47 +94,6 @@ paths:
       - Login
 components:
   schemas:
-    Team:
-      additionalProperties: false
-      properties:
-        execution_region:
-          type: string
-        name:
-          type: string
-        organization:
-          description: The name of the organization this team belongs to.
-          type: string
-        slug:
-          deprecated: true
-          description: This property is deprecated. Use name instead.
-          type: string
-        token:
-          $ref: '#/components/schemas/Token'
-        type:
-          description: The type of team, either 'personal' or 'team'.
-          type: string
-      required:
-      - name
-      - type
-      - organization
-      - execution_region
-      type: object
-    DescribeDeviceLoginSessionResponse:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/DescribeDeviceLoginSessionResponse.json
-          format: uri
-          readOnly: true
-          type: string
-        session:
-          $ref: '#/components/schemas/Session'
-          description: The current session associated with your authentication method.
-      required:
-      - session
-      type: object
     User:
       additionalProperties: false
       properties:
@@ -178,25 +137,37 @@ components:
       - is_confirmed
       - is_subscribed_to_changelog
       type: object
-    ClaimDeviceLoginTicketParams:
+    FeaturebaseIdentity:
       additionalProperties: false
       properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/ClaimDeviceLoginTicketParams.json
-          format: uri
-          readOnly: true
+        company_hash:
           type: string
-        refresh_token:
-          description: The refresh token for the session to delegate to the device.
-          type: string
-        user_code:
-          description: The user code to claim.
+        user_hash:
           type: string
       required:
-      - user_code
-      - refresh_token
+      - user_hash
+      - company_hash
+      type: object
+    Session:
+      additionalProperties: false
+      properties:
+        featurebase_identity:
+          $ref: '#/components/schemas/FeaturebaseIdentity'
+          deprecated: true
+          description: This property is deprecated. It will be removed in a future version.
+        teams:
+          items:
+            $ref: '#/components/schemas/Team'
+          type: array
+        token:
+          $ref: '#/components/schemas/Token'
+        user:
+          $ref: '#/components/schemas/User'
+      required:
+      - user
+      - token
+      - teams
+      - featurebase_identity
       type: object
     CreateDeviceLoginTicketResponse:
       additionalProperties: false
@@ -241,53 +212,41 @@ components:
       - expires_in
       - interval
       type: object
-    Session:
-      additionalProperties: false
-      properties:
-        featurebase_identity:
-          $ref: '#/components/schemas/FeaturebaseIdentity'
-          deprecated: true
-          description: This property is deprecated. It will be removed in a future version.
-        teams:
-          items:
-            $ref: '#/components/schemas/Team'
-          type: array
-        token:
-          $ref: '#/components/schemas/Token'
-        user:
-          $ref: '#/components/schemas/User'
-      required:
-      - user
-      - token
-      - teams
-      - featurebase_identity
-      type: object
-    FeaturebaseIdentity:
-      additionalProperties: false
-      properties:
-        company_hash:
-          type: string
-        user_hash:
-          type: string
-      required:
-      - user_hash
-      - company_hash
-      type: object
-    ClaimDeviceLoginTicketResponse:
+    DescribeDeviceLoginSessionResponse:
       additionalProperties: false
       properties:
         $schema:
           description: A URL to the JSON Schema for this object.
           examples:
-          - https://api.tower.dev/v1/schemas/ClaimDeviceLoginTicketResponse.json
+          - https://api.tower.dev/v1/schemas/DescribeDeviceLoginSessionResponse.json
           format: uri
           readOnly: true
           type: string
-        claimed:
-          description: Whether the code was successfully claimed.
-          type: boolean
+        session:
+          $ref: '#/components/schemas/Session'
+          description: The current session associated with your authentication method.
       required:
-      - claimed
+      - session
+      type: object
+    ClaimDeviceLoginTicketParams:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/ClaimDeviceLoginTicketParams.json
+          format: uri
+          readOnly: true
+          type: string
+        refresh_token:
+          description: The refresh token for the session to delegate to the device.
+          type: string
+        user_code:
+          description: The user code to claim.
+          type: string
+      required:
+      - user_code
+      - refresh_token
       type: object
     ErrorDetail:
       additionalProperties: false
@@ -315,6 +274,47 @@ components:
       required:
       - access_token
       - jwt
+      type: object
+    ClaimDeviceLoginTicketResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/ClaimDeviceLoginTicketResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        claimed:
+          description: Whether the code was successfully claimed.
+          type: boolean
+      required:
+      - claimed
+      type: object
+    Team:
+      additionalProperties: false
+      properties:
+        execution_region:
+          type: string
+        name:
+          type: string
+        organization:
+          description: The name of the organization this team belongs to.
+          type: string
+        slug:
+          deprecated: true
+          description: This property is deprecated. Use name instead.
+          type: string
+        token:
+          $ref: '#/components/schemas/Token'
+        type:
+          description: The type of team, either 'personal' or 'team'.
+          type: string
+      required:
+      - name
+      - type
+      - organization
+      - execution_region
       type: object
     ErrorModel:
       additionalProperties: false

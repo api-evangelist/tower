@@ -54,20 +54,6 @@ components:
       required:
       - catalog
       type: object
-    CatalogProperty:
-      additionalProperties: false
-      properties:
-        environment_variable:
-          description: The environment variable name this property is injected as at runtime.
-          type: string
-        name:
-          type: string
-        preview:
-          type: string
-      required:
-      - name
-      - preview
-      type: object
     Catalog:
       additionalProperties: false
       properties:
@@ -94,6 +80,20 @@ components:
       - environment
       - properties
       - CreatedAt
+      type: object
+    CatalogProperty:
+      additionalProperties: false
+      properties:
+        environment_variable:
+          description: The environment variable name this property is injected as at runtime.
+          type: string
+        name:
+          type: string
+        preview:
+          type: string
+      required:
+      - name
+      - preview
       type: object
   securitySchemes:
     APIKeyAuth:

@@ -40,6 +40,27 @@ paths:
       - Whoami
 components:
   schemas:
+    DescribeWhoamiResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/DescribeWhoamiResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        expires_at:
+          description: Absolute time at which the token expires.
+          format: date-time
+          type: string
+        token:
+          description: RS256-signed identity JWT scoped to the authenticated user. Verify against the public keys at /.well-known/jwks.json.
+          type: string
+      required:
+      - token
+      - expires_at
+      type: object
     ErrorDetail:
       additionalProperties: false
       properties:
@@ -96,27 +117,6 @@ components:
           - https://example.com/errors/example
           format: uri
           type: string
-      type: object
-    DescribeWhoamiResponse:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/DescribeWhoamiResponse.json
-          format: uri
-          readOnly: true
-          type: string
-        expires_at:
-          description: Absolute time at which the token expires.
-          format: date-time
-          type: string
-        token:
-          description: RS256-signed identity JWT scoped to the authenticated user. Verify against the public keys at /.well-known/jwks.json.
-          type: string
-      required:
-      - token
-      - expires_at
       type: object
   securitySchemes:
     APIKeyAuth:

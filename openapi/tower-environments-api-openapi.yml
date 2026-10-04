@@ -192,6 +192,66 @@ paths:
       - Environments
 components:
   schemas:
+    UpdateEnvironmentResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/UpdateEnvironmentResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        environment:
+          $ref: '#/components/schemas/Environment'
+      required:
+      - environment
+      type: object
+    ErrorModel:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/ErrorModel.json
+          format: uri
+          readOnly: true
+          type: string
+        detail:
+          description: A human-readable explanation specific to this occurrence of the problem.
+          examples:
+          - Property foo is required but is missing.
+          type: string
+        errors:
+          description: Optional list of individual error details
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+          type: array
+        instance:
+          description: A URI reference that identifies the specific occurrence of the problem.
+          examples:
+          - https://example.com/error-log/abc123
+          format: uri
+          type: string
+        status:
+          description: HTTP status code
+          examples:
+          - 400
+          format: int64
+          type: integer
+        title:
+          description: A short, human-readable summary of the problem type. This value should not change between occurrences of the error.
+          examples:
+          - Bad Request
+          type: string
+        type:
+          default: about:blank
+          description: A URI reference to human-readable documentation for the error.
+          examples:
+          - https://example.com/errors/example
+          format: uri
+          type: string
+      type: object
     CreateEnvironmentResponse:
       additionalProperties: false
       properties:
@@ -228,38 +288,25 @@ components:
       - num_pages
       - page_size
       type: object
-    CreateEnvironmentParams:
+    ListEnvironmentsResponse:
       additionalProperties: false
       properties:
         $schema:
           description: A URL to the JSON Schema for this object.
           examples:
-          - https://api.tower.dev/v1/schemas/CreateEnvironmentParams.json
+          - https://api.tower.dev/v1/schemas/ListEnvironmentsResponse.json
           format: uri
           readOnly: true
           type: string
-        name:
-          description: The name of the environment
-          maxLength: 100
-          minLength: 1
-          type: string
+        environments:
+          items:
+            $ref: '#/components/schemas/Environment'
+          type: array
+        pages:
+          $ref: '#/components/schemas/Pagination'
       required:
-      - name
-      type: object
-    DeleteEnvironmentResponse:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/DeleteEnvironmentResponse.json
-          format: uri
-          readOnly: true
-          type: string
-        environment:
-          $ref: '#/components/schemas/Environment'
-      required:
-      - environment
+      - environments
+      - pages
       type: object
     DescribeEnvironmentResponse:
       additionalProperties: false
@@ -316,85 +363,23 @@ components:
         value:
           description: The value at the given location
       type: object
-    UpdateEnvironmentResponse:
+    CreateEnvironmentParams:
       additionalProperties: false
       properties:
         $schema:
           description: A URL to the JSON Schema for this object.
           examples:
-          - https://api.tower.dev/v1/schemas/UpdateEnvironmentResponse.json
+          - https://api.tower.dev/v1/schemas/CreateEnvironmentParams.json
           format: uri
           readOnly: true
           type: string
-        environment:
-          $ref: '#/components/schemas/Environment'
+        name:
+          description: The name of the environment
+          maxLength: 100
+          minLength: 1
+          type: string
       required:
-      - environment
-      type: object
-    ListEnvironmentsResponse:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/ListEnvironmentsResponse.json
-          format: uri
-          readOnly: true
-          type: string
-        environments:
-          items:
-            $ref: '#/components/schemas/Environment'
-          type: array
-        pages:
-          $ref: '#/components/schemas/Pagination'
-      required:
-      - environments
-      - pages
-      type: object
-    ErrorModel:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/ErrorModel.json
-          format: uri
-          readOnly: true
-          type: string
-        detail:
-          description: A human-readable explanation specific to this occurrence of the problem.
-          examples:
-          - Property foo is required but is missing.
-          type: string
-        errors:
-          description: Optional list of individual error details
-          items:
-            $ref: '#/components/schemas/ErrorDetail'
-          type: array
-        instance:
-          description: A URI reference that identifies the specific occurrence of the problem.
-          examples:
-          - https://example.com/error-log/abc123
-          format: uri
-          type: string
-        status:
-          description: HTTP status code
-          examples:
-          - 400
-          format: int64
-          type: integer
-        title:
-          description: A short, human-readable summary of the problem type. This value should not change between occurrences of the error.
-          examples:
-          - Bad Request
-          type: string
-        type:
-          default: about:blank
-          description: A URI reference to human-readable documentation for the error.
-          examples:
-          - https://example.com/errors/example
-          format: uri
-          type: string
+      - name
       type: object
     Environment:
       additionalProperties: false
@@ -408,6 +393,21 @@ components:
       required:
       - name
       - is_deletable
+      type: object
+    DeleteEnvironmentResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/DeleteEnvironmentResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        environment:
+          $ref: '#/components/schemas/Environment'
+      required:
+      - environment
       type: object
   securitySchemes:
     APIKeyAuth:

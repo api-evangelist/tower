@@ -82,6 +82,53 @@ paths:
       - Team Invites
 components:
   schemas:
+    UpdateMyTeamInvitationResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/UpdateMyTeamInvitationResponse.json
+          format: uri
+          readOnly: true
+          type: string
+      type: object
+    TeamInvitation:
+      additionalProperties: false
+      properties:
+        email:
+          type: string
+        invitation_sent_at:
+          format: date-time
+          type: string
+        role:
+          type: string
+        team:
+          $ref: '#/components/schemas/Team'
+      required:
+      - team
+      - email
+      - invitation_sent_at
+      - role
+      type: object
+    ListMyTeamInvitationsResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/ListMyTeamInvitationsResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        team_invitations:
+          description: All of team invitations
+          items:
+            $ref: '#/components/schemas/TeamInvitation'
+          type: array
+      required:
+      - team_invitations
+      type: object
     Team:
       additionalProperties: false
       properties:
@@ -106,62 +153,6 @@ components:
       - type
       - organization
       - execution_region
-      type: object
-    ListMyTeamInvitationsResponse:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/ListMyTeamInvitationsResponse.json
-          format: uri
-          readOnly: true
-          type: string
-        team_invitations:
-          description: All of team invitations
-          items:
-            $ref: '#/components/schemas/TeamInvitation'
-          type: array
-      required:
-      - team_invitations
-      type: object
-    UpdateMyTeamInvitationParams:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/UpdateMyTeamInvitationParams.json
-          format: uri
-          readOnly: true
-          type: string
-        accepted:
-          description: Whether or not the invitation was accepted. If false, it's considered rejected.
-          type: boolean
-        name:
-          description: The name of the team invitation to update
-          type: string
-      required:
-      - name
-      - accepted
-      type: object
-    TeamInvitation:
-      additionalProperties: false
-      properties:
-        email:
-          type: string
-        invitation_sent_at:
-          format: date-time
-          type: string
-        role:
-          type: string
-        team:
-          $ref: '#/components/schemas/Team'
-      required:
-      - team
-      - email
-      - invitation_sent_at
-      - role
       type: object
     ErrorDetail:
       additionalProperties: false
@@ -189,6 +180,26 @@ components:
       required:
       - access_token
       - jwt
+      type: object
+    UpdateMyTeamInvitationParams:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/UpdateMyTeamInvitationParams.json
+          format: uri
+          readOnly: true
+          type: string
+        accepted:
+          description: Whether or not the invitation was accepted. If false, it's considered rejected.
+          type: boolean
+        name:
+          description: The name of the team invitation to update
+          type: string
+      required:
+      - name
+      - accepted
       type: object
     ErrorModel:
       additionalProperties: false
@@ -233,17 +244,6 @@ components:
           examples:
           - https://example.com/errors/example
           format: uri
-          type: string
-      type: object
-    UpdateMyTeamInvitationResponse:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/UpdateMyTeamInvitationResponse.json
-          format: uri
-          readOnly: true
           type: string
       type: object
   securitySchemes:

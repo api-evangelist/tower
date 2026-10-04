@@ -112,31 +112,6 @@ paths:
       - Accounts
 components:
   schemas:
-    Team:
-      additionalProperties: false
-      properties:
-        execution_region:
-          type: string
-        name:
-          type: string
-        organization:
-          description: The name of the organization this team belongs to.
-          type: string
-        slug:
-          deprecated: true
-          description: This property is deprecated. Use name instead.
-          type: string
-        token:
-          $ref: '#/components/schemas/Token'
-        type:
-          description: The type of team, either 'personal' or 'team'.
-          type: string
-      required:
-      - name
-      - type
-      - organization
-      - execution_region
-      type: object
     User:
       additionalProperties: false
       properties:
@@ -180,53 +155,55 @@ components:
       - is_confirmed
       - is_subscribed_to_changelog
       type: object
-    DescribeAccountBody:
+    FeaturebaseIdentity:
       additionalProperties: false
       properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/DescribeAccountBody.json
-          format: uri
-          readOnly: true
+        company_hash:
           type: string
-        account:
-          $ref: '#/components/schemas/Account'
+        user_hash:
+          type: string
       required:
-      - account
+      - user_hash
+      - company_hash
       type: object
-    Token:
+    Account:
       additionalProperties: false
       properties:
-        access_token:
-          description: The access token to use when authenticating API requests with Tower.
+        execution_region:
           type: string
-        jwt:
+        is_self_hosted_only:
+          type: boolean
+        name:
           type: string
-        refresh_token:
-          description: The refresh token to use when refreshing an expired access token. For security reasons, refresh tokens should only be transmitted over secure channels and never logged or stored in plaintext. It will only be returned upon initial authentication or when explicitly refreshing the access token.
+        slug:
+          deprecated: true
+          description: This property is deprecated. Use name instead.
           type: string
       required:
-      - access_token
-      - jwt
+      - name
+      - is_self_hosted_only
+      - execution_region
       type: object
-    CreateAccountParams:
+    Session:
       additionalProperties: false
       properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/CreateAccountParams.json
-          format: uri
-          readOnly: true
-          type: string
-        email:
-          type: string
-        password:
-          type: string
+        featurebase_identity:
+          $ref: '#/components/schemas/FeaturebaseIdentity'
+          deprecated: true
+          description: This property is deprecated. It will be removed in a future version.
+        teams:
+          items:
+            $ref: '#/components/schemas/Team'
+          type: array
+        token:
+          $ref: '#/components/schemas/Token'
+        user:
+          $ref: '#/components/schemas/User'
       required:
-      - email
-      - password
+      - user
+      - token
+      - teams
+      - featurebase_identity
       type: object
     UpdateAccountParams:
       additionalProperties: false
@@ -253,67 +230,23 @@ components:
           description: The new name for the account, if any
           type: string
       type: object
-    Session:
+    CreateAccountParams:
       additionalProperties: false
       properties:
-        featurebase_identity:
-          $ref: '#/components/schemas/FeaturebaseIdentity'
-          deprecated: true
-          description: This property is deprecated. It will be removed in a future version.
-        teams:
-          items:
-            $ref: '#/components/schemas/Team'
-          type: array
-        token:
-          $ref: '#/components/schemas/Token'
-        user:
-          $ref: '#/components/schemas/User'
-      required:
-      - user
-      - token
-      - teams
-      - featurebase_identity
-      type: object
-    FeaturebaseIdentity:
-      additionalProperties: false
-      properties:
-        company_hash:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/CreateAccountParams.json
+          format: uri
+          readOnly: true
           type: string
-        user_hash:
+        email:
+          type: string
+        password:
           type: string
       required:
-      - user_hash
-      - company_hash
-      type: object
-    ErrorDetail:
-      additionalProperties: false
-      properties:
-        location:
-          description: Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id'
-          type: string
-        message:
-          description: Error message text
-          type: string
-        value:
-          description: The value at the given location
-      type: object
-    Account:
-      additionalProperties: false
-      properties:
-        execution_region:
-          type: string
-        is_self_hosted_only:
-          type: boolean
-        name:
-          type: string
-        slug:
-          deprecated: true
-          description: This property is deprecated. Use name instead.
-          type: string
-      required:
-      - name
-      - is_self_hosted_only
-      - execution_region
+      - email
+      - password
       type: object
     UpdateAccountResponse:
       additionalProperties: false
@@ -330,6 +263,48 @@ components:
       required:
       - account
       type: object
+    DescribeAccountBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/DescribeAccountBody.json
+          format: uri
+          readOnly: true
+          type: string
+        account:
+          $ref: '#/components/schemas/Account'
+      required:
+      - account
+      type: object
+    ErrorDetail:
+      additionalProperties: false
+      properties:
+        location:
+          description: Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id'
+          type: string
+        message:
+          description: Error message text
+          type: string
+        value:
+          description: The value at the given location
+      type: object
+    Token:
+      additionalProperties: false
+      properties:
+        access_token:
+          description: The access token to use when authenticating API requests with Tower.
+          type: string
+        jwt:
+          type: string
+        refresh_token:
+          description: The refresh token to use when refreshing an expired access token. For security reasons, refresh tokens should only be transmitted over secure channels and never logged or stored in plaintext. It will only be returned upon initial authentication or when explicitly refreshing the access token.
+          type: string
+      required:
+      - access_token
+      - jwt
+      type: object
     CreateAccountResponse:
       additionalProperties: false
       properties:
@@ -344,6 +319,31 @@ components:
           $ref: '#/components/schemas/Session'
       required:
       - session
+      type: object
+    Team:
+      additionalProperties: false
+      properties:
+        execution_region:
+          type: string
+        name:
+          type: string
+        organization:
+          description: The name of the organization this team belongs to.
+          type: string
+        slug:
+          deprecated: true
+          description: This property is deprecated. Use name instead.
+          type: string
+        token:
+          $ref: '#/components/schemas/Token'
+        type:
+          description: The type of team, either 'personal' or 'team'.
+          type: string
+      required:
+      - name
+      - type
+      - organization
+      - execution_region
       type: object
     ErrorModel:
       additionalProperties: false

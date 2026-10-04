@@ -126,36 +126,6 @@ paths:
       - User
 components:
   schemas:
-    DescribeEmailPreferencesBody:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/DescribeEmailPreferencesBody.json
-          format: uri
-          readOnly: true
-          type: string
-        subscriptions:
-          $ref: '#/components/schemas/EmailSubscriptions'
-      required:
-      - subscriptions
-      type: object
-    UpdateEmailPreferencesBody:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/UpdateEmailPreferencesBody.json
-          format: uri
-          readOnly: true
-          type: string
-        subscriptions:
-          $ref: '#/components/schemas/EmailSubscriptions'
-      required:
-      - subscriptions
-      type: object
     User:
       additionalProperties: false
       properties:
@@ -209,36 +179,6 @@ components:
         tower_newsletter:
           type: boolean
       type: object
-    DescribeAuthenticationContextBody:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/DescribeAuthenticationContextBody.json
-          format: uri
-          readOnly: true
-          type: string
-        authentication_context:
-          $ref: '#/components/schemas/AuthenticationContext'
-      required:
-      - authentication_context
-      type: object
-    UpdateUserResponse:
-      additionalProperties: false
-      properties:
-        $schema:
-          description: A URL to the JSON Schema for this object.
-          examples:
-          - https://api.tower.dev/v1/schemas/UpdateUserResponse.json
-          format: uri
-          readOnly: true
-          type: string
-        user:
-          $ref: '#/components/schemas/User'
-      required:
-      - user
-      type: object
     AuthenticationContext:
       additionalProperties: false
       properties:
@@ -248,17 +188,20 @@ components:
       required:
       - work_os_access_token
       type: object
-    ErrorDetail:
+    DescribeEmailPreferencesBody:
       additionalProperties: false
       properties:
-        location:
-          description: Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id'
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/DescribeEmailPreferencesBody.json
+          format: uri
+          readOnly: true
           type: string
-        message:
-          description: Error message text
-          type: string
-        value:
-          description: The value at the given location
+        subscriptions:
+          $ref: '#/components/schemas/EmailSubscriptions'
+      required:
+      - subscriptions
       type: object
     UpdateUserParams:
       additionalProperties: false
@@ -313,6 +256,63 @@ components:
           type:
           - string
           - 'null'
+      type: object
+    DescribeAuthenticationContextBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/DescribeAuthenticationContextBody.json
+          format: uri
+          readOnly: true
+          type: string
+        authentication_context:
+          $ref: '#/components/schemas/AuthenticationContext'
+      required:
+      - authentication_context
+      type: object
+    UpdateEmailPreferencesBody:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/UpdateEmailPreferencesBody.json
+          format: uri
+          readOnly: true
+          type: string
+        subscriptions:
+          $ref: '#/components/schemas/EmailSubscriptions'
+      required:
+      - subscriptions
+      type: object
+    UpdateUserResponse:
+      additionalProperties: false
+      properties:
+        $schema:
+          description: A URL to the JSON Schema for this object.
+          examples:
+          - https://api.tower.dev/v1/schemas/UpdateUserResponse.json
+          format: uri
+          readOnly: true
+          type: string
+        user:
+          $ref: '#/components/schemas/User'
+      required:
+      - user
+      type: object
+    ErrorDetail:
+      additionalProperties: false
+      properties:
+        location:
+          description: Where the error occurred, e.g. 'body.items[3].tags' or 'path.thing-id'
+          type: string
+        message:
+          description: Error message text
+          type: string
+        value:
+          description: The value at the given location
       type: object
     ErrorModel:
       additionalProperties: false
