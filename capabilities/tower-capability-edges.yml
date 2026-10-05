@@ -1,0 +1,44 @@
+slug: tower
+provider: Tower
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Software & Technology
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 3
+edges:
+- tag: Secrets
+  spec_file: tower-secrets-api-openapi.yml
+  capability_id: BC-4210.60
+  capability_id_l1: BC-4210
+  capability_name: Configuration & Secrets Management
+  confidence: 0.85
+  evidence: POST /secrets create-secret; GET /secrets/environments list-secret-environments; GET /secrets/key
+    describe-secrets-key Describe encryption key
+  reason: CRUD plus export and encryption-key description over named secrets scoped to environments —
+    management of runtime configuration values and secrets consumed by deployed apps.
+- tag: Feature Flags
+  spec_file: tower-feature-flags-api-openapi.yml
+  capability_id: BC-4210.50
+  capability_id_l1: BC-4210
+  capability_name: Feature Flag Management
+  confidence: 0.78
+  evidence: GET /feature-flags/{key} get-feature-flag-value Get feature flag value
+  reason: Single operation resolves a feature flag value at runtime, which is the runtime-control half
+    of feature flag management. Thin surface (read only, no flag lifecycle), hence moderate confidence.
+- tag: Webhooks
+  spec_file: tower-webhooks-api-openapi.yml
+  capability_id: BC-4270.80
+  capability_id_l1: BC-4270
+  capability_name: Webhook & Event Subscription Management
+  confidence: 0.75
+  evidence: POST /webhooks create-webhook; POST /webhooks/{name}/test check-webhook
+  reason: Full lifecycle (create, describe, update, delete, test) of outbound webhook endpoints for platform
+    events, matching webhook and event subscription management rather than any data-pipeline business
+    capability.
